@@ -4,7 +4,8 @@ var application_root = __dirname,
     mongoose = require("mongoose"),
     bodyParser = require('body-parser'),
     methodOverride = require('method-override'),
-    nodemailer = require('nodemailer');
+    nodemailer = require('nodemailer'),
+    CronJob = require('cron').CronJob;
 
 var app = express();
 
@@ -15,7 +16,7 @@ app.use(bodyParser.json());
 require('./routes')(express, app, path);
 
 //require file with methods/api, access to database
-require('./method')(express, app, mongoose, path, nodemailer);
+require('./method')(express, app, mongoose, path, nodemailer, CronJob);
 
 //Launch server
 app.listen(4242, function(){
