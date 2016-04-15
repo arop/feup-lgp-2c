@@ -34,7 +34,7 @@ angular.module('itBirthday', ['ionic', 'itBirthday.login'])
   // login page before showing tabs
   .state('login', {
     url: '/login',
-    templateUrl: 'templates/login.html',
+    templateUrl: '/app/www/templates/login.html',
     controller: 'LoginCtrl'
   })
 
@@ -42,7 +42,7 @@ angular.module('itBirthday', ['ionic', 'itBirthday.login'])
   .state('tabs', {
     url: '/tabs',
     abstract: true,
-    templateUrl: 'templates/tabs.html'
+    templateUrl: '/app/www/templates/tabs.html'
   })
 
   // Each tab has its own nav history stack:
@@ -51,7 +51,7 @@ angular.module('itBirthday', ['ionic', 'itBirthday.login'])
     url: '/dash',
     views: {
       'tab-dash': {
-        templateUrl: 'templates/tab-dash.html',
+        templateUrl: '/app/www/templates/tab-dash.html',
         //controller: 'DashCtrl'
       }
     }
@@ -61,7 +61,7 @@ angular.module('itBirthday', ['ionic', 'itBirthday.login'])
       url: '/profile',
       views: {
         'tab-profile': {
-          templateUrl: 'templates/tab-profile.html'
+          templateUrl: '/app/www/templates/tab-profile.html'
           //controller: 'ChatsCtrl'
         }
       }
@@ -71,7 +71,7 @@ angular.module('itBirthday', ['ionic', 'itBirthday.login'])
     url: '/settings',
     views: {
       'tab-settings': {
-        templateUrl: 'templates/tab-settings.html',
+        templateUrl: '/app/www/templates/tab-settings.html',
         //controller: 'AccountCtrl'
       }
     }

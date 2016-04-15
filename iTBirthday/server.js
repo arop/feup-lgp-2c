@@ -20,7 +20,7 @@ require('./method')(express, app, mongoose, path, nodemailer, CronJob);
 
 //Launch server
 app.listen(4242, function(){
-  console.log("Connected to server");
+  console.log("Connected to server, port 4242.");
 });
 
 module.exports = app;
