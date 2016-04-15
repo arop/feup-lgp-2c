@@ -4,7 +4,6 @@
 
 *node_modules/
 .idea/
-*/iconic.project
 
 #################
 ## Eclipse
@@ -222,3 +221,4 @@ pip-log.txt
 
 #Mr Developer
 .mr.developer.cfg
+iTBirthday/app/ionic.project
