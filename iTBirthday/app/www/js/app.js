@@ -5,79 +5,96 @@
 // the 2nd parameter is an array of 'requires'
 angular.module('itBirthday', ['ionic', 'itBirthday.login'])
 
-.run(function($ionicPlatform) {
-  $ionicPlatform.ready(function() {
-    if(window.cordova && window.cordova.plugins.Keyboard) {
-      // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
-      // for form inputs)
-      cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
+  .run(function($ionicPlatform) {
+    $ionicPlatform.ready(function() {
+      if(window.cordova && window.cordova.plugins.Keyboard) {
+        // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
+        // for form inputs)
+        cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
 
-      // Don't remove this line unless you know what you are doing. It stops the viewport
-      // from snapping when text inputs are focused. Ionic handles this internally for
-      // a much nicer keyboard experience.
-      cordova.plugins.Keyboard.disableScroll(true);
-    }
-    if(window.StatusBar) {
-      StatusBar.styleDefault();
-    }
-  });
-})
-
-.config(function($stateProvider, $urlRouterProvider) {
-
-  // Ionic uses AngularUI Router which uses the concept of states
-  // Learn more here: https://github.com/angular-ui/ui-router
-  // Set up the various states which the app can be in.
-  // Each state's controller can be found in controllers.js
-  $stateProvider
-
-  // login page before showing tabs
-  .state('login', {
-    url: '/login',
-    templateUrl: '/app/www/templates/login.html',
-    controller: 'LoginCtrl'
-  })
-
-  // setup an abstract state for the tabs directive
-  .state('tabs', {
-    url: '/tabs',
-    abstract: true,
-    templateUrl: '/app/www/templates/tabs.html'
-  })
-
-  // Each tab has its own nav history stack:
-
-  .state('tabs.dash', {
-    url: '/dash',
-    views: {
-      'tab-dash': {
-        templateUrl: '/app/www/templates/tab-dash.html',
-        //controller: 'DashCtrl'
+        // Don't remove this line unless you know what you are doing. It stops the viewport
+        // from snapping when text inputs are focused. Ionic handles this internally for
+        // a much nicer keyboard experience.
+        cordova.plugins.Keyboard.disableScroll(true);
       }
-    }
+      if(window.StatusBar) {
+        StatusBar.styleDefault();
+      }
+    });
   })
 
-  .state('tabs.profile', {
-      url: '/profile',
-      views: {
-        'tab-profile': {
-          templateUrl: '/app/www/templates/tab-profile.html'
-          //controller: 'ChatsCtrl'
+  .config(function($stateProvider, $urlRouterProvider) {
+
+    // Ionic uses AngularUI Router which uses the concept of states
+    // Learn more here: https://github.com/angular-ui/ui-router
+    // Set up the various states which the app can be in.
+    // Each state's controller can be found in controllers.js
+    $stateProvider
+
+    // login page before showing tabs
+      .state('login', {
+        url: '/login',
+        templateUrl: '/app/www/templates/login.html',
+        controller: 'LoginCtrl'
+      })
+
+      // setup an abstract state for the tabs directive
+      .state('tabs', {
+        url: '/tabs',
+        abstract: true,
+        templateUrl: '/app/www/templates/tabs.html'
+      })
+
+      // Each tab has its own nav history stack:
+
+      .state('tabs.dash', {
+        url: '/dash',
+        views: {
+          'tab-dash': {
+            templateUrl: '/app/www/templates/tab-dash.html',
+            //controller: 'DashCtrl'
+          }
         }
-      }
-    })
+      })
 
-  .state('tabs.settings', {
-    url: '/settings',
-    views: {
-      'tab-settings': {
-        templateUrl: '/app/www/templates/tab-settings.html',
-        //controller: 'AccountCtrl'
-      }
-    }
+      .state('tabs.profile', {
+        url: '/profile',
+        views: {
+          'tab-profile': {
+            templateUrl: '/app/www/templates/tab-profile.html'
+          }
+        }
+      })
+
+      .state('tabs.profile.new', {
+        url: '/new',
+        views: {
+          'tab-profile@tabs': {
+            templateUrl: '/app/www/templates/new-profile.html'
+          }
+        }
+      })
+
+      .state('tabs.profile.search', {
+        url: '/search',
+        views: {
+          'tab-profile@tabs': {
+            templateUrl: '/app/www/templates/search-profile.html'
+          }
+        }
+      })
+
+      .state('tabs.settings', {
+        url: '/settings',
+        views: {
+          'tab-settings': {
+            templateUrl: '/app/www/templates/tab-settings.html',
+            //controller: 'AccountCtrl'
+          }
+        }
+      });
+
+    // if none of the above states are matched, use this as the fallback
+
+    $urlRouterProvider.otherwise('/login');
   });
-
-  // if none of the above states are matched, use this as the fallback
-
-  $urlRouterProvider.otherwise('/login');
-});
