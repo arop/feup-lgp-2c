@@ -163,8 +163,9 @@ module.exports = function(express, app, mongoose, path, nodemailer, CronJob) {
 	//Example of the use of cron
 	//Every day of the week at 15.05.00
     //Change to a convenient time
-	new CronJob('00 05 15 * * 1-7', function() {
-        var query = Employee.find({sendMail : true});
+	//TODO see what to do to 29 February
+	new CronJob('00 37 20 * * 1-7', function() {
+        var query = Employee.find({$where : function() {return this.birthDate.getMonth() == new Date().getMonth() && this.birthDate.getDate() == new Date().getDate()}, sendMail : true});
         query.exec(function(err, result){
 
             for ( var i = 0; i < result.length; i++) {
@@ -186,6 +187,7 @@ module.exports = function(express, app, mongoose, path, nodemailer, CronJob) {
                     }
                     console.log('Message sent: ' + info.response);
                 });
+
             }
         });
 	}, null, true, 'Europe/London');
