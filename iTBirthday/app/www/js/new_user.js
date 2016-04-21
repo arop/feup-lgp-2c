@@ -431,7 +431,7 @@ newProfile.controller('NewUserCtrl', function($scope, $state, $http) {
    * @return {boolean}
    */
   var IsNumber = function(code) {
-    return (code >= 48 && code <= 57);
+    return (code >= 48 && code <= 57) || (code >= 96 && code <= 105);
   };
 });
 
