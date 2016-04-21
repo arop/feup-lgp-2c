@@ -132,23 +132,23 @@ module.exports = function(express, app, mongoose, path, nodemailer, CronJob) {
 	}
 
     //Post of employee only required fields
-	app.post('/post_employee/:name/:birthDate/:phoneNumber/:email/:entryDate/:sendMail/:sendSMS/:facebookPost', function (req,res) {
-        var emp_temp = new Employee ({
-            name: req.params.name,
-            birthDate: req.params.birthDate,
-            phoneNumber: req.params.phoneNumber,
-            email: req.params.email,
-            entryDate: req.params.entryDate,
-            sendMail: req.params.sendMail,
-            sendSMS: req.params.sendSMS,
-            facebookPost: req.params.facebookPost
-        });
-        emp_temp.save(function(err, emp){
-            if ( err )
-                return console.error(err);
-            else
-                return console.log("Employee inserted correctly");
-        });
+	app.post('/post_employee', function (req,res) {
+		var emp_temp = new Employee ({
+			name: req.body.name,
+			birthDate: req.body.birthDate,
+			phoneNumber: req.body.phoneNumber,
+			email: req.body.email,
+			entryDate: req.body.entryDate,
+			sendMail: req.body.sendMail,
+			sendSMS: req.body.sendSMS,
+			facebookPost: req.body.facebookPost
+		});
+		emp_temp.save(function(err, emp){
+			if ( err )
+				return console.error(err);
+			else
+				return console.log("Employee inserted correctly");
+		});
 	});
 
 
