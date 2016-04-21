@@ -1,4 +1,22 @@
-#main-buttons-div a {
-  border: dashed;
-  margin: 10%;
+#new-profile-btn-a {
+  margin: 5% 10% 0% 15%;
 }
+
+#search-btn-a {
+  margin: 5% 15% 0% 10%;
+}
+
+#main-buttons-div h2 {
+  text-align: center;
+
+}
+
+#main-buttons-div a:hover {
+  background-color: #FFD17B;
+}
+
+#main-buttons-div a {
+  text-decoration: none;
+  color: black;
+}
+
