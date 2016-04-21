@@ -7,6 +7,15 @@ module.exports = function(express, app, mongoose, path, nodemailer, CronJob) {
 		console.log("[MONGOOSE] Connected to Database");
 	});
 
+    //Nodemailer
+    var transporter = nodemailer.createTransport("SMTP", {
+        service: "gmail",
+        auth: {
+            user: "lgp2.teamc@gmail.com",
+            pass: "lgp2teamc"
+        }
+    });
+
 	//Schemas
 	var AdminSchema = new mongoose.Schema({
 		username : {type: String, trim: true, required: true},
@@ -133,29 +142,52 @@ module.exports = function(express, app, mongoose, path, nodemailer, CronJob) {
 
     //Post of employee only required fields
 	app.post('/post_employee', function (req,res) {
-		var emp_temp = new Employee ({
-			name: req.body.name,
-			birthDate: req.body.birthDate,
-			phoneNumber: req.body.phoneNumber,
-			email: req.body.email,
-			entryDate: req.body.entryDate,
-			sendMail: req.body.sendMail,
-			sendSMS: req.body.sendSMS,
-			facebookPost: req.body.facebookPost
-		});
-		emp_temp.save(function(err, emp){
-			if ( err )
-				return console.error(err);
-			else
-				return console.log("Employee inserted correctly");
-		});
+        var emp_temp = new Employee ({
+            name: req.body.name,
+            birthDate: req.body.birthDate,
+            phoneNumber: req.body.phoneNumber,
+            email: req.body.email,
+            entryDate: req.body.entryDate,
+            sendMail: req.body.sendMail,
+            mailText: req.body.sendSMS,
+            facebookPost: req.body.facebookPost
+        });
+        emp_temp.save(function(err, emp){
+            if ( err )
+                return console.error(err);
+            else
+                return console.log("Employee inserted correctly");
+        });
 	});
 
-
 	//Example of the use of cron
-	//Every day of the week at 16.31.00
-	new CronJob('00 31 16 * * 1-7', function() {
-		console.log('Message');
+	//Every day of the week at 15.05.00
+    //Change to a convenient time
+	new CronJob('00 05 15 * * 1-7', function() {
+        var query = Employee.find({sendMail : true});
+        query.exec(function(err, result){
+
+            for ( var i = 0; i < result.length; i++) {
+                var template = "Happy Birthday"; // add template  text
+                //if employee has different template
+                if ( result[i].mailText) {
+                    template = result[i].mailText;
+                }
+                var mailOptions = {
+                    from: 'lgp2.teamc@gmail.com', // <-- change this
+                    to: result[i].email,
+                    subject: "Happy Birthday", // TO be changed
+                    text: "Happy Birthday", // TO be changed
+                    html: '<b>'+  template +  '<b>' // TO be changed
+                }
+                transporter.sendMail(mailOptions, function(error, info) {
+                    if(error) {
+                        return console.log(error);
+                    }
+                    console.log('Message sent: ' + info.response);
+                });
+            }
+        });
 	}, null, true, 'Europe/London');
 
 	/*TESTS
