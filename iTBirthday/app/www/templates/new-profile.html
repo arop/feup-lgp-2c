@@ -4,34 +4,38 @@
       <div id="new-profile-div" class="col-lg-6 col-md-6 col-xm-12 col-xs-12">
         <form>
           <label class="item item-input">
-            <input type="text" placeholder="Nome" ng-model="profile.name" ng-required="required">
+            <input type="text" placeholder="Nome" ng-model="profile.name" maxlength="75" required="required"
+                   ng-keydown="on_name_edit_start($event)">
           </label>
           <label class="item item-input">
-            <input type="email" ng-model="profile.email" placeholder="E-mail">
+            <input type="email" ng-model="profile.email" placeholder="E-mail" maxlength="40" required="required">
           </label>
           <label class="item item-input">
-            <input type="text" ng-model="profile.phoneNumber" placeholder="Telefone"
-                  ng-keyup="on_phone_number_edited($event)">
+            <input type="text" ng-model="profile.phoneNumber" placeholder="Telefone" maxlength="11" required="required"
+                   ng-keydown="on_phone_number_edit($event)">
           </label>
           <label class="item item-input">
-            <input class="input-date" type="text" ng-model="profile.birthDate" placeholder="Data de Nascimento (Formato: yyyy-MM-dd)"
-                   ng-keyup="on_date_edited($event)" ng-blur="on_date_end_edit($event)" ng-keydown="on_date_start_edit($event)">
+            <input class="input-date" type="text" ng-model="profile.birthDate" placeholder="Data de Nascimento (Formato: yyyy-mm-dd)"
+                   ng-keydown="on_date_edit($event)" ng-keyup="on_date_keyup($event)" maxlength="10" required="required">
           </label>
           <label class="item item-input">
-            <input class="input-date" type="text" ng-model="profile.entryDate" placeholder="Data de Entrada (Formato: dd-MM-yyyy)"
-                   ng-keyup="on_date_edited($event)" ng-blur="on_date_end_edit($event)" ng-keydown="on_date_start_edit($event)">
+            <input class="input-date" type="text" ng-model="profile.entryDate" placeholder="Data de Entrada (Formato: yyyy-mm-dd)"
+                   ng-keydown="on_date_edit($event)" ng-keyup="on_date_keyup($event)" maxlength="10" required="required">
           </label>
           <label class="item item-input">
             <label for="send_mail">Envio de Mail: </label>
-            <input type="checkbox" id="send_mail" ng-model="profile.sendMail">
+            <input type="checkbox" id="send_mail" ng-model="profile.sendMail"
+                   ng-init="profile.sendMail = true" ng-checked="profile.sendMail">
           </label>
           <label class="item item-input">
             <label for="send_sms">Envio de SMS</label>
-            <input type="checkbox" id="send_sms" ng-model="profile.sendSMS">
+            <input type="checkbox" id="send_sms" ng-model="profile.sendSMS"
+                   ng-init="profile.sendSMS = true" ng-checked="profile.sendSMS">
           </label>
           <label class="item item-input">
             <label for="facebook_post">Post do Facebook</label>
-            <input type="checkbox" id="facebook_post" name="facebook" ng-model="profile.facebookPost">
+            <input type="checkbox" id="facebook_post" ng-model="profile.facebookPost"
+                   ng-init="profile.facebookPost = false" ng-checked="profile.facebookPost">
           </label>
         </form>
         <button class="button button-block app-color" ng-click="new_profile(profile)">Create</button>
