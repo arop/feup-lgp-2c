@@ -1,14 +1,23 @@
 #new-profile-btn-a {
-  margin: 5% 10% 0% 15%;
+  margin: 15% 0% 0% 26%;
 }
 
 #search-btn-a {
-  margin: 5% 15% 0% 10%;
+  margin: 15% 20% 0% 0%;
+}
+
+#search-btn-a h2{
+  padding: 12px;
+}
+
+#main-buttons-div img {
+  padding-right: 7px;
 }
 
 #main-buttons-div h2 {
   text-align: center;
-
+  margin-top: 5px;
+  margin-bottom: 5px;
 }
 
 #main-buttons-div a:hover {
@@ -20,3 +29,7 @@
   color: black;
 }
 
+.image-size{
+  width: 200px;
+  height: 200px;
+}
