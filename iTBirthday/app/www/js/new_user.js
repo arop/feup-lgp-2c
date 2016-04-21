@@ -72,12 +72,9 @@ newProfile.controller('NewUserCtrl', function($scope, $state, $http) {
   };
 
   $scope.on_name_edit_start = function($event) {
-    if($event.key == "Tab" || $event.key == "F5" || $event.key == "Backspace" || $event.key == " ") {
-      return true;
-    }
+    var code = ($event.which || $event.keyCode);
 
-    var eventAlpha = ($event.keyCode >= 65 && $event.keyCode <= 122);
-    if(eventAlpha) {
+    if(IsTab(code) || IsRefresh(code) || IsBackspace(code) || IsSpace(code) || IsLetter(code)) {
       return true;
     }
 
@@ -85,13 +82,14 @@ newProfile.controller('NewUserCtrl', function($scope, $state, $http) {
     return true;
   };
 
-  $scope.on_date_edit = function($event) {
-    if($event.key == "Tab" || $event.key == "F5") {
+  $scope.on_date_edit_start = function($event) {
+    var code = ($event.which || $event.keyCode);
+
+    if(IsTab(code) || IsRefresh(code)) {
       return true;
     }
 
-    var eventNum = ($event.keyCode >= 48 && $event.key <= 57);
-    if(!eventNum && !($event.key == "Backspace")) {
+    if(!IsNumber(code) && !IsBackspace(code)) {
       $event.preventDefault();
       return false;
     }
@@ -99,8 +97,9 @@ newProfile.controller('NewUserCtrl', function($scope, $state, $http) {
     var inputElem = $($event.target);
     var text = String(inputElem.val());
 
-    if($event.key == "Backspace") {
+    if(IsBackspace(code)) {
       $event.preventDefault();
+
       if(text.length == 5) {
         text = text.substr(0, 3);
       }
@@ -163,20 +162,20 @@ newProfile.controller('NewUserCtrl', function($scope, $state, $http) {
     return true;
   };
 
-  $scope.on_date_keyup = function($event) {
-    if($event.key == "Tab" || $event.key == "F5") {
+  $scope.on_date_edit_end = function($event) {
+    var code = ($event.which || $event.keyCode);
+
+    if(IsTab(code) || IsRefresh(code)) {
       return true;
     }
 
-    var eventNum = ($event.keyCode >= 48 && $event.key <= 57);
-    if(!eventNum && $event.key == "Backspace") {
+    if(!IsNumber(code) && IsBackspace(code)) {
       $event.preventDefault();
       return false;
     }
 
     var inputElem = $($event.target);
     var text = String(inputElem.val());
-
 
     if(text.length > 10) {
       text = text.substr(0, 10);
@@ -229,14 +228,14 @@ newProfile.controller('NewUserCtrl', function($scope, $state, $http) {
     return true;
   };
 
-  $scope.on_phone_number_edit = function($event) {
+  $scope.on_phone_number_edit_start = function($event) {
+    var code = ($event.which || $event.keyCode);
 
-    if($event.key == "Tab" || $event.key == "F5") {
+    if(IsTab(code) || IsRefresh(code)) {
       return true;
     }
 
-    var eventNum = ($event.keyCode >= 48 && $event.key <= 57);
-    if(!eventNum && !($event.key == "Backspace")) {
+    if(!IsNumber(code) && !IsBackspace(code)) {
       $event.preventDefault();
       return false;
     }
@@ -244,8 +243,9 @@ newProfile.controller('NewUserCtrl', function($scope, $state, $http) {
     var inputElem = $($event.target);
     var text = inputElem.val();
 
-    if($event.key == "Backspace") {
+    if(IsBackspace(code)) {
       $event.preventDefault();
+
       if(text.length == 4) {
         text = text.substr(0, 2);
       }
@@ -262,7 +262,7 @@ newProfile.controller('NewUserCtrl', function($scope, $state, $http) {
       return false;
     }
 
-    if(eventNum && text.length == 11) {
+    if(IsNumber(code) && text.length == 11) {
       $event.preventDefault();
       return false;
     }
@@ -390,6 +390,48 @@ newProfile.controller('NewUserCtrl', function($scope, $state, $http) {
     }
 
     return true;
+  };
+
+  /**
+   * @return {boolean}
+   */
+  var IsBackspace = function(code) {
+    return (code == 8);
+  };
+
+  /**
+   * @return {boolean}
+   */
+  var IsTab = function(code) {
+    return (code == 9);
+  };
+
+  /**
+   * @return {boolean}
+   */
+  var IsSpace = function(code) {
+    return (code == 32);
+  };
+
+  /**
+   * @return {boolean}
+   */
+  var IsRefresh = function(code) {
+    return (code == 116);
+  };
+
+  /**
+   * @return {boolean}
+   */
+  var IsLetter = function(code) {
+    return (code >= 65 && code <= 90);
+  };
+
+  /**
+   * @return {boolean}
+   */
+  var IsNumber = function(code) {
+    return (code >= 48 && code <= 57);
   };
 });
 

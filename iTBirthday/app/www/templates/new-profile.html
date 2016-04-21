@@ -12,15 +12,15 @@
           </label>
           <label class="item item-input">
             <input type="text" ng-model="profile.phoneNumber" placeholder="Telefone" maxlength="11" required="required"
-                   ng-keydown="on_phone_number_edit($event)">
+                   ng-keydown="on_phone_number_edit_start($event)">
           </label>
           <label class="item item-input">
             <input class="input-date" type="text" ng-model="profile.birthDate" placeholder="Data de Nascimento (Formato: yyyy-mm-dd)"
-                   ng-keydown="on_date_edit($event)" ng-keyup="on_date_keyup($event)" maxlength="10" required="required">
+                   ng-keydown="on_date_edit_start($event)" ng-keyup="on_date_edit_end($event)" maxlength="10" required="required">
           </label>
           <label class="item item-input">
             <input class="input-date" type="text" ng-model="profile.entryDate" placeholder="Data de Entrada (Formato: yyyy-mm-dd)"
-                   ng-keydown="on_date_edit($event)" ng-keyup="on_date_keyup($event)" maxlength="10" required="required">
+                   ng-keydown="on_date_edit_start($event)" ng-keyup="on_date_edit_end($event)" maxlength="10" required="required">
           </label>
           <label class="item item-input">
             <label for="send_mail">Envio de Mail: </label>
