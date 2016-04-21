@@ -3,7 +3,7 @@
 // angular.module is a global place for creating, registering and retrieving Angular modules
 // 'itBirthday' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
-angular.module('itBirthday', ['ionic', 'itBirthday.login'])
+angular.module('itBirthday', ['ionic', 'itBirthday.login', 'itBirthday.newProfile'])
 
   .run(function($ionicPlatform) {
     $ionicPlatform.ready(function() {
@@ -70,7 +70,8 @@ angular.module('itBirthday', ['ionic', 'itBirthday.login'])
         url: '/new',
         views: {
           'tab-profile@tabs': {
-            templateUrl: '/app/www/templates/new-profile.html'
+            templateUrl: '/app/www/templates/new-profile.html',
+            controller: 'NewUserCtrl'
           }
         }
       })

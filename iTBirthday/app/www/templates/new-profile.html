@@ -1,5 +1,17 @@
 <ion-view view-title="New Profile">
   <ion-content>
-    Put new profile form here
+    <div class="row">
+      <div id="new-user-div" class="col-lg-6 col-md-6 col-xm-12 col-xs-12">
+        <div>
+          <label class="item item-input">
+            <input type="text" placeholder="Nome" ng-model="profile.name">
+          </label>
+          <label class="item item-input">
+            <input type="email" placeholder="Email" ng-model="profile.email">
+          </label>
+        </div>
+        <button class="button button-block app-color" ng-click="new_user(profile)">Create</button>
+      </div>
+    </div>
   </ion-content>
 </ion-view>
