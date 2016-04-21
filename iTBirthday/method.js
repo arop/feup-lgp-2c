@@ -122,24 +122,6 @@ module.exports = function(express, app, mongoose, path, nodemailer, CronJob) {
 		});
 	}
 
-	function checkLogin(username, password){
-		var query = Admin.findOne({'username': username, 'password': password});
-		query.exec(function(err, result){
-			if(!err){
-				if(result){
-					console.log('[MONGOOSE] Found Admin Login');
-					return true;
-				} else {
-					console.log('[MONGOOSE] Did not find Admin Login');
-					return false;
-				}
-			} else {
-				console.log('[MONGOOSE] Error in checkLogin: ' + err);
-				return false;
-			}
-		});
-	}
-
     //Post of employee only required fields
 	app.post('/post_employee', function (req,res) {
         var emp_temp = new Employee ({
@@ -158,6 +140,24 @@ module.exports = function(express, app, mongoose, path, nodemailer, CronJob) {
             else
                 return console.log("Employee inserted correctly");
         });
+	});
+
+	app.post('/check_login', function(req, res){
+		var query = Admin.findOne({'username': req.body.username, 'password': req.body.password});
+		query.exec(function(err, result){
+			if(!err){
+				if(result){
+					console.log('[MONGOOSE] Found Admin Login');
+					res.status(200).json('[MONGOOSE] Found Admin Login');
+				} else {
+					console.error('[MONGOOSE] Did not find Admin Login');
+					res.status(500).json('[MONGOOSE] Did not find Admin Login');
+				}
+			} else {
+				console.error('[MONGOOSE] Error in checkLogin: ' + err);
+				res.status(500).json('[MONGOOSE] Error in checkLogin: ' + err);
+			}
+		});
 	});
 
 	//Example of the use of cron
