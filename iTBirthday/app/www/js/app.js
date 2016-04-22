@@ -23,7 +23,8 @@ angular.module('itBirthday', ['ionic', 'itBirthday.login', 'itBirthday.newProfil
     });
   })
 
-  .config(function($stateProvider, $urlRouterProvider) {
+  .config(function($stateProvider, $urlRouterProvider,$ionicConfigProvider) {
+    $ionicConfigProvider.tabs.position('top'); //bottom - comment to put default
 
     // Ionic uses AngularUI Router which uses the concept of states
     // Learn more here: https://github.com/angular-ui/ui-router
