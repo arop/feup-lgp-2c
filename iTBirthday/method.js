@@ -134,6 +134,14 @@ module.exports = function(express, app, mongoose, path, nodemailer, CronJob) {
             mailText: req.body.sendSMS,
             facebookPost: req.body.facebookPost
         });
+
+        if ( req.body.mailText )
+            emp_temp.mailText = req.body.mailText;
+        if ( req.body.smsText )
+            emp_temp.smsText = req.body.smsText;
+        if ( req.body.photoPath )
+            emp_temp.photoPath = req.body.photoPath;
+
         emp_temp.save(function(err, emp){
             if ( err )
                 return console.error(err);
