@@ -86,25 +86,6 @@ module.exports = function(express, app, mongoose, path, nodemailer, CronJob) {
 	}
 
 	//Access to database
-	function listAll(param){
-		if(param == 'Employee') var query = Employee.find({});
-		else if(param == 'Admin') var query = Admin.find({});
-		else if(param == 'Template') var query = Template.find({});
-		else return;
-
-		return query.exec(function(err, result){
-			if(!err){
-				if(result.length > 0){
-                    var resultStr = JSON.stringify(result, undefined, 2);
-					console.log(resultStr);
-				} else{
-					console.log('[MONGOOSE] No Results found! Length: ' + result.length);
-				}
-			} else {
-				console.log('[MONGOOSE] Error in listAll: ' + err);
-			}
-		});
-	}
 
 	function searchByName(param){
 		var query = Employee.find({name: new RegExp(param, "i")});
@@ -164,6 +145,57 @@ module.exports = function(express, app, mongoose, path, nodemailer, CronJob) {
 			} else {
 				console.error('[MONGOOSE] Error in checkLogin: ' + err);
 				res.status(500).json('[MONGOOSE] Error in checkLogin: ' + err);
+			}
+		});
+	});
+
+	app.get('/list_employees', function(req,res){
+		var query = Employee.find({});
+		query.exec(function(err,result){
+			if(!err){
+				if(result.length > 0){
+					console.log('[MONGOOSE] Found all employees');
+				} else {
+					console.log('[MONGOOSE] No employees to find');
+				}
+				res.status(200).json(result);
+			} else {
+				console.error('[MONGOOSE] ' + err);
+				res.status(500).json('[MONGOOSE] ' + err);
+			}
+		});
+	});
+
+	app.delete('/delete_employee/:email', function(req,res){
+		Employee.remove({'email':req.params.email}, function(err, result){
+			if(!err){
+				if(result){
+					console.log('[MONGOOSE] Employee Deleted');
+					res.status(202).json('[MONGOOSE] Employee Deleted');
+				} else {
+					console.log('[MONGOOSE] Employee not found');
+					res.status(200).json('[MONGOOSE] Employee not found');
+				}
+			} else {
+				console.error('[MONGOOSE] Error deleting user: ' + err);
+				res.status(500).json(err);
+			}
+		});
+	});
+
+	app.get('/employee_profile/:email', function(req, res){
+		var query = Employee.findOne({'email':req.params.email});
+		query.exec(function(err, result){
+			if(!err){
+				if(result){
+					console.log('[MONGOOSE] Found employee');
+				} else {
+					console.log('[MONGOOSE] Did not find employee');
+				}
+				res.status(200).json(result);
+			} else {
+				console.error('[MONGOOSE] Error finding user ' + err);
+				res.status(500).json(err);
 			}
 		});
 	});
