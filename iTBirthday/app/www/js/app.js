@@ -51,8 +51,7 @@ angular.module('itBirthday', ['ionic', 'itBirthday.login', 'itBirthday.newProfil
         url: '/dash',
         views: {
           'tab-dash': {
-            templateUrl: '/app/www/templates/tab-dash.html',
-            //controller: 'DashCtrl'
+            templateUrl: '/app/www/templates/tab-dash.html'
           }
         }
       })
@@ -62,6 +61,9 @@ angular.module('itBirthday', ['ionic', 'itBirthday.login', 'itBirthday.newProfil
         views: {
           'tab-profile': {
             templateUrl: '/app/www/templates/tab-profile.html'
+          },
+          'inside-profile-tab@tabs.profile': {
+            templateUrl: '/app/www/templates/default-profile.html'
           }
         }
       })
@@ -69,7 +71,7 @@ angular.module('itBirthday', ['ionic', 'itBirthday.login', 'itBirthday.newProfil
       .state('tabs.profile.new', {
         url: '/new',
         views: {
-          'tab-profile@tabs': {
+          'inside-profile-tab@tabs.profile': {
             templateUrl: '/app/www/templates/new-profile.html',
             controller: 'NewUserCtrl'
           }
@@ -79,7 +81,7 @@ angular.module('itBirthday', ['ionic', 'itBirthday.login', 'itBirthday.newProfil
       .state('tabs.profile.search', {
         url: '/search',
         views: {
-          'tab-profile@tabs': {
+          'inside-profile-tab@tabs.profile': {
             templateUrl: '/app/www/templates/search-profile.html'
           }
         }
