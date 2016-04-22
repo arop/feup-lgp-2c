@@ -29,6 +29,20 @@
   color: black;
 }
 
+#search-profile {
+  margin: 0 auto;
+  margin-top: 10%;
+}
+
+#search-label{
+  width: 350px;
+  height: 45px;
+}
+
+#results-area{
+  height: 400px;
+}
+
 .image-size {
   width: 200px;
   height: 200px;
