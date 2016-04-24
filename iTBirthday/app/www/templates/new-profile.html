@@ -1,43 +1,67 @@
-<ion-view view-title="New Profile">
-  <ion-content>
-    <div class="row">
-      <div id="new-profile-div" class="col-lg-6 col-md-6 col-xm-12 col-xs-12">
-        <form>
-          <ion-list>
-            <label class="item item-input">
+<ion-content padding="true" overflow-scroll="true">
+  <div class="row responsive-sm responsive-md" id="new-profile-div">
+    <div class="col col-50 col-offset-25">
+      <div class="row space-up hide-when-small">
+      </div>
+      <div class="row responsive-sm">
+        <div class="col-50">
+          <div class="list">
+            <label class="item item-image">
+              <img src="app/www/img/icons/novo_membro.png"/>
+            </label>
+          </div>
+        </div>
+        <div class="col-50">
+          <div class="list" style="width:100%; height: 100%;">
+            <label class="item item-input item-stacked-label">
               <span class="input-label">Nome</span>
-              <input type="text" placeholder="Nome" ng-model="profile.name" maxlength="75" required="required"
-                     ng-keydown="on_name_edit_start($event)"/>
+              <input type="text" placeholder="Nome" ng-model="profile.name" maxlength="75" class="pencil-edit"/>
             </label>
-            <label class="item item-input">
-              <span class="input-label">E-mail</span>
-              <input type="email" ng-model="profile.email" placeholder="E-mail" maxlength="40" required="required"/>
+
+            <label class="item item-input item-stacked-label">
+              <span class="input-label">Número de Telemóvel</span>
+              <input type="tel" ng-model="profile.phoneNumber" placeholder="Telemóvel" maxlength="9" class="pencil-edit"/>
             </label>
-            <label class="item item-input">
-              <span class="input-label">Telefone</span>
-              <input type="tel" ng-model="profile.phoneNumber" placeholder="Telefone" maxlength="11" required="required"
-                     ng-keydown="on_phone_number_edit_start($event)"/>
+
+            <label class="item item-input item-stacked-label">
+              <span class="input-label">Endereço de Email</span>
+              <input type="email" ng-model="profile.email" placeholder="Email" maxlength="40" class="pencil-edit"/>
             </label>
-            <label class="item item-input">
+
+            <label class="item item-input item-stacked-label">
               <span class="input-label">Data de nascimento</span>
-              <input class="input-date" type="text" ng-model="profile.birthDate" placeholder="Data de Nascimento (Formato: yyyy-mm-dd)"
-                     ng-keydown="on_date_edit_start($event)" ng-keyup="on_date_edit_end($event)" maxlength="10" required="required"/>
+              <input class="input-date pencil-edit" type="text" ng-model="profile.birthDate"
+                     placeholder="yyyy-mm-dd"
+                     ng-keydown="on_date_key_down($event)" ng-keypress="on_date_edited($event)" maxlength="10"/>
             </label>
-            <label class="item item-input">
-              <span class="input-label">Data de entrada</span>
-              <input class="input-date" type="text" ng-model="profile.entryDate" placeholder="Data de Entrada (Formato: yyyy-mm-dd)"
-                     ng-keydown="on_date_edit_start($event)" ng-keyup="on_date_edit_end($event)" maxlength="10" required="required"/>
+
+            <label class="item item-input item-stacked-label">
+              <span class="input-label">Data de admissão</span>
+              <input class="input-date pencil-edit" type="text" ng-model="profile.entryDate"
+                     placeholder="yyyy-mm-dd"
+                     ng-keydown="on_date_key_down($event)" ng-keypress="on_date_edited($event)" maxlength="10"/>
             </label>
-            <ion-checkbox id="send_mail" ng-model="profile.sendMail" ng-init="profile.sendMail = true"
-                          ng-checked="profile.sendMail">Envio de Mail</ion-checkbox>
-            <ion-checkbox ng-model="profile.sendSMS" ng-init="profile.sendSMS = true"
-                          ng-checked="profile.sendSMS">Envio de SMS</ion-checkbox>
-            <ion-checkbox ng-model="profile.facebookPost" ng-init="profile.facebookPost = false"
-                          ng-checked="profile.facebookPost">Post do Facebook</ion-checkbox>
-          </ion-list>
-        </form>
+
+            <ion-checkbox ng-model="profile.sendMail"
+                          ng-init="profile.sendMail = true"
+                          ng-checked="profile.sendMail">Email de Aniversário
+            </ion-checkbox>
+
+            <ion-checkbox ng-model="profile.sendSMS"
+                          ng-init="profile.sendSMS = true"
+                          ng-checked="profile.sendSMS">SMS de Aniversário
+            </ion-checkbox>
+
+            <ion-checkbox ng-model="profile.facebookPost"
+                          ng-init="profile.facebookPost = false"
+                          ng-checked="profile.facebookPost">Post do Facebook
+            </ion-checkbox>
+          </div>
+        </div>
+      </div>
+      <div class="row">
         <button class="button button-block app-color" ng-click="new_profile(profile)">Create</button>
       </div>
     </div>
-  </ion-content>
-</ion-view>
+  </div>
+</ion-content>

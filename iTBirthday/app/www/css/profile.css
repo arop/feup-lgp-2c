@@ -6,7 +6,7 @@
   margin: 15% 20% 0 0;
 }
 
-#search-btn-a h2{
+#search-btn-a h2 {
   padding: 12px;
 }
 
@@ -34,18 +34,126 @@
   margin-top: 10%;
 }
 
-#search-label{
+#search-label {
   width: 350px;
   height: 45px;
 }
 
-#results-area{
+#results-area {
   height: 400px;
 }
 
 .image-size {
   width: 200px;
   height: 200px;
+}
+
+/* NEW USER PROFILE */
+#new-profile-div .list > label.item {
+  border: none;
+  padding: 1px 2px 1px 2px;
+}
+
+#new-profile-div .list > label.item-image {
+  max-width: 75%;
+  margin: auto;
+}
+
+#new-profile-div .list > label.item > span {
+  padding: 2px 0;
+}
+
+#new-profile-div .list > label.item > input[type="text"],
+#new-profile-div .list > label.item > input[type="email"],
+#new-profile-div .list > label.item > input[type="tel"] {
+  padding: 1px 3px 1px 3px;
+  height: 2em;
+  max-width: 75%;
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  border-radius: 0;
+  background-color: #FFE47A;
+}
+
+#new-profile-div .list > label.item > input[type="text"].pencil-edit,
+#new-profile-div .list > label.item > input[type="email"].pencil-edit,
+#new-profile-div .list > label.item > input[type="tel"].pencil-edit {
+  background-image: url(../img/icons/lapis.png);
+  background-repeat: no-repeat;
+  background-position: right;
+  -webkit-background-size: 20px;
+  background-size: 20px;
+}
+
+#new-profile-div .list > label.item > input[type="text"]::-webkit-input-placeholder,
+#new-profile-div .list > label.item > input[type="email"]::-webkit-input-placeholder,
+#new-profile-div .list > label.item > input[type="tel"]::-webkit-input-placeholder {
+  color: transparent;
+}
+
+#new-profile-div .list > label.item > input[type="text"]:-moz-placeholder,
+#new-profile-div .list > label.item > input[type="email"]:-moz-placeholder,
+#new-profile-div .list > label.item > input[type="tel"]:-moz-placeholder {
+  color: transparent;
+}
+
+#new-profile-div .list > label.item > input[type="text"]::-moz-placeholder,
+#new-profile-div .list > label.item > input[type="email"]::-moz-placeholder,
+#new-profile-div .list > label.item > input[type="tel"]::-moz-placeholder {
+  color: transparent;
+}
+
+#new-profile-div .list > label.item > input[type="text"]:-ms-input-placeholder,
+#new-profile-div .list > label.item > input[type="email"]:-ms-input-placeholder,
+#new-profile-div .list > label.item > input[type="tel"]:-ms-input-placeholder {
+  color: transparent;
+}
+
+#new-profile-div .list label.item-checkbox {
+  max-width: 75%;
+  border: none;
+  padding: 4px 30px 4px 2px;
+}
+
+#new-profile-div .list label.item-checkbox > .checkbox {
+  top: 0;
+  right: 0;
+  left: auto;
+  padding: 4px 0 4px 0;
+  margin-top: 0;
+}
+
+#new-profile-div .list label.item-checkbox > .checkbox .checkbox-icon {
+  right: 0;
+  width: 22px;
+  height: 22px;
+}
+
+#new-profile-div .list label.item-checkbox > .checkbox .checkbox-icon::before {
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  border-radius: 0;
+  border: 1px solid #ddd;
+
+  background-color: transparent;
+}
+
+#new-profile-div .list label.item-checkbox > .checkbox .checkbox-icon::after {
+  width: 12px;
+}
+
+#new-profile-div .list label.item-checkbox > .checkbox input:checked + .checkbox-icon::after {
+  border-color: #000;
+}
+
+#new-profile-div .row.space-up {
+  padding-top: 80px;
+}
+
+@media screen and (max-width: 767px) {
+  .hide-when-small {
+    display: none;
+  }
 }
 
 .input-date {
@@ -56,6 +164,7 @@
   -ms-user-select: none;
   user-select: none;
 }
+
 .input-date::-moz-selection {
   background: transparent;
 }
