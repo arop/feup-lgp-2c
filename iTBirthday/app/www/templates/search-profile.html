@@ -4,11 +4,18 @@
       <div id="search-profile" class="col-lg-6 col-md-6 col-xm-12 col-xs-12">
         Pesquisa
         <label id="search-label" class="item item-input app-color">
-          <input type="text" ng-model="profile.search" required="required">
+          <input type="text" ng-model="searchInput">
         </label>
         <br>
         <label class="item app-color">
-          <div id="results-area" class="app-color"></div>
+          <div id="results-area" class="app-color">
+            <div class="list card">
+              <div class="item item-avatar" ng-repeat="p in profiles | filter: searchInput">
+                <img src="http://tutorialsplane.com/runtest/ionic/img/profile.jpg">
+                <h2>{{p.employee.name}}</h2>
+                <p>{{p.employee.email}}</p>
+              </div>
+            </div>
         </label>
       </div>
     </div>
