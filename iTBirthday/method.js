@@ -1,4 +1,4 @@
-module.exports = function(express, app, mongoose, path, nodemailer, CronJob) {
+module.exports = function(express, app, mongoose, path, nodemailer, CronJob, fs, busboy) {
 	//Database
     mongoose.connect('mongodb://localhost/iTBirthday'); // change name of database , local database at the moment
 	var db = mongoose.connection;
@@ -103,7 +103,7 @@ module.exports = function(express, app, mongoose, path, nodemailer, CronJob) {
 		});
 	}
 
-    //Post of employee only required fields
+    //Post of employee
 	app.post('/post_employee', function (req,res) {
         var emp_temp = new Employee ({
             name: req.body.name,
@@ -112,7 +112,7 @@ module.exports = function(express, app, mongoose, path, nodemailer, CronJob) {
             email: req.body.email,
             entryDate: req.body.entryDate,
             sendMail: req.body.sendMail,
-            mailText: req.body.sendSMS,
+            sendSms: req.body.sendSMS,
             facebookPost: req.body.facebookPost
         });
 
@@ -120,16 +120,43 @@ module.exports = function(express, app, mongoose, path, nodemailer, CronJob) {
             emp_temp.mailText = req.body.mailText;
         if ( req.body.smsText )
             emp_temp.smsText = req.body.smsText;
-        if ( req.body.photoPath )
-            emp_temp.photoPath = req.body.photoPath;
+        if ( req.body.photoPath ) {
+               emp_temp.photoPath = req.body.photoPath;
+        }
 
         emp_temp.save(function(err, emp){
-            if ( err )
-                return console.error(err);
-            else
-                return console.log("Employee inserted correctly");
+            if ( err ) {
+				console.error(err);
+				res.status(500).json('[MONGOOSE] Error inserting new Employee');
+			}
+            else {
+				console.log("Employee inserted correctly");
+                var fstream;
+
+                //checks if a folder named 'images' exists in directory
+                //if it does not exist, the folder is created
+                if (!fs.existsSync(__dirname + '/images/' )){
+                    fs.mkdirSync(__dirname + '/images/');
+                }
+                //checks if a folder named 'employees' inside the folder 'images' exists in directory
+                //if it does not exist, the folder is created
+                if (!fs.existsSync(__dirname + '/images/employees/')){
+                    fs.mkdirSync(__dirname + '/images/employees/');
+                }
+                //TODO save image in file
+				res.status(200).json('[MONGOOSE] Employee inserted with success');
+			}
         });
 	});
+
+    //Update informations of the employee
+    //Employee ID passed in the url
+    app.post('/update_employee/:id', function(req,res){
+        Employee.findOneAndUpdate({_id : req.params.id}, req.body, function(err, emp){
+            console.log("done");
+        })
+
+    });
 
 	app.post('/check_login', function(req, res){
 		var query = Admin.findOne({'username': req.body.username, 'password': req.body.password});
