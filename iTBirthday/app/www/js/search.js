@@ -2,6 +2,8 @@ angular.module('itBirthday.search', [])
 
   .controller('SearchCtrl', function($scope, $http) {
     $scope.profiles = profilesGlobal;
+    // TODO ao ir buscar os employees apenas ir buscar o nome e email, senao vai pesquisar por tudo
+    // TODO tentar excluir o "@itgrow.com" da pesquisa
   })
 
 var johndoe = {employee: {

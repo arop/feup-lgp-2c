@@ -1,3 +1,7 @@
 .app-color {
 	background: #FFD17B !important;
 }
+
+.tabs-background-app-color > .tabs {
+  background-color: #FFD17B !important;
+}

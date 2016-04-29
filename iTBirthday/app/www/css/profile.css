@@ -1,37 +1,21 @@
-#new-profile-btn-a {
-  margin: 15% 0 0 26%;
-}
-
-#search-btn-a {
-  margin: 15% 20% 0 0;
-}
-
-#search-btn-a h2 {
-  padding: 12px;
-}
-
-#main-buttons-div img {
-  padding-right: 7px;
-}
-
-#main-buttons-div h2 {
-  text-align: center;
-  margin-top: 5px;
-  margin-bottom: 5px;
-}
-
 #main-buttons-div a:hover {
   background-color: #FFD17B;
 }
 
 #main-buttons-div a {
+  text-align: center;
   text-decoration: none;
   color: black;
 }
 
+.image-size {
+  width: 200px;
+  height: 200px;
+}
+
+/* SEARCH PAGE */
 #search-profile {
-  margin: 0 auto;
-  margin-top: 10%;
+  margin: 3% auto 0 auto;
 }
 
 #search-label {
@@ -41,11 +25,6 @@
 
 #results-area {
   height: 400px;
-}
-
-.image-size {
-  width: 200px;
-  height: 200px;
 }
 
 /* NEW USER PROFILE */
