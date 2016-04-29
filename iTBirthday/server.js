@@ -7,7 +7,8 @@ var application_root = __dirname,
     nodemailer = require('nodemailer'),
     CronJob = require('cron').CronJob,
     fs = require('fs-extra'), // File System - for file manipulation
-    busboy = require('connect-busboy'); //middleware for form/file upload
+    busboy = require('connect-busboy'), //middleware for form/file upload
+    clickatell = require('node-clickatell'); //SMS
 
 var app = express();
 
@@ -18,7 +19,7 @@ app.use(bodyParser.json());
 require('./routes')(express, app, path);
 
 //require file with methods/api, access to database
-require('./method')(express, app, mongoose, path, nodemailer, CronJob, fs, busboy);
+require('./method')(express, app, mongoose, path, nodemailer, CronJob, fs, busboy, clickatell);
 
 //Launch server
 app.listen(4242, function(){
