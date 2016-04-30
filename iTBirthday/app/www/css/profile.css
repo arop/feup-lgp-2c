@@ -34,8 +34,9 @@
 }
 
 #new-profile-div .list > label.item-image {
-  max-width: 75%;
   margin: auto;
+  width: 100%;
+  height: auto;
 }
 
 #new-profile-div .list > label.item > span {
@@ -47,19 +48,16 @@
 #new-profile-div .list > label.item > input[type="tel"] {
   padding: 1px 3px 1px 3px;
   height: 2em;
-  max-width: 75%;
   -webkit-border-radius: 0;
   -moz-border-radius: 0;
   border-radius: 0;
-  background-color: #FFE47A;
+  background-color: #FFE47A !important;
 }
 
 #new-profile-div .list > label.item > input[type="text"].pencil-edit,
 #new-profile-div .list > label.item > input[type="email"].pencil-edit,
 #new-profile-div .list > label.item > input[type="tel"].pencil-edit {
-  background-image: url(../img/icons/lapis.png);
-  background-repeat: no-repeat;
-  background-position: right;
+  background: url(../img/icons/lapis.png) no-repeat right #FFE47A;
   -webkit-background-size: 20px;
   background-size: 20px;
 }
@@ -89,14 +87,13 @@
 }
 
 #new-profile-div .list label.item-checkbox {
-  max-width: 75%;
   border: none;
   padding: 4px 30px 4px 2px;
 }
 
 #new-profile-div .list label.item-checkbox > .checkbox {
   top: 0;
-  right: 0;
+  right: 2px;
   left: auto;
   padding: 4px 0 4px 0;
   margin-top: 0;
@@ -138,7 +135,6 @@
 .input-date {
   -webkit-touch-callout: none;
   -webkit-user-select: none;
-  -khtml-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
