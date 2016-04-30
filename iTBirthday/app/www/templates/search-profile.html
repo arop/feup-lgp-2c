@@ -1,14 +1,19 @@
 <ion-view view-title="Search Profile">
-  <ion-content>
-    <div class="row">
-      <div id="search-profile" class="col col-60">
-        <h4>Pesquisa</h4>
+  <ion-header-bar id="search-profile-filter">
+    <div class="row responsive-sm">
+      <div class="col-50 col-offset-25">
         <label id="search-label" class="item item-input app-color">
-          <input type="text" ng-model="searchInput">
+          <input type="text" ng-model="searchInput" placeholder="Filtrar resultados">
         </label>
-        <br>
+      </div>
+    </div>
+  </ion-header-bar>
+  <ion-content id="search-profile">
+    <div class="row responsive-sm">
+      <div class="col-50 col-offset-25">
+        <h4>Resultados</h4>
         <label class="item app-color">
-          <div id="results-area" class="app-color">
+          <div id="search-profile-results" class="app-color">
             <div class="list card">
               <div class="item item-avatar" ng-repeat="p in profiles | filter: searchInput">
                 <img src="http://tutorialsplane.com/runtest/ionic/img/profile.jpg">

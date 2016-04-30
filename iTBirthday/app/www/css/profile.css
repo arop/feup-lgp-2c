@@ -1,30 +1,65 @@
-#main-buttons-div a:hover {
+/* MAIN PAGE */
+#profile-buttons a {
+  display: block;
+  text-align: center;
+  text-decoration: none;
+  padding: 2%;
+  width: 75%;
+  height: auto;
+  margin: auto;
+}
+
+#profile-buttons a:hover {
   background-color: #FFD17B;
 }
 
-#main-buttons-div a {
-  text-align: center;
-  text-decoration: none;
-  color: black;
+#profile-buttons a > img {
+  width: 100%;
+  height: auto;
+  padding: 0 5%;
 }
 
-.image-size {
-  width: 200px;
-  height: 200px;
+#profile-buttons a > p {
+  color: #333333;
+  display: block;
+  width: 100%;
+  height: auto;
+  margin: 0 0 5% 0;
+  font-size: 20px;
 }
 
 /* SEARCH PAGE */
-#search-profile {
-  margin: 3% auto 0 auto;
+#search-profile-filter {
+  padding: 10px 0 0;
+  height: auto;
 }
 
 #search-label {
-  width: 350px;
-  height: 45px;
+  width: 100%;
+  outline: none;
+  margin: 0;
 }
 
-#results-area {
-  height: 400px;
+#search-label input:-ms-input-placeholder {
+  color: #333333;
+}
+
+#search-label input::-webkit-input-placeholder {
+  color: #333333;
+}
+
+#search-label input::-moz-placeholder,
+#search-label input:-moz-placeholder {
+  color: #333333;
+}
+
+#search-profile {
+  margin-top: 20px;
+}
+
+#search-profile-results {
+  min-height: 25em;
+  height: auto;
 }
 
 /* NEW USER PROFILE */

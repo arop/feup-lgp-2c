@@ -1,14 +1,22 @@
 <ion-view>
   <ion-content>
-    <div id="main-buttons-div" class="row row-center">
-      <a ui-sref=".new" class="col col-30">
-        <img ng-src="/app/www/img/icons/novo_membro.png" class="img-responsive img-size"/>
-        <h2>Novo Membro</h2>
-      </a>
-      <a ui-sref=".search" class="col col-30 col-offset-10">
-        <img ng-src="/app/www/img/icons/pesquisa.png" class="img-responsive img-size"/>
-        <h2>Pesquisa</h2>
-      </a>
+    <div class="row responsive-sm" id="profile-buttons">
+      <div class="col-80 col-offset-10">
+        <div class="row">
+          <div class="col-50">
+            <a ui-sref=".new">
+              <img ng-src="/app/www/img/icons/novo_membro.png" class="img-responsive"/>
+              <p>Novo Membro</p>
+            </a>
+          </div>
+          <div class="col-50">
+            <a ui-sref=".search">
+              <img ng-src="/app/www/img/icons/pesquisa.png" class="img-responsive"/>
+              <p>Pesquisar</p>
+            </a>
+          </div>
+        </div>
+      </div>
     </div>
   </ion-content>
 </ion-view>
