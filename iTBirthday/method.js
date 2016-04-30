@@ -28,6 +28,8 @@ module.exports = function(express, app, mongoose, path, nodemailer, CronJob, fs,
         password: {type: String, trim: true, required: true, minlength: 64, maxlength: 64}
     });
 
+    var employeeGender = 'Male Female'.split(' ');
+
     var EmployeeSchema = new mongoose.Schema({
         name: {type: String, trim: true, required: true},
         birthDate: {type: Date, required: true},
@@ -40,7 +42,8 @@ module.exports = function(express, app, mongoose, path, nodemailer, CronJob, fs,
         sendSMS: {type: Boolean, required: true, default: false},
         smsText: {type: String, required: false, trim: true},
         facebookPost: {type: Boolean, required: true, default: false},
-        photoPath: {type: String, required: false, trim: true}
+        photoPath: {type: String, required: false, trim: true},
+        gender: {type: String, enum: employeeGender, required: true, trim: true}
     });
 
     EmployeeSchema.virtual('age').get(function () {
@@ -52,6 +55,11 @@ module.exports = function(express, app, mongoose, path, nodemailer, CronJob, fs,
             age--;
         }
         return age;
+    });
+
+    EmployeeSchema.virtual('timeSpent').get(function() {
+        if(this.exitDate) return dateDiffInDays(this.entryDate, this.exitDate);
+        else return dateDiffInDays(this.entryDate, new Date());
     });
 
     var templateTypes = 'Email SMS Facebook'.split(' ');
@@ -277,11 +285,72 @@ module.exports = function(express, app, mongoose, path, nodemailer, CronJob, fs,
         });
     }
 
+    //TODO: get the default or personalized message
     app.get('/test_sms', function (req, res) {
         console.log("SENDING TEST SMS");
         //SendSMSService("HAPPY BIRTHDAY!", "+351962901682");
         res.status(200).json();
     });
+
+    app.get('/statistics', function (req, res){
+        var query = Employee.find({});
+        query.exec(function (err, result) {
+            if (!err) {
+                if (result.length > 0) {
+                    console.log('[MONGOOSE] Found all employees');
+                    var stats = gatherStatistics(result);
+                    res.status(200).json({'Ratio':{'Male':stats[0][0], 'Female':stats[0][1]},
+                                          'BirthsByMonth':{'Jan':stats[1][0],'Feb':stats[1][1],'Mar':stats[1][2],'Apr':stats[1][3],'May':stats[1][4],'Jun':stats[1][5],
+                                                         'Jul':stats[1][6],'Aug':stats[1][7],'Sep':stats[1][8],'Oct':stats[1][9],'Nov':stats[1][10],'Dec':stats[1][11]},
+                                          'AverageTime':stats[2],
+                                          'AgeGroups':{'18to24':stats[3][0], '25to34':stats[3][1],'35to44':stats[3][2],'45-54':stats[3][3], '55+':stats[3][4]}});
+                } else {
+                    console.log('[MONGOOSE] No employees to find');
+                }
+            } else {
+                console.error('[MONGOOSE] ' + err);
+                res.status(500).json('[MONGOOSE] ' + err);
+            }
+        });
+    });
+
+    function gatherStatistics(employees){
+        var statistics = [];
+        var ratio = [0, 0]; // Male Female
+        var birthByMonth = [0,0,0,0,0,0,0,0,0,0,0,0];
+        var averageTime = 0;
+        var ageGroup = [0,0,0,0,0]; //18-24, 25-34, 35-44, 45-54, 55+
+        for(var i = 0; i < employees.length; i++) {
+            var person = employees[i];
+            if(person.gender == "Male") ratio[0]++;
+            else ratio[1]++;
+
+            birthByMonth[person.birthDate.getMonth()]++;
+
+            averageTime += person.timeSpent;
+
+            var age = person.age;
+            if(age >= 18 && age <= 24) ageGroup[0]++;
+            else if(age >= 25 && age <= 34) ageGroup[1]++;
+            else if(age >= 35 && age <= 44) ageGroup[2]++;
+            else if(age >= 45 && age <= 54) ageGroup[3]++;
+            else if(age >= 55) ageGroup[4]++;
+        }
+        statistics[0] = ratio;
+        statistics[1] = birthByMonth;
+        statistics[2] = Math.ceil(averageTime / employees.length);
+        statistics[3] = ageGroup;
+        return statistics;
+    }
+
+    var _MS_PER_DAY = 1000 * 60 * 60 * 24;
+
+    function dateDiffInDays(a, b) {
+        var utc1 = Date.UTC(a.getFullYear(), a.getMonth(), a.getDate());
+        var utc2 = Date.UTC(b.getFullYear(), b.getMonth(), b.getDate());
+
+        return Math.floor((utc2 - utc1) / _MS_PER_DAY);
+    }
 
 	/*TESTS
 	 cleanAdmin();
@@ -290,23 +359,44 @@ module.exports = function(express, app, mongoose, path, nodemailer, CronJob, fs,
 	 var admin = new Admin({username: 'admin', password: '68e656b251e67e8358bef8483ab0d51c6619f3e7a1a9f0e75838d41ff368f728'});
 	 admin.save(function (err) {if (err) console.log ('[MONGOOSE] Error saving new admin! ' + err)});
 	 checkLogin('admin','68e656b251e67e8358bef8483ab0d51c6619f3e7a1a9f0e75838d41ff368f728');
-
+/*
 	 var johndoe = new Employee ({
-	 name: 'John Doe',
-	 birthDate: '1990-01-30',
-	 phoneNumber: '965912228',
-	 email: 'johndoe@itgrow.com',
-	 entryDate: '2014-04-10',
-	 sendMail: true,
-	 sendSMS: false,
-	 facebookPost: false
+         name: 'John Doe',
+         birthDate: '1990-01-30',
+         phoneNumber: '965912228',
+         email: 'johndoe@itgrow.com',
+         entryDate: '2014-04-10',
+         sendMail: true,
+         sendSMS: false,
+         facebookPost: false,
+         gender: 'Male'
 	 });
 
-	 johndoe.save(function (err) {if (err) console.log ('[MONGOOSE] Error saving new employee!' + err)});
+     var maryjane = new Employee ({
+         name: 'Mary Jane',
+         birthDate: '1990-01-30',
+         phoneNumber: '965912218',
+         email: 'maryjane@itgrow.com',
+         entryDate: '2014-04-10',
+         sendMail: true,
+         sendSMS: false,
+         facebookPost: false,
+         gender: 'Female'
+     });
 
-	 listAll('Employee');
-	 listAll('Admin');
-	 listAll('Template');
-	 searchByName('John Doe');
-	 /**/
+     var zecarlos = new Employee ({
+         name: 'Zé Carlos',
+         birthDate: '1990-01-30',
+         phoneNumber: '965912328',
+         email: 'zecarlos@itgrow.com',
+         entryDate: '2014-04-10',
+         sendMail: true,
+         sendSMS: false,
+         facebookPost: false,
+         gender: 'Male'
+     });
+
+    johndoe.save(function (err) {if (err) console.log ('[MONGOOSE] Error saving new employee!' + err)});
+    maryjane.save(function (err) {if (err) console.log ('[MONGOOSE] Error saving new employee!' + err)});
+    zecarlos.save(function (err) {if (err) console.log ('[MONGOOSE] Error saving new employee!' + err)});*/
 }
