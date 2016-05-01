@@ -100,7 +100,7 @@
 #new-profile-div .list > label.item > input[type="text"]::-webkit-input-placeholder,
 #new-profile-div .list > label.item > input[type="email"]::-webkit-input-placeholder,
 #new-profile-div .list > label.item > input[type="tel"]::-webkit-input-placeholder {
-  color: transparent;
+  color: black;
 }
 
 #new-profile-div .list > label.item > input[type="text"]:-moz-placeholder,
