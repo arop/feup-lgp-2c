@@ -57,12 +57,20 @@ angular.module('itBirthday', ['ionic', 'itBirthday.login', 'itBirthday.newProfil
         }
       })
 
+      // setup an abstract state for the profile tab
       .state('tabs.profile', {
         url: '/profile',
+        abstract: true,
         views: {
           'tab-profile': {
             templateUrl: '/app/www/templates/tab-profile.html'
-          },
+          }
+        }
+      })
+
+      .state('tabs.profile.main', {
+        url: '/main',
+        views: {
           'inside-profile-tab@tabs.profile': {
             templateUrl: '/app/www/templates/default-profile.html'
           }
@@ -112,4 +120,5 @@ angular.module('itBirthday', ['ionic', 'itBirthday.login', 'itBirthday.newProfil
     // if none of the above states are matched, use this as the fallback
 
     $urlRouterProvider.otherwise('/login');
-  });
+  })
+
