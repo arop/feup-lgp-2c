@@ -1,8 +1,19 @@
 var newProfile = angular.module('itBirthday.newProfile', []);
 
-newProfile.controller('NewUserCtrl', function ($scope, $state, $http) {
+newProfile.controller('NewUserCtrl',['$scope', '$state', '$http', 'Upload',  function ($scope, $state, $http, Upload) {
+
+  $scope.profile = {};
+
+  //listen for the file selected event
+  $scope.$on("fileSelected", function (event, args) {
+    $scope.$apply(function () {
+      $scope.profile.photo = args.file;
+    });
+  });
 
   $scope.new_profile = function (profileData) {
+
+
     if (profileData == undefined) {
       console.error('Profile Data is not valid.');
       return false;
@@ -60,13 +71,23 @@ newProfile.controller('NewUserCtrl', function ($scope, $state, $http) {
       sendMail: profileData.sendMail,
       sendSMS: profileData.sendSMS,
       facebookPost: profileData.facebookPost
-    }).success(function () {
+    }).success(function (data) {
       //console.log('New user POST successful');
+      Upload.upload({
+        url: '/save_image_employee/' + data,
+        file: profileData.photo,
+        progress: function(e){}
+      }).then(function(data, status, headers, config) {
+        // file is uploaded successfully
+      });
+
+      console.log(data);
       return true;
     }).error(function (err) {
       console.log('Error while creating new user: ' + err);
       return false;
     });
+
 
     $state.go('tabs.dash');
   };
@@ -368,5 +389,5 @@ newProfile.controller('NewUserCtrl', function ($scope, $state, $http) {
   var IsCopyPaste = function (code) {
     return (code == 67 || code == 86);
   };
-});
+}]);
 

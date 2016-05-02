@@ -43,7 +43,7 @@ module.exports = function(express, app, mongoose, path, nodemailer, CronJob, fs,
         smsText: {type: String, required: false, trim: true},
         facebookPost: {type: Boolean, required: true, default: false},
         photoPath: {type: String, required: false, trim: true},
-        gender: {type: String, enum: employeeGender, required: true, trim: true}
+        gender: {type: String, enum: employeeGender, required: false, trim: true}
     });
 
     EmployeeSchema.virtual('age').get(function () {
@@ -119,6 +119,8 @@ module.exports = function(express, app, mongoose, path, nodemailer, CronJob, fs,
 
     //Post of employee
     app.post('/post_employee', function (req, res) {
+
+        console.log(req.body);
         var emp_temp = new Employee({
             name: req.body.name,
             birthDate: req.body.birthDate,
@@ -145,29 +147,54 @@ module.exports = function(express, app, mongoose, path, nodemailer, CronJob, fs,
             }
             else {
                 console.log("Employee inserted correctly");
-                var fstream;
-
-                //checks if a folder named 'images' exists in directory
-                //if it does not exist, the folder is created
-                if (!fs.existsSync(__dirname + '/images/')) {
-                    fs.mkdirSync(__dirname + '/images/');
-                }
-                //checks if a folder named 'employees' inside the folder 'images' exists in directory
-                //if it does not exist, the folder is created
-                if (!fs.existsSync(__dirname + '/images/employees/')) {
-                    fs.mkdirSync(__dirname + '/images/employees/');
-                }
-                //TODO save image in file
-                res.status(200).json('[MONGOOSE] Employee inserted with success');
+                res.status(200).json(emp._id);
             }
         });
     });
+
+    app.use(busboy());
+    app.post('/save_image_employee/:id',function (req, res) {
+        var fstream;
+        //checks if a folder named 'images' exists in directory
+        //if it does not exist, the folder is created
+        if (!fs.existsSync(__dirname + '/images/')) {
+            fs.mkdirSync(__dirname + '/images/');
+        }
+        //checks if a folder named 'employees' inside the folder 'images' exists in directory
+        //if it does not exist, the folder is created
+        if (!fs.existsSync(__dirname + '/images/employees/')) {
+            fs.mkdirSync(__dirname + '/images/employees/');
+        }
+
+        req.pipe(req.busboy);
+        req.busboy.on('file', function (fieldname, file, filename) {
+            console.log("Uploading: " + filename);
+            //Path where image will be uploaded
+            var ext = filename.substr(filename.indexOf('.'),filename.lenght);
+            fstream = fs.createWriteStream(__dirname + '/images/employees/' + req.params.id + ext);
+            file.pipe(fstream);
+            fstream.on('close', function () {
+                console.log("Upload Finished of " + req.params.id + ext);
+                res.redirect('back');           //where to go next
+            });
+        });
+
+    });
+
 
     //Update informations of the employee
     //Employee ID passed in the url
     app.post('/update_employee/:id', function (req, res) {
         Employee.findOneAndUpdate({_id: req.params.id}, req.body, function (err, emp) {
-            console.log("done");
+            if ( err ) {
+                console.error('[MONGOOSE] Error in updated employee: ' + err);
+                res.status(500).json('[MONGOOSE] Error in updated employee: ' + err);
+            } else {
+               //TODO change image
+
+                console.log('[MONGOOSE] Employee Updated');
+                res.status(200).json('[MONGOOSE] Employee Updated');
+            }
         })
 
     });
