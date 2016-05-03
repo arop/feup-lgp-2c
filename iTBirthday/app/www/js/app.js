@@ -4,7 +4,7 @@
 // 'itBirthday' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
 angular.module('itBirthday', ['ionic', 'ngFileUpload',
-    'itBirthday.login', 'itBirthday.newProfile', 'itBirthday.profile'])
+    'itBirthday.login', 'itBirthday.profile'])
 
   .run(function($ionicPlatform) {
     $ionicPlatform.ready(function() {
@@ -82,7 +82,7 @@ angular.module('itBirthday', ['ionic', 'ngFileUpload',
         url: '/new',
         views: {
           'inside-profile-tab@tabs.profile': {
-            templateUrl: '/app/www/templates/new-profile.html',
+            templateUrl: '/app/www/templates/profile.html',
             controller: 'NewUserCtrl'
           }
         }
@@ -93,7 +93,7 @@ angular.module('itBirthday', ['ionic', 'ngFileUpload',
         url: '/update',
         views: {
           'inside-profile-tab@tabs.profile': {
-            templateUrl: '/app/www/templates/view-or-update-profile.html',
+            templateUrl: '/app/www/templates/profile.html',
             controller: 'UpdateUserCtrl'
           }
         }
@@ -103,7 +103,7 @@ angular.module('itBirthday', ['ionic', 'ngFileUpload',
         url: '/show/:id',
         views: {
           'inside-profile-tab@tabs.profile': {
-            templateUrl: '/app/www/templates/view-or-update-profile.html',
+            templateUrl: '/app/www/templates/profile.html',
             controller: 'UpdateUserCtrl'
           }
         }
