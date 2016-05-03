@@ -3,7 +3,8 @@
 // angular.module is a global place for creating, registering and retrieving Angular modules
 // 'itBirthday' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
-angular.module('itBirthday', ['ionic', 'itBirthday.login', 'itBirthday.newProfile', 'itBirthday.search', 'itBirthday.updateProfile', 'ngFileUpload'])
+angular.module('itBirthday', ['ionic', 'ngFileUpload',
+    'itBirthday.login', 'itBirthday.newProfile', 'itBirthday.profile'])
 
   .run(function($ionicPlatform) {
     $ionicPlatform.ready(function() {
@@ -86,12 +87,23 @@ angular.module('itBirthday', ['ionic', 'itBirthday.login', 'itBirthday.newProfil
           }
         }
       })
-
+      
+      // unused
       .state('tabs.profile.update', {
         url: '/update',
         views: {
           'inside-profile-tab@tabs.profile': {
-            templateUrl: '/app/www/templates/update-profile.html',
+            templateUrl: '/app/www/templates/view-or-update-profile.html',
+            controller: 'UpdateUserCtrl'
+          }
+        }
+      })
+
+      .state('tabs.profile.show', {
+        url: '/show/:id',
+        views: {
+          'inside-profile-tab@tabs.profile': {
+            templateUrl: '/app/www/templates/view-or-update-profile.html',
             controller: 'UpdateUserCtrl'
           }
         }
@@ -106,6 +118,8 @@ angular.module('itBirthday', ['ionic', 'itBirthday.login', 'itBirthday.newProfil
           }
         }
       })
+
+
 
       .state('tabs.settings', {
         url: '/settings',

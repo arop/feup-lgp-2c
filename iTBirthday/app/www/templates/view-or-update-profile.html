@@ -1,0 +1,69 @@
+<ion-content padding="true" overflow-scroll="true" data-ng-init="getEmployee(); isView=true">
+  <div class="row responsive-sm responsive-md" id="new-profile-div">
+    <div class="col col-50 col-offset-25">
+      <div class="row responsive-sm">
+        <div class="col-50">
+          <div class="list">
+            <label class="item item-image">
+              <img src=""/>
+            </label>
+          </div>
+        </div>
+        <div class="col-50">
+          <div class="list" style="width:100%; height: 100%;">
+            <label class="item item-input item-stacked-label">
+              <span class="input-label">Nome</span>
+              <input type="text" ng-model="profile.name" maxlength="75" class="pencil-edit"
+                     ng-readonly="isView"/>
+            </label>
+
+            <label class="item item-input item-stacked-label">
+              <span class="input-label">Número de Telemóvel</span>
+              <input type="tel" ng-model="profile.phoneNumber" maxlength="9" class="pencil-edit"
+                     ng-readonly="isView"/>
+            </label>
+
+            <label class="item item-input item-stacked-label">
+              <span class="input-label">Endereço de Email</span>
+              <input type="email" ng-model="profile.email" maxlength="40" class="pencil-edit"
+                     ng-readonly="isView"/>
+            </label>
+
+            <label class="item item-input item-stacked-label">
+              <span class="input-label">Data de nascimento</span>
+              <input class="input-date pencil-edit" type="text" ng-model="profile.birthDate"
+                     ng-keydown="on_date_key_down($event)" ng-keypress="on_date_edited($event)" maxlength="10"
+                     ng-readonly="isView"/>
+            </label>
+
+            <label class="item item-input item-stacked-label">
+              <span class="input-label">Data de admissão</span>
+              <input class="input-date pencil-edit" type="text" ng-model="profile.entryDate"
+                     ng-keydown="on_date_key_down($event)" ng-keypress="on_date_edited($event)" maxlength="10"
+                     ng-readonly="isView"/>
+            </label>
+
+            <ion-checkbox ng-model="profile.sendMail"
+                          ng-checked="profile.sendMail"
+                          ng-disabled="isView">Email de Aniversário
+            </ion-checkbox>
+
+            <ion-checkbox ng-model="profile.sendSMS"
+                          ng-checked="profile.sendSMS"
+                          ng-disabled="isView">SMS de Aniversário
+            </ion-checkbox>
+
+            <ion-checkbox ng-model="profile.facebookPost"
+                          ng-checked="profile.facebookPost"
+                          ng-disabled="isView">Post do Facebook
+            </ion-checkbox>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <button class="button button-block app-color" ng-click="isView=false" ng-show="isView">Editar perfil</button>
+        <button class="button button-block app-color" ng-click="update_profile()" ng-hide="isView">Guardar alterações</button>
+      </div>
+    </div>
+  </div>
+</ion-content>
