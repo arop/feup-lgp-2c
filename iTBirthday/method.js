@@ -218,7 +218,7 @@ module.exports = function(express, app, mongoose, path, nodemailer, CronJob, fs,
     });
 
     app.get('/list_employees', function (req, res) {
-        var query = Employee.find({});
+        var query = Employee.find({}, 'name email');
         query.exec(function (err, result) {
             if (!err) {
                 if (result.length > 0) {
@@ -251,8 +251,8 @@ module.exports = function(express, app, mongoose, path, nodemailer, CronJob, fs,
         });
     });
 
-    app.get('/employee_profile/:email', function (req, res) {
-        var query = Employee.findOne({'email': req.params.email});
+    app.get('/employee_profile/:id', function (req, res) {
+        var query = Employee.findOne({'_id': req.params.id});
         query.exec(function (err, result) {
             if (!err) {
                 if (result) {
