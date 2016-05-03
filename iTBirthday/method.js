@@ -330,7 +330,7 @@ module.exports = function(express, app, mongoose, path, nodemailer, CronJob, fs,
                                           'BirthsByMonth':{'Jan':stats[1][0],'Feb':stats[1][1],'Mar':stats[1][2],'Apr':stats[1][3],'May':stats[1][4],'Jun':stats[1][5],
                                                          'Jul':stats[1][6],'Aug':stats[1][7],'Sep':stats[1][8],'Oct':stats[1][9],'Nov':stats[1][10],'Dec':stats[1][11]},
                                           'AverageTime':stats[2],
-                                          'AgeGroups':{'18to24':stats[3][0], '25to34':stats[3][1],'35to44':stats[3][2],'45-54':stats[3][3], '55+':stats[3][4]}});
+                                          'AgeGroups':{'18to24':stats[3][0], '25to34':stats[3][1],'35to44':stats[3][2],'45to54':stats[3][3], '55+':stats[3][4]}});
                 } else {
                     console.log('[MONGOOSE] No employees to find');
                 }
