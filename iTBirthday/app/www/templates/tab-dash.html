@@ -1,17 +1,61 @@
-<ion-view view-title="Dashboard">
+<ion-view view-title="Métricas" data-ng-init="getStatistics()">
   <ion-content class="padding">
-    <h2>Welcome to Ionic</h2>
-    <p>
-    This is the Ionic starter for tabs-based apps. For other starters and ready-made templates, check out the <a href="http://market.ionic.io/starters" target="_blank">Ionic Market</a>.
-    </p>
-    <p>
-      To edit the content of each tab, edit the corresponding template file in <code>www/templates/</code>. This template is <code>www/templates/tab-dash.html</code>
-    </p>
-    <p>
-    If you need help with your app, join the Ionic Community on the <a href="http://forum.ionicframework.com" target="_blank">Ionic Forum</a>. Make sure to <a href="http://twitter.com/ionicframework" target="_blank">follow us</a> on Twitter to get important updates and announcements for Ionic developers.
-    </p>
-    <p>
-      For help sending push notifications, join the <a href="https://apps.ionic.io/signup" target="_blank">Ionic Platform</a> and check out <a href="http://docs.ionic.io/docs/push-overview" target="_blank">Ionic Push</a>. We also have other services available.
-    </p>
+    <div id="anniversaries_this_month">
+      <h2>Aniversários este mês</h2>
+      <div class="item-avatar">
+        <img src="http://tutorialsplane.com/runtest/ionic/img/profile.jpg" style="position:inherit;">
+      </div>
+    </div>
+
+    <div id="births_dy_month">
+      <h2>Distribuição dos aniversários por mês</h2>
+      <div class="app-color">
+        <div class="row responsive-sm">
+          <div class="col">Janeiro - {{statistics.BirthsByMonth.Jan}}</div>
+          <div class="col">Maio - {{statistics.BirthsByMonth.May}}</div>
+          <div class="col">Setembro - {{statistics.BirthsByMonth.Sep}}</div>
+        </div>
+        <div class="row responsive-sm">
+          <div class="col">Fevereiro - {{statistics.BirthsByMonth.Feb}}</div>
+          <div class="col">Junho - {{statistics.BirthsByMonth.Jun}}</div>
+          <div class="col">Outubro - {{statistics.BirthsByMonth.Oct}}</div>
+        </div>
+        <div class="row responsive-sm">
+          <div class="col">Março - {{statistics.BirthsByMonth.Mar}}</div>
+          <div class="col">Julho - {{statistics.BirthsByMonth.Jul}}</div>
+          <div class="col">Novembro - {{statistics.BirthsByMonth.Nov}}</div>
+        </div>
+        <div class="row responsive-sm">
+          <div class="col">Abril - {{statistics.BirthsByMonth.Apr}}</div>
+          <div class="col">Agosto - {{statistics.BirthsByMonth.Aug}}</div>
+          <div class="col">Dezembro - {{statistics.BirthsByMonth.Dec}}</div>
+        </div>
+      </div>
+    </div>
+
+    <div id="ratio_and_years">
+      <div class="row">
+        <div class="col col-33"><h3>Distribuição do rácio de mulheres/homens</h3></div>
+        <div class="col col-66"><h3>Distribuição das faixas etárias (quantidade por anos)</h3></div>
+      </div>
+      <div class="row app-color">
+        <div class="col col-33">
+          <p>Mulheres: {{statistics.Ratio.Female}}</p>
+          <p>Homens: {{statistics.Ratio.Male}}</p>
+        </div>
+        <div class="col col-66">
+          <p>18to24 : {{statistics.AgeGroups['18to24']}}</p>
+          <p>25to34 : {{statistics.AgeGroups['25to34']}}</p>
+          <p>35to44 : {{statistics.AgeGroups['35to44']}}</p>
+          <p>45to54 : {{statistics.AgeGroups['45to54']}}</p>
+          <p>55+ : {{statistics.AgeGroups['55+']}}</p>
+        </div>
+      </div>
+    </div>
+
+    <div id="average_time">
+      <h2>Tempo médio de permanência (em dias)</h2>
+      <p>{{statistics.AverageTime}}</p>
+    </div>
   </ion-content>
 </ion-view>
