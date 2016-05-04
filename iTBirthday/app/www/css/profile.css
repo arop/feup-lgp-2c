@@ -63,15 +63,13 @@
 }
 
 /* NEW USER PROFILE */
+#profile_row .col-50 {
+  padding: 5px;
+}
+
 #new-profile-div .list > label.item {
   border: none;
   padding: 1px 2px 1px 2px;
-}
-
-#new-profile-div .list > label.item-image {
-  margin: auto;
-  width: 100%;
-  height: auto;
 }
 
 #new-profile-div .list > label.item > span {
@@ -91,34 +89,45 @@
 
 #new-profile-div .list > label.item > input[type="text"].pencil-edit,
 #new-profile-div .list > label.item > input[type="email"].pencil-edit,
-#new-profile-div .list > label.item > input[type="tel"].pencil-edit {
+#new-profile-div .list > label.item > input[type="tel"].pencil-edit,
+#new-profile-div .list > label.item > .item-select > .pencil-edit{
   background: url(../img/icons/lapis.png) no-repeat right #FFE47A;
   -webkit-background-size: 20px;
   background-size: 20px;
 }
 
+
+#new-profile-div .list > label.item > input[readonly="readonly"].pencil-edit,
+#new-profile-div .list > label.item > input[readonly="readonly"].pencil-edit,
+#new-profile-div .list > label.item > input[readonly="readonly"].pencil-edit,
+#new-profile-div .list > label.item > .item-select > .pencil-edit[disabled="disabled"] {
+  background-image: none;
+}
+
+
+
 #new-profile-div .list > label.item > input[type="text"]::-webkit-input-placeholder,
 #new-profile-div .list > label.item > input[type="email"]::-webkit-input-placeholder,
 #new-profile-div .list > label.item > input[type="tel"]::-webkit-input-placeholder {
-  color: black;
+  color: rgba(0, 0, 0, 0.4);
 }
 
 #new-profile-div .list > label.item > input[type="text"]:-moz-placeholder,
 #new-profile-div .list > label.item > input[type="email"]:-moz-placeholder,
 #new-profile-div .list > label.item > input[type="tel"]:-moz-placeholder {
-  color: transparent;
+  color: rgba(0, 0, 0, 0.4);
 }
 
 #new-profile-div .list > label.item > input[type="text"]::-moz-placeholder,
 #new-profile-div .list > label.item > input[type="email"]::-moz-placeholder,
 #new-profile-div .list > label.item > input[type="tel"]::-moz-placeholder {
-  color: transparent;
+  color: rgba(0, 0, 0, 0.4);
 }
 
 #new-profile-div .list > label.item > input[type="text"]:-ms-input-placeholder,
 #new-profile-div .list > label.item > input[type="email"]:-ms-input-placeholder,
 #new-profile-div .list > label.item > input[type="tel"]:-ms-input-placeholder {
-  color: transparent;
+  color: rgba(0, 0, 0, 0.4);
 }
 
 #new-profile-div .list label.item-checkbox {
@@ -167,7 +176,7 @@
   }
 }
 
-.input-date {
+#new-profile-div .input-date {
   -webkit-touch-callout: none;
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -175,15 +184,81 @@
   user-select: none;
 }
 
-.input-date::-moz-selection {
+  #new-profile-div .input-date::-moz-selection {
   background: transparent;
 }
 
-.input-date::selection {
+#new-profile-div .input-date::selection {
   background: transparent;
 }
 
-.toggle input:checked + .track {
+#new-profile-div .toggle input:checked + .track {
   border-color: #FFD17B;
   background-color: #FFD17B;
+}
+
+#new-profile-div label.item-select {
+  display: block;
+  position: relative;
+  padding: 2px 0;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  right: 0;
+  vertical-align: middle;
+  text-align: center;
+}
+
+#new-profile-div .item-select::after {
+  display: none;
+}
+
+#new-profile-div .item-select select {
+  display: block;
+  position: inherit;
+  width: 100%;
+  max-width: 100%;
+  padding: 0;
+  height: 2em;
+  background-color: #FFE47A !important;
+  text-align: left;
+  margin: auto;
+  direction: inherit;
+}
+
+#new-profile-div .item-select select[disabled="disabled"] {
+  pointer-events: none;
+}
+
+#new-profile-div .list > .item.item-image {
+  padding-top: 0;
+}
+
+#new-profile-div .list > .item.item-image > img {
+  background-color: #FFE47A !important;
+}
+
+#new-profile-div .list > .item.item-file {
+  padding-top: 0;
+  margin-top: 0;
+}
+
+#new-profile-div .list > .item.item-file input[type="file"] {
+  cursor: pointer;
+  width: 100%;
+  text-align: center;
+  padding: 4px;
+  margin: auto;
+  background-color: #FFE47A !important;
+}
+
+#new-profile-div #buttons_row {
+  text-align: right;
+  padding-top: 10px;
+}
+
+#new-profile-div button.button.button-inline-block {
+  display: table;
+  width: 50%;
+  margin: auto 5px;
 }

@@ -21,10 +21,6 @@ angular.module('itBirthday.profile', [])
       $scope.isView = true;
       $http.get('/employee_profile/'+$stateParams.id).success( function(response) {
         $scope.profile = response;
-        if($scope.profile.gender === 'Male')
-          $scope.profile.gender = true;
-        else $scope.profile.gender = false;
-
         $scope.profile.birthDate = $filter('date')($scope.profile.birthDate, 'yyyy-MM-dd');
         $scope.profile.entryDate = $filter('date')($scope.profile.entryDate, 'yyyy-MM-dd');
       });
@@ -272,6 +268,7 @@ angular.module('itBirthday.profile', [])
 
     $scope.new_profile = function (profileData) {
 
+      console.log("Gender: " + profileData.gender);
 
       if (profileData == undefined) {
         console.error('Profile Data is not valid.');
@@ -321,35 +318,35 @@ angular.module('itBirthday.profile', [])
         return false;
       }
 
-      $http.post('/post_employee', {
-        name: profileData.name,
-        birthDate: new Date(profileData.birthDate),
-        phoneNumber: profileData.phoneNumber,
-        email: profileData.email,
-        entryDate: new Date(profileData.entryDate),
-        sendMail: profileData.sendMail,
-        sendSMS: profileData.sendSMS,
-        facebookPost: profileData.facebookPost,
-        gender: profileData.gender
-      }).success(function (data) {
-        //console.log('New user POST successful');
-        Upload.upload({
-          url: '/save_image_employee/' + data,
-          file: profileData.photo,
-          progress: function(e){}
-        }).then(function(data, status, headers, config) {
-          // file is uploaded successfully
-        });
-
-        console.log(data);
-        return true;
-      }).error(function (err) {
-        console.log('Error while creating new user: ' + err);
-        return false;
-      });
-
-
-      $state.go('tabs.dash');
+      // $http.post('/post_employee', {
+      //   name: profileData.name,
+      //   birthDate: new Date(profileData.birthDate),
+      //   phoneNumber: profileData.phoneNumber,
+      //   email: profileData.email,
+      //   entryDate: new Date(profileData.entryDate),
+      //   sendMail: profileData.sendMail,
+      //   sendSMS: profileData.sendSMS,
+      //   facebookPost: profileData.facebookPost,
+      //   gender: profileData.gender
+      // }).success(function (data) {
+      //   //console.log('New user POST successful');
+      //   Upload.upload({
+      //     url: '/save_image_employee/' + data,
+      //     file: profileData.photo,
+      //     progress: function(e){}
+      //   }).then(function(data, status, headers, config) {
+      //     // file is uploaded successfully
+      //   });
+      //
+      //   console.log(data);
+      //   return true;
+      // }).error(function (err) {
+      //   console.log('Error while creating new user: ' + err);
+      //   return false;
+      // });
+      //
+      //
+      // $state.go('tabs.dash');
     };
 
     $scope.on_date_key_down = function ($event) {
