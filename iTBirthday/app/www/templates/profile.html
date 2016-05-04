@@ -12,6 +12,11 @@
         </div>
         <div class="col-50">
           <div class="list" style="width:100%; height: 100%;">
+            <ion-toggle ng-model="profile.gender" checked="profile.gender" ng-disabled="isView">
+              <span ng-show="profile.gender">Masculino</span>
+              <span ng-show="!profile.gender">Feminino</span>
+            </ion-toggle>
+
             <label class="item item-input item-stacked-label">
               <span class="input-label">Nome</span>
               <input type="text" placeholder="Nome" ng-model="profile.name" maxlength="75" class="pencil-edit"

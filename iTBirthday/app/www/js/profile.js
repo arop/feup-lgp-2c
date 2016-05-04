@@ -1,6 +1,6 @@
 angular.module('itBirthday.profile', [])
 
-  .controller('SearchCtrl', function($scope, $http, $state) {
+  .controller('SearchCtrl', function($scope, $http) {
 
     // TODO tentar excluir o "@itgrow.com" da pesquisa
     //$scope.profiles = profilesGlobal;
@@ -13,13 +13,20 @@ angular.module('itBirthday.profile', [])
 
   })
 
-  .controller('UpdateUserCtrl', function($scope, $http, $stateParams) {
+  .controller('UpdateUserCtrl', function($scope, $http, $state, $stateParams, $filter) {
     $scope.profile = {};
+    $scope.isView = null;
+
     $scope.getEmployee = function () {
       $scope.isView = true;
       $http.get('/employee_profile/'+$stateParams.id).success( function(response) {
         $scope.profile = response;
-        console.log($scope.profile);
+        if($scope.profile.gender === 'Male')
+          $scope.profile.gender = true;
+        else $scope.profile.gender = false;
+
+        $scope.profile.birthDate = $filter('date')($scope.profile.birthDate, 'yyyy-MM-dd');
+        $scope.profile.entryDate = $filter('date')($scope.profile.entryDate, 'yyyy-MM-dd');
       });
     };
 
@@ -91,9 +98,11 @@ angular.module('itBirthday.profile', [])
         entryDate: new Date($scope.profile.entryDate),
         sendMail: $scope.profile.sendMail,
         sendSMS: $scope.profile.sendSMS,
-        facebookPost: $scope.profile.facebookPost
+        facebookPost: $scope.profile.facebookPost,
+        gender: $scope.profile.gender? 'Male' : 'Female'
       }).success(function (data) {
         console.log(data);
+        $state.go($state.current, {}, {reload: true});
       });
     };
 
@@ -320,7 +329,8 @@ angular.module('itBirthday.profile', [])
         entryDate: new Date(profileData.entryDate),
         sendMail: profileData.sendMail,
         sendSMS: profileData.sendSMS,
-        facebookPost: profileData.facebookPost
+        facebookPost: profileData.facebookPost,
+        gender: profileData.gender
       }).success(function (data) {
         //console.log('New user POST successful');
         Upload.upload({

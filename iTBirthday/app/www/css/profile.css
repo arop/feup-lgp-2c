@@ -182,3 +182,8 @@
 .input-date::selection {
   background: transparent;
 }
+
+.toggle input:checked + .track {
+  border-color: #FFD17B;
+  background-color: #FFD17B;
+}

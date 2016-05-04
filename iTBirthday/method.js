@@ -34,7 +34,7 @@ module.exports = function(express, app, mongoose, path, nodemailer, CronJob, fs,
         name: {type: String, trim: true, required: true},
         birthDate: {type: Date, required: true},
         phoneNumber: {type: String, minlength: 9, maxlength: 9, required: true, trim: true, unique: true},
-        email: {type: String, required: true, match: [/^[a-zA-Z0-9_.-]*@itgrow.com/], trim: true, unique: true},
+        email: {type: String, required: true, match: [/^[a-zA-Z0-9_.-]*@[a-zA-Z0-9_.-]*.[a-zA-Z0-9_.-]*/], trim: true, unique: true},
         entryDate: {type: Date, required: true, default: Date.now},
         exitDate: {type: Date, required: false},
         sendMail: {type: Boolean, required: true, default: false},
@@ -43,7 +43,7 @@ module.exports = function(express, app, mongoose, path, nodemailer, CronJob, fs,
         smsText: {type: String, required: false, trim: true},
         facebookPost: {type: Boolean, required: true, default: false},
         photoPath: {type: String, required: false, trim: true},
-        gender: {type: String, enum: employeeGender, required: false, trim: true}
+        gender: {type: String, enum: employeeGender, required: true, trim: true}
     });
 
     EmployeeSchema.virtual('age').get(function () {
@@ -129,7 +129,8 @@ module.exports = function(express, app, mongoose, path, nodemailer, CronJob, fs,
             entryDate: req.body.entryDate,
             sendMail: req.body.sendMail,
             sendSms: req.body.sendSMS,
-            facebookPost: req.body.facebookPost
+            facebookPost: req.body.facebookPost,
+            gender: req.body.gender? 'Male' : 'Female'
         });
 
         if (req.body.mailText)
