@@ -1,4 +1,4 @@
-angular.module('itBirthday.profile', [])
+angular.module('itBirthday.profile', ['ngFileUpload'])
 
   .controller('SearchCtrl', function ($scope, $http) {
 
@@ -265,15 +265,18 @@ angular.module('itBirthday.profile', [])
     }
 
     //listen for the file selected event
-    $scope.$on("fileSelected", function (event, args) {
-      $scope.$apply(function () {
-        $scope.profile.photo = args.file;
-      });
+    $("input[type=file]").change(function () {
+      var file = this.files[0];
+      $scope.profile.photo = file;
     });
 
-    $scope.new_profile = function (profileData) {
+    // $scope.$on("input[type=file]", function (event, args) {
+    //   $scope.$apply(function () {
+    //     $scope.profile.photo = args.file;
+    //   });
+    // });
 
-      console.log("Gender: " + profileData.gender);
+    $scope.new_profile = function (profileData) {
 
       if (profileData == undefined) {
         console.error('Profile Data is not valid.');
@@ -343,12 +346,12 @@ angular.module('itBirthday.profile', [])
         Upload.upload({
           url: '/save_image_employee/' + data,
           file: profileData.photo,
-          progress: function(e){}
-        }).then(function(data, status, headers, config) {
+          progress: function (e) {
+          }
+        }).then(function (data, status, headers, config) {
           // file is uploaded successfully
         });
 
-        console.log(data);
         $state.go('tabs.dash');
         return true;
       }).error(function (err) {
