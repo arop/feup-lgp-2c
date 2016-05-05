@@ -54,12 +54,41 @@
 }
 
 #search-profile {
-  margin-top: 20px;
+  margin-top: 45px;
 }
 
 #search-profile-results {
   min-height: 25em;
   height: auto;
+}
+
+#search-profile-results .item.item-avatar {
+  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.25);
+}
+
+#search-profile-results .item.item-avatar:hover {
+  cursor: pointer;
+}
+
+#search-profile-results .item.item-avatar > a {
+  padding: 0;
+}
+
+#search-profile-results .item.item-avatar > a > .item-content:hover {
+  background-color: #FFE47A !important;
+}
+
+#search-profile-results .item-content h2 {
+  padding-bottom: 4px;
+}
+
+#search-profile-results .item-avatar .item-content > img:first-child {
+  max-width: 44px;
+  max-height: 44px;
+}
+
+#search-profile-results ion-list.card {
+  margin: auto;
 }
 
 /* NEW USER PROFILE */
@@ -255,6 +284,10 @@
 #new-profile-div #buttons_row {
   text-align: right;
   padding-top: 10px;
+}
+
+button.button.button-inline-block {
+  margin: auto 5px 5px 0;
 }
 
 #new-profile-div button.button.button-inline-block {

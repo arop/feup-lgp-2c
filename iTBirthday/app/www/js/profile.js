@@ -1,25 +1,25 @@
 angular.module('itBirthday.profile', [])
 
-  .controller('SearchCtrl', function($scope, $http) {
+  .controller('SearchCtrl', function ($scope, $http) {
 
     // TODO tentar excluir o "@itgrow.com" da pesquisa
     //$scope.profiles = profilesGlobal;
 
     $scope.getAllEmployees = function () {
-      $http.get('/list_employees').success( function(response) {
+      $http.get('/list_employees').success(function (response) {
         $scope.profiles = response;
       });
     }
 
   })
 
-  .controller('UpdateUserCtrl', function($scope, $http, $state, $stateParams, $filter) {
+  .controller('UpdateUserCtrl', function ($scope, $http, $state, $stateParams, $filter) {
     $scope.profile = {};
     $scope.isView = null;
 
     $scope.getEmployee = function () {
       $scope.isView = true;
-      $http.get('/employee_profile/'+$stateParams.id).success( function(response) {
+      $http.get('/employee_profile/' + $stateParams.id).success(function (response) {
         $scope.profile = response;
         $scope.profile.birthDate = $filter('date')($scope.profile.birthDate, 'yyyy-MM-dd');
         $scope.profile.entryDate = $filter('date')($scope.profile.entryDate, 'yyyy-MM-dd');
@@ -37,7 +37,7 @@ angular.module('itBirthday.profile', [])
      facebookPost: false
      };*/
 
-    $scope.update_profile = function(){
+    $scope.update_profile = function () {
       if ($scope.profile == undefined) {
         console.error('Profile Data is not valid.');
         return false;
@@ -86,7 +86,12 @@ angular.module('itBirthday.profile', [])
         return false;
       }
 
-      $http.post('/update_employee/'+$stateParams.id, {
+      if ($scope.profile.gender == undefined) {
+        console.error('Gender is not defined.');
+        return false;
+      }
+
+      $http.post('/update_employee/' + $stateParams.id, {
         name: $scope.profile.name,
         birthDate: new Date($scope.profile.birthDate),
         phoneNumber: $scope.profile.phoneNumber,
@@ -95,7 +100,7 @@ angular.module('itBirthday.profile', [])
         sendMail: $scope.profile.sendMail,
         sendSMS: $scope.profile.sendSMS,
         facebookPost: $scope.profile.facebookPost,
-        gender: $scope.profile.gender? 'Male' : 'Female'
+        gender: $scope.profile.gender
       }).success(function (data) {
         console.log(data);
         $state.go($state.current, {}, {reload: true});
@@ -250,7 +255,7 @@ angular.module('itBirthday.profile', [])
 
   })
 
-  .controller('NewUserCtrl',['$scope', '$state', '$http', 'Upload',  function ($scope, $state, $http, Upload) {
+  .controller('NewUserCtrl', ['$scope', '$state', '$http', 'Upload', function ($scope, $state, $http, Upload) {
 
     $scope.profile = {};
 
@@ -318,35 +323,38 @@ angular.module('itBirthday.profile', [])
         return false;
       }
 
-      // $http.post('/post_employee', {
-      //   name: profileData.name,
-      //   birthDate: new Date(profileData.birthDate),
-      //   phoneNumber: profileData.phoneNumber,
-      //   email: profileData.email,
-      //   entryDate: new Date(profileData.entryDate),
-      //   sendMail: profileData.sendMail,
-      //   sendSMS: profileData.sendSMS,
-      //   facebookPost: profileData.facebookPost,
-      //   gender: profileData.gender
-      // }).success(function (data) {
-      //   //console.log('New user POST successful');
-      //   Upload.upload({
-      //     url: '/save_image_employee/' + data,
-      //     file: profileData.photo,
-      //     progress: function(e){}
-      //   }).then(function(data, status, headers, config) {
-      //     // file is uploaded successfully
-      //   });
-      //
-      //   console.log(data);
-      //   return true;
-      // }).error(function (err) {
-      //   console.log('Error while creating new user: ' + err);
-      //   return false;
-      // });
-      //
-      //
-      // $state.go('tabs.dash');
+      if ($scope.profile.gender == undefined) {
+        console.error('Gender is not defined.');
+        return false;
+      }
+
+      $http.post('/post_employee', {
+        name: profileData.name,
+        birthDate: new Date(profileData.birthDate),
+        phoneNumber: profileData.phoneNumber,
+        email: profileData.email,
+        entryDate: new Date(profileData.entryDate),
+        sendMail: profileData.sendMail,
+        sendSMS: profileData.sendSMS,
+        facebookPost: profileData.facebookPost,
+        gender: profileData.gender
+      }).success(function (data) {
+        //console.log('New user POST successful');
+        Upload.upload({
+          url: '/save_image_employee/' + data,
+          file: profileData.photo,
+          progress: function(e){}
+        }).then(function(data, status, headers, config) {
+          // file is uploaded successfully
+        });
+
+        console.log(data);
+        $state.go('tabs.dash');
+        return true;
+      }).error(function (err) {
+        console.log('Error while creating new user: ' + err);
+        return false;
+      });
     };
 
     $scope.on_date_key_down = function ($event) {
@@ -650,39 +658,45 @@ var IsCopyPaste = function (code) {
 
 
 /* dummy values */
-var johndoe = {employee: {
-  name: 'John Doe',
-  birthDate: '1990-01-30',
-  phoneNumber: '965912228',
-  email: 'johndoe@itgrow.com',
-  entryDate: '2014-04-10',
-  sendMail: true,
-  sendSMS: false,
-  facebookPost: false
-}};
+var johndoe = {
+  employee: {
+    name: 'John Doe',
+    birthDate: '1990-01-30',
+    phoneNumber: '965912228',
+    email: 'johndoe@itgrow.com',
+    entryDate: '2014-04-10',
+    sendMail: true,
+    sendSMS: false,
+    facebookPost: false
+  }
+};
 
-var maryjane = {employee: {
-  name: 'Mary Jane',
-  birthDate: '1990-01-30',
-  phoneNumber: '965912228',
-  email: 'maryjane@itgrow.com',
-  entryDate: '2014-04-10',
-  sendMail: true,
-  sendSMS: false,
-  facebookPost: false
-}};
+var maryjane = {
+  employee: {
+    name: 'Mary Jane',
+    birthDate: '1990-01-30',
+    phoneNumber: '965912228',
+    email: 'maryjane@itgrow.com',
+    entryDate: '2014-04-10',
+    sendMail: true,
+    sendSMS: false,
+    facebookPost: false
+  }
+};
 
-var zecarlos = {employee: {
-  name: 'Zé Carlos',
-  birthDate: '1990-01-30',
-  phoneNumber: '965912228',
-  email: 'zecarlos@itgrow.com',
-  entryDate: '2014-04-10',
-  sendMail: true,
-  sendSMS: false,
-  facebookPost: false
-}};
+var zecarlos = {
+  employee: {
+    name: 'Zé Carlos',
+    birthDate: '1990-01-30',
+    phoneNumber: '965912228',
+    email: 'zecarlos@itgrow.com',
+    entryDate: '2014-04-10',
+    sendMail: true,
+    sendSMS: false,
+    facebookPost: false
+  }
+};
 
-var profilesGlobal = [johndoe, maryjane,zecarlos];
+var profilesGlobal = [johndoe, maryjane, zecarlos];
 
 

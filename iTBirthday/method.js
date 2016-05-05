@@ -130,7 +130,7 @@ module.exports = function(express, app, mongoose, path, nodemailer, CronJob, fs,
             sendMail: req.body.sendMail,
             sendSms: req.body.sendSMS,
             facebookPost: req.body.facebookPost,
-            gender: req.body.gender? 'Male' : 'Female'
+            gender: req.body.gender
         });
 
         if (req.body.mailText)

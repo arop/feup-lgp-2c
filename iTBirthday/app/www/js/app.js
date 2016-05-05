@@ -3,7 +3,7 @@
 // angular.module is a global place for creating, registering and retrieving Angular modules
 // 'itBirthday' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
-angular.module('itBirthday', ['ionic', 'ngFileUpload',
+angular.module('itBirthday', ['ionic', 'ngFileUpload', 'ngPageTitle',
     'itBirthday.login', 'itBirthday.profile', 'itBirthday.statistics'])
 
   .run(function($ionicPlatform) {
@@ -37,7 +37,10 @@ angular.module('itBirthday', ['ionic', 'ngFileUpload',
       .state('login', {
         url: '/login',
         templateUrl: '/app/www/templates/login.html',
-        controller: 'LoginCtrl'
+        controller: 'LoginCtrl',
+        data: {
+          pageTitle: 'Login'
+        }
       })
 
       // setup an abstract state for the tabs directive
@@ -48,7 +51,6 @@ angular.module('itBirthday', ['ionic', 'ngFileUpload',
       })
 
       // Each tab has its own nav history stack:
-
       .state('tabs.dash', {
         url: '/dash',
         views: {
@@ -56,6 +58,9 @@ angular.module('itBirthday', ['ionic', 'ngFileUpload',
             templateUrl: '/app/www/templates/tab-dash.html',
             controller: 'StatisticsCtrl'
           }
+        },
+        data: {
+          pageTitle: 'Dashboard'
         }
       })
 
@@ -76,6 +81,9 @@ angular.module('itBirthday', ['ionic', 'ngFileUpload',
           'inside-profile-tab@tabs.profile': {
             templateUrl: '/app/www/templates/default-profile.html'
           }
+        },
+        data: {
+          pageTitle: 'Perfis'
         }
       })
 
@@ -86,10 +94,12 @@ angular.module('itBirthday', ['ionic', 'ngFileUpload',
             templateUrl: '/app/www/templates/profile.html',
             controller: 'NewUserCtrl'
           }
+        },
+        data: {
+          pageTitle: 'Novo Perfil'
         }
       })
-      
-      // unused
+
       .state('tabs.profile.update', {
         url: '/update',
         views: {
@@ -97,6 +107,9 @@ angular.module('itBirthday', ['ionic', 'ngFileUpload',
             templateUrl: '/app/www/templates/profile.html',
             controller: 'UpdateUserCtrl'
           }
+        },
+        data: {
+          pageTitle: 'Atualizar Perfil'
         }
       })
 
@@ -107,6 +120,9 @@ angular.module('itBirthday', ['ionic', 'ngFileUpload',
             templateUrl: '/app/www/templates/profile.html',
             controller: 'UpdateUserCtrl'
           }
+        },
+        data: {
+          pageTitle: 'Ver Perfil'
         }
       })
 
@@ -117,23 +133,26 @@ angular.module('itBirthday', ['ionic', 'ngFileUpload',
             templateUrl: '/app/www/templates/search-profile.html',
             controller: 'SearchCtrl'
           }
+        },
+        data: {
+          pageTitle: 'Pesquisar Perfis'
         }
       })
-
-
 
       .state('tabs.settings', {
         url: '/settings',
         views: {
           'tab-settings': {
             templateUrl: '/app/www/templates/tab-settings.html',
-            //controller: 'AccountCtrl'
           }
+        },
+        data: {
+          pageTitle: 'Opções'
         }
       });
 
     // if none of the above states are matched, use this as the fallback
 
     $urlRouterProvider.otherwise('/login');
-  })
+  });
 
