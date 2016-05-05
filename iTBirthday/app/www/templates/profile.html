@@ -9,10 +9,11 @@
                 <span class="input-label" id="image-label">Avatar</span>
               </label>
               <label class="item item-image">
-                <img src="app/www/img/icons/novo_membro.png"/>
+                <!--<img src="app/www/img/icons/novo_membro.png"/>-->
+                <img ng-src="/images/employees/{{profile.photoPath}}">
               </label>
               <label class="item item-file">
-                <input id="file_upload" type="file" file-upload ng-readonly="isView">
+                <input id="file_upload" type="file" file-upload ng-hide="isView">
               </label>
             </div>
           </div>

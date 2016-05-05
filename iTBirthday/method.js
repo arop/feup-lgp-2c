@@ -1,4 +1,6 @@
 module.exports = function(express, app, mongoose, path, nodemailer, CronJob, fs, busboy, clickatell) {
+    var Finder = require('fs-finder');
+
     //Database
     mongoose.connect('mongodb://localhost/iTBirthday'); // change name of database , local database at the moment
     var db = mongoose.connection;
@@ -170,11 +172,19 @@ module.exports = function(express, app, mongoose, path, nodemailer, CronJob, fs,
         req.pipe(req.busboy);
         req.busboy.on('file', function (fieldname, file, filename) {
             console.log("Uploading: " + filename);
+
+            //removes previous image if it exists
+            var files = Finder.from("images/employees/").findFiles(req.params.id + '.*');
+            fs.unlinkSync(files[0]);
             //Path where image will be uploaded
             var ext = filename.substr(filename.indexOf('.'),filename.lenght);
             fstream = fs.createWriteStream(__dirname + '/images/employees/' + req.params.id + ext);
             file.pipe(fstream);
             fstream.on('close', function () {
+                var photo = { photoPath : req.params.id + ext };
+                //changes the value of the photoPath of the employee
+                Employee.findOneAndUpdate({_id: req.params.id},photo, function(err,emp) {
+                });
                 console.log("Upload Finished of " + req.params.id + ext);
                 res.redirect('back');           //where to go next
             });
@@ -187,12 +197,11 @@ module.exports = function(express, app, mongoose, path, nodemailer, CronJob, fs,
     //Employee ID passed in the url
     app.post('/update_employee/:id', function (req, res) {
         Employee.findOneAndUpdate({_id: req.params.id}, req.body, function (err, emp) {
+            console.log("UPDATEIND");
             if ( err ) {
                 console.error('[MONGOOSE] Error in updated employee: ' + err);
                 res.status(500).json('[MONGOOSE] Error in updated employee: ' + err);
             } else {
-               //TODO change image
-
                 console.log('[MONGOOSE] Employee Updated');
                 res.status(200).json('[MONGOOSE] Employee Updated');
             }

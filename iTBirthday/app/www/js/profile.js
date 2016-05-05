@@ -13,7 +13,7 @@ angular.module('itBirthday.profile', ['ngFileUpload'])
 
   })
 
-  .controller('UpdateUserCtrl', function ($scope, $http, $state, $stateParams, $filter) {
+  .controller('UpdateUserCtrl', function ($scope, $http, $state, $stateParams, $filter, Upload) {
     $scope.profile = {};
     $scope.isView = null;
 
@@ -25,6 +25,14 @@ angular.module('itBirthday.profile', ['ngFileUpload'])
         $scope.profile.entryDate = $filter('date')($scope.profile.entryDate, 'yyyy-MM-dd');
       });
     };
+
+
+    //listen for the file selected event
+    $("input[type=file]").change(function () {
+      console.log("CHANGED");
+      var file = this.files[0];
+      $scope.profile.photo = file;
+    });
 
     /*    $scope.profile = {
      name: 'Ana Vieira',
@@ -101,8 +109,19 @@ angular.module('itBirthday.profile', ['ngFileUpload'])
         sendSMS: $scope.profile.sendSMS,
         facebookPost: $scope.profile.facebookPost,
         gender: $scope.profile.gender
-      }).success(function (data) {
-        console.log(data);
+      }).success(function () {
+        console.log($scope.profile.photo);
+        if ($scope.profile.photo != undefined){
+          Upload.upload({
+            url: '/save_image_employee/' + $stateParams.id,
+            file: $scope.profile.photo,
+            progress: function (e) {
+            }
+          }).then(function (data, status, headers, config) {
+            // file is uploaded successfully
+          });
+        }
+
         $state.go($state.current, {}, {reload: true});
       });
     };
@@ -270,11 +289,6 @@ angular.module('itBirthday.profile', ['ngFileUpload'])
       $scope.profile.photo = file;
     });
 
-    // $scope.$on("input[type=file]", function (event, args) {
-    //   $scope.$apply(function () {
-    //     $scope.profile.photo = args.file;
-    //   });
-    // });
 
     $scope.new_profile = function (profileData) {
 
@@ -343,14 +357,16 @@ angular.module('itBirthday.profile', ['ngFileUpload'])
         gender: profileData.gender
       }).success(function (data) {
         //console.log('New user POST successful');
-        Upload.upload({
-          url: '/save_image_employee/' + data,
-          file: profileData.photo,
-          progress: function (e) {
-          }
-        }).then(function (data, status, headers, config) {
-          // file is uploaded successfully
-        });
+        if (profileData != undefined){
+          Upload.upload({
+            url: '/save_image_employee/' + data,
+            file: profileData.photo,
+            progress: function (e) {
+            }
+          }).then(function (data, status, headers, config) {
+            // file is uploaded successfully
+          });
+       }
 
         $state.go('tabs.dash');
         return true;
