@@ -1,6 +1,6 @@
 module.exports = function(express, app, mongoose, path, nodemailer, CronJob, fs, busboy, clickatell) {
     var Finder = require('fs-finder');
-
+    var CryptoJS = require("crypto-js");
     //Database
     mongoose.connect('mongodb://localhost/iTBirthday'); // change name of database , local database at the moment
     var db = mongoose.connection;
@@ -215,7 +215,9 @@ module.exports = function(express, app, mongoose, path, nodemailer, CronJob, fs,
             if (!err) {
                 if (result) {
                     console.log('[MONGOOSE] Found Admin Login');
-                    res.status(200).json('[MONGOOSE] Found Admin Login');
+                    var  date = new Date();
+                    var cookie = CryptoJS.AES.encrypt("" + result.username + "/" + date.toJSON(), "1234567890");
+                    res.json(cookie.toString());
                 } else {
                     console.error('[MONGOOSE] Did not find Admin Login');
                     res.status(500).json('[MONGOOSE] Did not find Admin Login');
@@ -223,6 +225,33 @@ module.exports = function(express, app, mongoose, path, nodemailer, CronJob, fs,
             } else {
                 console.error('[MONGOOSE] Error in checkLogin: ' + err);
                 res.status(500).json('[MONGOOSE] Error in checkLogin: ' + err);
+            }
+        });
+    });
+
+    app.get('/Session/:cookie(*)', function (req, res) {
+        var cook = CryptoJS.AES.decrypt(req.params.cookie,"1234567890").toString(CryptoJS.enc.Utf8);
+        cook = cook.split("/");
+
+        var id = cook[0];
+
+        var date = new Date(cook[1]);
+        var date2 = new Date();
+        var session = { username: ""};
+
+        //if session can expire after some time
+        //if((Math.abs(date - date2)/(1000 * 3600 * 4)) < 4){}
+        Admin.find({username : id},function (err, docs) {
+            if (err == null) {
+                if ( docs.length == 0 ) {
+                }
+                else {
+                    //returns the session
+                    session.username = docs[0].username;
+                    res.json(session);
+                }
+            } else {
+                console.log(err);
             }
         });
     });

@@ -2,6 +2,25 @@ angular.module('itBirthday.profile', ['ngFileUpload'])
 
   .controller('SearchCtrl', function ($scope, $http) {
 
+    var cookie = localStorage.getItem('session');
+
+    if (cookie == null){
+
+    }
+    else {
+      //removes """ from cookie
+      var cookie2 = cookie.replace('\"', '');
+
+      $http.get('/Session/' + cookie2).success(function (data) {
+        if (data.length == 0) {
+          $scope.session = {username: undefined};
+        }
+        else {
+          $scope.session = {username: "admin"};
+        }
+      }).error(function (data) {
+      });
+    }
     // TODO tentar excluir o "@itgrow.com" da pesquisa
     //$scope.profiles = profilesGlobal;
 
@@ -16,6 +35,7 @@ angular.module('itBirthday.profile', ['ngFileUpload'])
   .controller('UpdateUserCtrl', function ($scope, $http, $state, $stateParams, $filter, Upload) {
     $scope.profile = {};
     $scope.isView = null;
+
 
     $scope.getEmployee = function () {
       $scope.isView = true;
