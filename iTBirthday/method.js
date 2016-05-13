@@ -196,6 +196,13 @@ module.exports = function(express, app, mongoose, path, nodemailer, CronJob, fs,
     //Update informations of the employee
     //Employee ID passed in the url
     app.post('/update_employee/:id', function (req, res) {
+        //if exit date then sendMail,sendSMS and facebookPost will be false
+        //No message will be sent
+        if ( req.body.exitDate != undefined){
+            req.body.sendMail = false;
+            req.body.sendSMS = false;
+            req.body.facebookPost = false;
+        }
         Employee.findOneAndUpdate({_id: req.params.id}, req.body, function (err, emp) {
             console.log("UPDATEIND");
             if ( err ) {
