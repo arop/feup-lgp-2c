@@ -225,7 +225,7 @@ module.exports = function(express, app, mongoose, path, nodemailer, CronJob, fs,
                 if (result) {
                     console.log('[MONGOOSE] Found Admin Login');
                     var  date = new Date();
-                    var cookie = CryptoJS.AES.encrypt("" + result.username + "/" + date.toJSON(), "1234567890");
+                    var cookie = CryptoJS.AES.encrypt("" + result._id + "/" + date.toJSON(), "1234567890");
                     res.json(cookie.toString());
                 } else {
                     console.error('[MONGOOSE] Did not find Admin Login');
@@ -250,7 +250,7 @@ module.exports = function(express, app, mongoose, path, nodemailer, CronJob, fs,
 
         //if session can expire after some time
         //if((Math.abs(date - date2)/(1000 * 3600 * 4)) < 4){}
-        Admin.find({username : id},function (err, docs) {
+        Admin.find({_id : id},function (err, docs) {
             if (err == null) {
                 if ( docs.length == 0 ) {
                 }

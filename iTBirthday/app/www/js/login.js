@@ -9,22 +9,27 @@ angular.module('itBirthday.login', [])
 
     $scope.login = function(user) {
       //console.log("LOGIN user: " + user.username + " - PW: " + user.password);
-      $state.go('tabs.dash');
-       $http.post('/check_login', {
-         username: user.username,
-         password: user.password
-       }).success(function (data) {
-         console.log('[APP] Login Successful');
+      if ( user.username == undefined || user.password == undefined){
+        alert("Erro nos valores inseridos.");
+        return false;
+      }else {
+        $state.go('tabs.dash');
+        $http.post('/check_login', {
+          username: user.username,
+          password: user.password
+        }).success(function (data) {
+          console.log('[APP] Login Successful');
 
-         //saves cookie in localstorage
-         if ("session" in localStorage) localStorage.removeItem("session");
-         localStorage.setItem("session" ,JSON.stringify(data));
+          //saves cookie in localstorage
+          if ("session" in localStorage) localStorage.removeItem("session");
+          localStorage.setItem("session", JSON.stringify(data));
 
-         $state.go('tabs.dash');
-       }).error(function (data) {
-         console.log('ERROR: ' + data);
-         return false;
-       });
+          $state.go('tabs.dash');
+        }).error(function (data) {
+          console.log('ERROR: ' + data);
+          return false;
+        });
+      }
     }
   });
 
