@@ -3,6 +3,8 @@ module.exports = function(express, app, mongoose, path, nodemailer, CronJob, fs,
     var CryptoJS = require("crypto-js");
     //Database
     mongoose.connect('mongodb://localhost/iTBirthday'); // change name of database , local database at the moment
+    //mongoose.connect('mongodb://itbirthday:drVrTkQatqB3U@192.168.58.151'); // cica server
+
     var db = mongoose.connection;
     db.on('error', console.error.bind(console, '[MONGOOSE] Database Connection Error'));
     db.once('open', function () {

@@ -4,7 +4,7 @@
 // 'itBirthday' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
 angular.module('itBirthday', ['ionic', 'ngFileUpload', 'ngPageTitle',
-    'itBirthday.login', 'itBirthday.profile', 'itBirthday.statistics'])
+    'itBirthday.login', 'itBirthday.profile', 'itBirthday.statistics', 'itBirthday.settings'])
 
   .run(function($ionicPlatform) {
     $ionicPlatform.ready(function() {
@@ -144,6 +144,7 @@ angular.module('itBirthday', ['ionic', 'ngFileUpload', 'ngPageTitle',
         views: {
           'tab-settings': {
             templateUrl: '/app/www/templates/tab-settings.html',
+            controller: 'MsgTemplatesCtrl'
           }
         },
         data: {

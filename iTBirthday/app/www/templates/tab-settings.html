@@ -1,5 +1,20 @@
 <ion-view>
-  <ion-content>
-    This is the settings page
+  <ion-content class="padding" data-ng-init="getDefaultMsg()">
+    <div id="default_messages_div">
+      <h1>Default messages</h1>
+      <div>
+        <label class="item item-input item-floating-label">
+          <span class="input-label">E-mail</span>
+          <textarea placeholder="E-mail" ng-model="defaultMsg.email" class="app-color"></textarea>
+        </label>
+      </div>
+
+      <div>
+        <label class="item item-input item-floating-label">
+          <span class="input-label">SMS</span>
+          <textarea placeholder="SMS" ng-model="defaultMsg.sms" class="app-color"></textarea>
+        </label>
+      </div>
+    </div>
   </ion-content>
 </ion-view>
