@@ -27,9 +27,9 @@ require('./method')(express, app, mongoose, path, nodemailer, CronJob, fs, busbo
 });*/
 
 // launch server with ngrok
+//https://e5230151.ngrok.io/
 app.listen(8080, function(){
   console.log("Connected to server, port 8080.");
 });
 
 module.exports = app;
-https://e5230151.ngrok.io
