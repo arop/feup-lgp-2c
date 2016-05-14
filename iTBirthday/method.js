@@ -374,11 +374,15 @@ module.exports = function(express, app, mongoose, path, nodemailer, CronJob, fs,
                 if (result.length > 0) {
                     console.log('[MONGOOSE] Found all employees');
                     var stats = gatherStatistics(result);
-                    res.status(200).json({'Ratio':{'Male':stats[0][0], 'Female':stats[0][1]},
-                                          'BirthsByMonth':{'Jan':stats[1][0],'Feb':stats[1][1],'Mar':stats[1][2],'Apr':stats[1][3],'May':stats[1][4],'Jun':stats[1][5],
-                                                         'Jul':stats[1][6],'Aug':stats[1][7],'Sep':stats[1][8],'Oct':stats[1][9],'Nov':stats[1][10],'Dec':stats[1][11]},
-                                          'AverageTime':stats[2],
-                                          'AgeGroups':{'18to24':stats[3][0], '25to34':stats[3][1],'35to44':stats[3][2],'45to54':stats[3][3], '55+':stats[3][4]}});
+                    res.status(200).json({'MFRatio':{'Male':stats[0][0], 'Female':stats[0][1]},
+                                          'MFTotal':{'Male':stats[1][0], 'Female':stats[1][1]},
+                                          'BirthsByMonthRatio':{'Jan':stats[2][0],'Feb':stats[2][1],'Mar':stats[2][2],'Apr':stats[2][3],'May':stats[2][4],'Jun':stats[2][5],
+                                                                'Jul':stats[2][6],'Aug':stats[2][7],'Sep':stats[2][8],'Oct':stats[2][9],'Nov':stats[2][10],'Dec':stats[2][11]},
+                                          'BirthsByMonthTotal':{'Jan':stats[3][0],'Feb':stats[3][1],'Mar':stats[3][2],'Apr':stats[3][3],'May':stats[3][4],'Jun':stats[3][5],
+                                                                'Jul':stats[3][6],'Aug':stats[3][7],'Sep':stats[3][8],'Oct':stats[3][9],'Nov':stats[3][10],'Dec':stats[3][11]},
+                                          'AverageTime':stats[4],
+                                          'AgeGroups':{'18to24':stats[5][0], '25to34':stats[5][1],'35to44':stats[5][2],'45to54':stats[5][3], '55+':stats[5][4]},
+                                          'TotalEmployees':stats[6]});
                 } else {
                     console.log('[MONGOOSE] No employees to find');
                 }
@@ -391,16 +395,19 @@ module.exports = function(express, app, mongoose, path, nodemailer, CronJob, fs,
 
     function gatherStatistics(employees){
         var statistics = [];
-        var ratio = [0, 0]; // Male Female
-        var birthByMonth = [0,0,0,0,0,0,0,0,0,0,0,0];
+        var MFratio = [0, 0]; // Male Female
+        var MFtotal = [0, 0];
+        var birthByMonthTotal = [0,0,0,0,0,0,0,0,0,0,0,0];
+        var birthByMonthRatio = [0,0,0,0,0,0,0,0,0,0,0,0];
         var averageTime = 0;
         var ageGroup = [0,0,0,0,0]; //18-24, 25-34, 35-44, 45-54, 55+
-        for(var i = 0; i < employees.length; i++) {
+        var totalEmployees = employees.length;
+        for(var i = 0; i < totalEmployees; i++) {
             var person = employees[i];
-            if(person.gender == "Male") ratio[0]++;
-            else ratio[1]++;
+            if(person.gender == "Male") MFtotal[0]++;
+            else MFtotal[1]++;
 
-            birthByMonth[person.birthDate.getMonth()]++;
+            birthByMonthTotal[person.birthDate.getMonth()]++;
 
             averageTime += person.timeSpent;
 
@@ -411,10 +418,20 @@ module.exports = function(express, app, mongoose, path, nodemailer, CronJob, fs,
             else if(age >= 45 && age <= 54) ageGroup[3]++;
             else if(age >= 55) ageGroup[4]++;
         }
-        statistics[0] = ratio;
-        statistics[1] = birthByMonth;
-        statistics[2] = Math.ceil(averageTime / employees.length);
-        statistics[3] = ageGroup;
+        MFratio[0] = MFtotal[0] / totalEmployees;
+        MFratio[1] = MFtotal[1] / totalEmployees;
+
+        for(var i = 0; i < birthByMonthTotal.length; i++) {
+            birthByMonthRatio[i] = birthByMonthTotal[i] / totalEmployees;
+        }
+
+        statistics[0] = MFratio;
+        statistics[1] = MFtotal;
+        statistics[2] = birthByMonthRatio;
+        statistics[3] = birthByMonthTotal;
+        statistics[4] = Math.ceil(averageTime / employees.length);
+        statistics[5] = ageGroup;
+        statistics[6] = totalEmployees;
         return statistics;
     }
 
