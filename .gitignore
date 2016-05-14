@@ -200,7 +200,7 @@ $RECYCLE.BIN/
 # Packages
 *.egg
 *.egg-info
-dist/
+#dist/ #node modules
 build/
 eggs/
 parts/
