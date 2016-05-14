@@ -116,7 +116,7 @@ _TeamCity*
 .*crunch*.local.xml
 
 # Installshield output folder
-[Ee]xpress/
+# [Ee]xpress/ # commented to commit the express node module
 
 # DocProject is a documentation generator add-in
 DocProject/buildhelp/
