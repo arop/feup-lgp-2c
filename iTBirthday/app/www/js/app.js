@@ -1,6 +1,6 @@
 // Ionic Starter App
 
-var serverUrl = "https://edf72357.ngrok.io/";
+var serverUrl = "https://edf72357.ngrok.io";
 //var defaultPath = '/app/www/';
 var defaultPath = '';
 
