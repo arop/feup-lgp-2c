@@ -22,8 +22,14 @@ require('./routes')(express, app, path);
 require('./method')(express, app, mongoose, path, nodemailer, CronJob, fs, busboy, clickatell);
 
 //Launch server
-app.listen(4242, function(){
+/*app.listen(4242, function(){
   console.log("Connected to server, port 4242.");
+});*/
+
+// launch server with ngrok
+//https://e5230151.ngrok.io/
+app.listen(8080, function(){
+  console.log("Connected to server, port 8080.");
 });
 
 module.exports = app;
