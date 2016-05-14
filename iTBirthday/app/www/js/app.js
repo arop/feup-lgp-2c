@@ -1,12 +1,18 @@
 // Ionic Starter App
 
+var serverUrl = "https://e5230151.ngrok.io";
+//var defaultPath = '/app/www/';
+var defaultPath = '';
+
 // angular.module is a global place for creating, registering and retrieving Angular modules
 // 'itBirthday' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
 angular.module('itBirthday', ['ionic', 'ngFileUpload', 'ngPageTitle',
     'itBirthday.login', 'itBirthday.profile', 'itBirthday.statistics', 'itBirthday.settings'])
 
-  .run(function($ionicPlatform) {
+  .run(function($ionicPlatform, $rootScope) {
+    $rootScope.defaultPath = defaultPath;
+
     $ionicPlatform.ready(function() {
       if(window.cordova && window.cordova.plugins.Keyboard) {
         // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
@@ -25,6 +31,7 @@ angular.module('itBirthday', ['ionic', 'ngFileUpload', 'ngPageTitle',
   })
 
   .config(function($stateProvider, $urlRouterProvider,$ionicConfigProvider) {
+
     $ionicConfigProvider.tabs.position('top'); //bottom - comment to put default
 
     // Ionic uses AngularUI Router which uses the concept of states
@@ -36,7 +43,7 @@ angular.module('itBirthday', ['ionic', 'ngFileUpload', 'ngPageTitle',
     // login page before showing tabs
       .state('login', {
         url: '/login',
-        templateUrl: '/app/www/templates/login.html',
+        templateUrl: defaultPath + 'templates/login.html',
         controller: 'LoginCtrl',
         data: {
           pageTitle: 'Login'
@@ -47,7 +54,7 @@ angular.module('itBirthday', ['ionic', 'ngFileUpload', 'ngPageTitle',
       .state('tabs', {
         url: '/tabs',
         abstract: true,
-        templateUrl: '/app/www/templates/tabs.html'
+        templateUrl: defaultPath + 'templates/tabs.html'
       })
 
       // Each tab has its own nav history stack:
@@ -55,7 +62,7 @@ angular.module('itBirthday', ['ionic', 'ngFileUpload', 'ngPageTitle',
         url: '/dash',
         views: {
           'tab-dash': {
-            templateUrl: '/app/www/templates/tab-dash.html',
+            templateUrl: defaultPath + 'templates/tab-dash.html',
             controller: 'StatisticsCtrl'
           }
         },
@@ -70,7 +77,7 @@ angular.module('itBirthday', ['ionic', 'ngFileUpload', 'ngPageTitle',
         abstract: true,
         views: {
           'tab-profile': {
-            templateUrl: '/app/www/templates/tab-profile.html'
+            templateUrl: defaultPath + 'templates/tab-profile.html'
           }
         }
       })
@@ -79,7 +86,7 @@ angular.module('itBirthday', ['ionic', 'ngFileUpload', 'ngPageTitle',
         url: '/main',
         views: {
           'inside-profile-tab@tabs.profile': {
-            templateUrl: '/app/www/templates/default-profile.html'
+            templateUrl: defaultPath + 'templates/default-profile.html'
           }
         },
         data: {
@@ -91,7 +98,7 @@ angular.module('itBirthday', ['ionic', 'ngFileUpload', 'ngPageTitle',
         url: '/new',
         views: {
           'inside-profile-tab@tabs.profile': {
-            templateUrl: '/app/www/templates/profile.html',
+            templateUrl: defaultPath + 'templates/profile.html',
             controller: 'NewUserCtrl'
           }
         },
@@ -104,7 +111,7 @@ angular.module('itBirthday', ['ionic', 'ngFileUpload', 'ngPageTitle',
         url: '/update',
         views: {
           'inside-profile-tab@tabs.profile': {
-            templateUrl: '/app/www/templates/profile.html',
+            templateUrl: defaultPath + 'templates/profile.html',
             controller: 'UpdateUserCtrl'
           }
         },
@@ -117,7 +124,7 @@ angular.module('itBirthday', ['ionic', 'ngFileUpload', 'ngPageTitle',
         url: '/show/:id',
         views: {
           'inside-profile-tab@tabs.profile': {
-            templateUrl: '/app/www/templates/profile.html',
+            templateUrl: defaultPath + 'templates/profile.html',
             controller: 'UpdateUserCtrl'
           }
         },
@@ -130,7 +137,7 @@ angular.module('itBirthday', ['ionic', 'ngFileUpload', 'ngPageTitle',
         url: '/search',
         views: {
           'inside-profile-tab@tabs.profile': {
-            templateUrl: '/app/www/templates/search-profile.html',
+            templateUrl: defaultPath + 'templates/search-profile.html',
             controller: 'SearchCtrl'
           }
         },
@@ -143,7 +150,7 @@ angular.module('itBirthday', ['ionic', 'ngFileUpload', 'ngPageTitle',
         url: '/settings',
         views: {
           'tab-settings': {
-            templateUrl: '/app/www/templates/tab-settings.html',
+            templateUrl: defaultPath + 'templates/tab-settings.html',
             controller: 'MsgTemplatesCtrl'
           }
         },
@@ -155,5 +162,5 @@ angular.module('itBirthday', ['ionic', 'ngFileUpload', 'ngPageTitle',
     // if none of the above states are matched, use this as the fallback
 
     $urlRouterProvider.otherwise('/login');
-  });
+  })
 
