@@ -4,6 +4,7 @@
 
 #*node_modules/
 .idea/
+.io-config.json
 
 #################
 ## Eclipse
@@ -224,3 +225,5 @@ pip-log.txt
 
 iTBirthday/app/ionic.project
 iTBirthday/images/
+iTBirthday/app/.io-config.json
+iTBirthday/.io-config.json
