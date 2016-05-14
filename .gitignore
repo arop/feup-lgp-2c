@@ -50,8 +50,8 @@ local.properties
 
 # Build results
 
-[Dd]ebug/
-[Rr]elease/
+#[Dd]ebug/	# commited because node modules
+#[Rr]elease/ # commited because node modules
 x64/
 build/
 [Bb]in/
