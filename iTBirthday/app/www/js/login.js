@@ -2,6 +2,8 @@ angular.module('itBirthday.login', [])
 
   .controller('LoginCtrl', function($scope,$state, $http) {
 
+    $scope.user = {};
+
     //log out
     /*$scope.logout = function() {
       if ("session" in localStorage) localStorage.removeItem("session");
@@ -14,7 +16,7 @@ angular.module('itBirthday.login', [])
         return false;
       }else {
         $state.go('tabs.dash');
-        $http.post('/check_login', {
+        $http.post(serverUrl + '/check_login', {
           username: user.username,
           password: user.password
         }).success(function (data) {
@@ -25,6 +27,7 @@ angular.module('itBirthday.login', [])
           localStorage.setItem("session", JSON.stringify(data));
 
           $state.go('tabs.dash');
+          
         }).error(function (data) {
           console.log('ERROR: ' + data);
           return false;

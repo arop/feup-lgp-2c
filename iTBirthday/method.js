@@ -215,7 +215,6 @@ module.exports = function(express, app, mongoose, path, nodemailer, CronJob, fs,
                 res.status(200).json('[MONGOOSE] Employee Updated');
             }
         })
-
     });
 
     app.post('/check_login', function (req, res) {
@@ -347,7 +346,7 @@ module.exports = function(express, app, mongoose, path, nodemailer, CronJob, fs,
                     console.log('Message sent: ' + info.response);
                 });
                 if(result[i].sendSMS){
-                   // SendSMSService("Happy Birthday", "+351" + result[i].phoneNumber); //TO change to the message itself
+                    // SendSMSService("Happy Birthday", "+351" + result[i].phoneNumber); //TO change to the message itself
                 }
 
             }
@@ -375,14 +374,14 @@ module.exports = function(express, app, mongoose, path, nodemailer, CronJob, fs,
                     console.log('[MONGOOSE] Found all employees');
                     var stats = gatherStatistics(result);
                     res.status(200).json({'MFRatio':{'Male':stats[0][0], 'Female':stats[0][1]},
-                                          'MFTotal':{'Male':stats[1][0], 'Female':stats[1][1]},
-                                          'BirthsByMonthRatio':{'Jan':stats[2][0],'Feb':stats[2][1],'Mar':stats[2][2],'Apr':stats[2][3],'May':stats[2][4],'Jun':stats[2][5],
-                                                                'Jul':stats[2][6],'Aug':stats[2][7],'Sep':stats[2][8],'Oct':stats[2][9],'Nov':stats[2][10],'Dec':stats[2][11]},
-                                          'BirthsByMonthTotal':{'Jan':stats[3][0],'Feb':stats[3][1],'Mar':stats[3][2],'Apr':stats[3][3],'May':stats[3][4],'Jun':stats[3][5],
-                                                                'Jul':stats[3][6],'Aug':stats[3][7],'Sep':stats[3][8],'Oct':stats[3][9],'Nov':stats[3][10],'Dec':stats[3][11]},
-                                          'AverageTime':stats[4],
-                                          'AgeGroups':{'18to24':stats[5][0], '25to34':stats[5][1],'35to44':stats[5][2],'45to54':stats[5][3], '55+':stats[5][4]},
-                                          'TotalEmployees':stats[6]});
+                        'MFTotal':{'Male':stats[1][0], 'Female':stats[1][1]},
+                        'BirthsByMonthRatio':{'Jan':stats[2][0],'Feb':stats[2][1],'Mar':stats[2][2],'Apr':stats[2][3],'May':stats[2][4],'Jun':stats[2][5],
+                            'Jul':stats[2][6],'Aug':stats[2][7],'Sep':stats[2][8],'Oct':stats[2][9],'Nov':stats[2][10],'Dec':stats[2][11]},
+                        'BirthsByMonthTotal':{'Jan':stats[3][0],'Feb':stats[3][1],'Mar':stats[3][2],'Apr':stats[3][3],'May':stats[3][4],'Jun':stats[3][5],
+                            'Jul':stats[3][6],'Aug':stats[3][7],'Sep':stats[3][8],'Oct':stats[3][9],'Nov':stats[3][10],'Dec':stats[3][11]},
+                        'AverageTime':stats[4],
+                        'AgeGroups':{'18to24':stats[5][0], '25to34':stats[5][1],'35to44':stats[5][2],'45to54':stats[5][3], '55+':stats[5][4]},
+                        'TotalEmployees':stats[6]});
                 } else {
                     console.log('[MONGOOSE] No employees to find');
                 }
@@ -444,51 +443,51 @@ module.exports = function(express, app, mongoose, path, nodemailer, CronJob, fs,
         return Math.floor((utc2 - utc1) / _MS_PER_DAY);
     }
 
-	/*TESTS
-	 cleanAdmin();
-	 cleanEmployee();
-	 cleanTemplate();
-	 var admin = new Admin({username: 'admin', password: '68e656b251e67e8358bef8483ab0d51c6619f3e7a1a9f0e75838d41ff368f728'});
-	 admin.save(function (err) {if (err) console.log ('[MONGOOSE] Error saving new admin! ' + err)});
-	 checkLogin('admin','68e656b251e67e8358bef8483ab0d51c6619f3e7a1a9f0e75838d41ff368f728');
-/*
-	 var johndoe = new Employee ({
-         name: 'John Doe',
-         birthDate: '1990-01-30',
-         phoneNumber: '965912228',
-         email: 'johndoe@itgrow.com',
-         entryDate: '2014-04-10',
-         sendMail: true,
-         sendSMS: false,
-         facebookPost: false,
-         gender: 'Male'
-	 });
+    /*TESTS
+     cleanAdmin();
+     cleanEmployee();
+     cleanTemplate();
+     var admin = new Admin({username: 'admin', password: '68e656b251e67e8358bef8483ab0d51c6619f3e7a1a9f0e75838d41ff368f728'});
+     admin.save(function (err) {if (err) console.log ('[MONGOOSE] Error saving new admin! ' + err)});
+     checkLogin('admin','68e656b251e67e8358bef8483ab0d51c6619f3e7a1a9f0e75838d41ff368f728');
+     /*
+     var johndoe = new Employee ({
+     name: 'John Doe',
+     birthDate: '1990-01-30',
+     phoneNumber: '965912228',
+     email: 'johndoe@itgrow.com',
+     entryDate: '2014-04-10',
+     sendMail: true,
+     sendSMS: false,
+     facebookPost: false,
+     gender: 'Male'
+     });
 
      var maryjane = new Employee ({
-         name: 'Mary Jane',
-         birthDate: '1990-01-30',
-         phoneNumber: '965912218',
-         email: 'maryjane@itgrow.com',
-         entryDate: '2014-04-10',
-         sendMail: true,
-         sendSMS: false,
-         facebookPost: false,
-         gender: 'Female'
+     name: 'Mary Jane',
+     birthDate: '1990-01-30',
+     phoneNumber: '965912218',
+     email: 'maryjane@itgrow.com',
+     entryDate: '2014-04-10',
+     sendMail: true,
+     sendSMS: false,
+     facebookPost: false,
+     gender: 'Female'
      });
 
      var zecarlos = new Employee ({
-         name: 'Zé Carlos',
-         birthDate: '1990-01-30',
-         phoneNumber: '965912328',
-         email: 'zecarlos@itgrow.com',
-         entryDate: '2014-04-10',
-         sendMail: true,
-         sendSMS: false,
-         facebookPost: false,
-         gender: 'Male'
+     name: 'Zé Carlos',
+     birthDate: '1990-01-30',
+     phoneNumber: '965912328',
+     email: 'zecarlos@itgrow.com',
+     entryDate: '2014-04-10',
+     sendMail: true,
+     sendSMS: false,
+     facebookPost: false,
+     gender: 'Male'
      });
 
-    johndoe.save(function (err) {if (err) console.log ('[MONGOOSE] Error saving new employee!' + err)});
-    maryjane.save(function (err) {if (err) console.log ('[MONGOOSE] Error saving new employee!' + err)});
-    zecarlos.save(function (err) {if (err) console.log ('[MONGOOSE] Error saving new employee!' + err)});*/
+     johndoe.save(function (err) {if (err) console.log ('[MONGOOSE] Error saving new employee!' + err)});
+     maryjane.save(function (err) {if (err) console.log ('[MONGOOSE] Error saving new employee!' + err)});
+     zecarlos.save(function (err) {if (err) console.log ('[MONGOOSE] Error saving new employee!' + err)});*/
 }
