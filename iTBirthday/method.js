@@ -2,8 +2,8 @@ module.exports = function(express, app, mongoose, path, nodemailer, CronJob, fs,
     var Finder = require('fs-finder');
     var CryptoJS = require("crypto-js");
     //Database
-    mongoose.connect('mongodb://localhost/iTBirthday'); // change name of database , local database at the moment
-    //mongoose.connect('mongodb://lgpteamc:lgp201516@ds036069.mlab.com:36069/itbirthday');
+    //mongoose.connect('mongodb://localhost/iTBirthday'); // change name of database , local database at the moment
+    mongoose.connect('mongodb://lgpteamc:lgp201516@ds036069.mlab.com:36069/itbirthday');
 
     var db = mongoose.connection;
     db.on('error', console.error.bind(console, '[MONGOOSE] Database Connection Error'));
