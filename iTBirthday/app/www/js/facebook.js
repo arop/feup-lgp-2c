@@ -1,120 +1,123 @@
-angular.module('itBirthday.facebook', [])
-
-  .controller('FacebookCtrl', function ($scope, $http) {
-
-    $scope.login = function () {
-    };
-
-    $scope.post = function() {
-      console.log("Posting on facebook");
-    };
-
-    $scope.checkLoginState = function () {
-      FB.getLoginStatus(function(response) {
-
-        statusChangeCallback(response, $scope);
-
-        console.log($scope.facebookUser);
-      });
-    };
-
-    $scope.updateFacebookData = function() {
-
-      if($scope.facebookUser.token == undefined) {
-        console.log("Token is undefined!");
-        return;
-      }
-
-      if($scope.facebookUser.expiresIn == undefined) {
-        console.log("ExpiresIn is undefined!");
-        return;
-      }
-
-      $http.post('/update_facebook_data', {
-        token: $scope.facebookUser.token,
-        expiresIn: $scope.facebookUser.expiresIn
-      }).success(function (data) {
-
-        console.log("Facebook data successfully updated!");
-        return true;
-      }).error(function (err) {
-
-        console.log('Error while udapting facebook data: ' + err);
-        return false;
-      });
-
-      console.log("Update Facebook Data terminated");
-    };
-  })
-
-  .run(['$rootScope', '$window',
-    function ($rootScope, $window) {
-
-      $rootScope.facebookUser = {};
-
-      $window.fbAsyncInit = function() {
-        // Executed when the SDK is loaded
-
-        FB.init({
-          appId: '1046778285368752',
-          channelUrl: 'app/www/channel.html',
-          status: true,
-          cookie: true,
-          xfbml: true
-        });
-
-        FB.getLoginStatus(function(response) {
-
-          statusChangeCallback(response, $rootScope);
-
-          console.log($rootScope.facebookUser);
-        });
-      };
-
-      (function(d){
-        // load the Facebook javascript SDK
-        var js,
-          id = 'facebook-jssdk',
-          ref = d.getElementsByTagName('script')[0];
-
-        if (d.getElementById(id)) {return;}
-
-        js = d.createElement('script');
-        js.id = id;
-        js.async = true;
-        js.src = "//connect.facebook.net/en_US/all.js";
-
-        ref.parentNode.insertBefore(js, ref);
-      }(document));
-  }]);
-
-var statusChangeCallback = function(response, $scope) {
-
-  // The response object is returned with a status field that lets the
-  // app know the current login status of the person.
-  // Full docs on the response object can be found in the documentation
-  // for FB.getLoginStatus().
-  if (response.status === 'connected') {
-    // Logged into your app and Facebook.
-
-    $scope.facebookUser.token = response.authResponse.accessToken;
-    $scope.facebookUser.expiresIn = response.authResponse.expiresIn;
-
-  } else if (response.status === 'not_authorized') {
-
-    // The person is logged into Facebook, but not your app.
-    document.getElementById('status').innerHTML = 'Please log into this app.';
-  } else {
-
-    // The person is not logged into Facebook, so we're not sure if
-    // they are logged into this app or not.
-    document.getElementById('status').innerHTML = 'Please log into Facebook.';
-  }
-};
-
-var checkLoginState = function () {
-  FB.getLoginStatus(function(response) {
-
-    statusChangeCallback(response);
+// The code below is the asynchronous loading of the facebook API
+window.fbAsyncInit = function () {
+  FB.init({
+    appId: '1046778285368752',
+    xfbml: true,
+    version: 'v2.4'
   });
 };
+
+(function (d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {
+    return;
+  }
+  js = d.createElement(s);
+  js.id = id;
+  js.src = "//connect.facebook.net/en_US/sdk.js";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));
+
+// Below we create the service for OAuth authentication
+var appModule = angular.module('itBirthday');
+appModule.service('FBAuth', function ($q, $ionicLoading) {
+
+  this.getLoginStatus = function () {
+    var defer = $q.defer();
+
+    FB.getLoginStatus(function (response) {
+
+      if (response.status === "connected") {
+        console.log(JSON.stringify(response));
+      } else {
+        console.log("FB: Not logged in");
+      }
+    });
+
+    return defer.promise;
+  };
+
+  this.loginFacebook = function ($scope) {
+    var defer = $q.defer();
+
+    FB.login(function (response) {
+
+      if (response.status === "connected") {
+        $scope.activeToken = response["authResponse"]["accessToken"];
+        console.log("Acess Token: " + $scope.activeToken);
+      } else {
+        console.log("FB: Not logged in");
+      }
+    }, {
+      scope: 'public_profile, email, publish_actions',
+      return_scopes: true
+    });
+
+    return defer.promise;
+  };
+
+  this.logoutFacebook = function () {
+    var defer = $q.defer();
+
+    FB.logout(function (response) {
+      console.log('FB: logged out');
+    });
+
+    return defer.promise;
+  };
+
+  this.getFacebookAPI = function () {
+    var defer = $q.defer();
+
+
+    FB.api("me/?fields = id,email", ['publish_actions'], function(response) {
+
+      if(response.error) {
+        console.log(JSON.stringify(response.error));
+      } else {
+        console.log(JSON.stringify(response));
+      }
+    });
+
+    return defer.promise;
+  };
+});
+
+angular.module('itBirthday.facebook', [])
+
+.controller('FacebookCtrl', function($scope, FBAuth, $ionicLoading) {
+
+  $scope.activeToken = {};
+
+  $scope.checkLoginStatus = function() {
+    getLoginUserStatus();
+  };
+
+  $scope.loginFacebook = function(userData) {
+    loginFacebookUser();
+  };
+
+  $scope.facebookAPI = function() {
+    getFacebookUserApi();
+  };
+
+  $scope.logoutFacebook = function() {
+    logoutFacebookUser();
+  };
+
+  function loginFacebookUser() {
+    return FBAuth.loginFacebook($scope);
+  }
+
+  function logoutFacebookUser() {
+    return FBAuth.logoutFacebook();
+  }
+
+  function getFacebookUserApi() {
+    return FBAuth.getFacebookAPI();
+  }
+
+  function getLoginUserStatus() {
+    return FBAuth.getLoginStatus();
+  }
+});

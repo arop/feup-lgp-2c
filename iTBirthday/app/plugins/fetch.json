@@ -1,0 +1,14 @@
+{
+    "com.phonegap.plugins.facebookconnect": {
+        "source": {
+            "type": "git",
+            "url": "https://github.com/Telerik-Verified-Plugins/Facebook/",
+            "subdir": "."
+        },
+        "is_top_level": true,
+        "variables": {
+            "APP_ID": "1046778285368752",
+            "APP_NAME": "iTBirthday"
+        }
+    }
+}

@@ -1,0 +1,17 @@
+{
+    "prepare_queue": {
+        "installed": [],
+        "uninstalled": []
+    },
+    "config_munge": {
+        "files": {}
+    },
+    "installed_plugins": {
+        "com.phonegap.plugins.facebookconnect": {
+            "APP_ID": "1046778285368752",
+            "APP_NAME": "iTBirthday",
+            "PACKAGE_NAME": "com.ionicframework.itbirthday311954"
+        }
+    },
+    "dependent_plugins": {}
+}

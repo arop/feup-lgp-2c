@@ -1,18 +1,9 @@
 <ion-view>
-  <ion-content>
-    <fb:login-button class="fb-login-button button button-block" scope="public_profile,email,publish_actions" onlogin="checkLoginState();"
-                     show-faces="true" max-rows="1" size="large"></fb:login-button>
-
-    <button class="button button-block" id="create-fb-data" ng-click="updateFacebookData()">
-      CREATE FACEBOOK DATA
-    </button>
-
-    <button class="button button-block" id="login-status" ng-click="checkLoginState()">
-      CHECK LOGIN STATUS
-    </button>
-
-    <button class="button button-block" id="post-button" ng-click="post()">
-      POST
-    </button>
+  <ion-content class="padding">
+    <div id = "fb-root"></div>
+    <button class = "button button-block" ng-click = "loginFacebook()">LOG IN</button>
+    <button class = "button button-block" ng-click = "logoutFacebook()">LOG OUT</button>
+    <button class = "button button-block" ng-click = "checkLoginStatus()">CHECK</button>
+    <button class = "button button-block" ng-click = "facebookAPI()">API</button>
   </ion-content>
 </ion-view>

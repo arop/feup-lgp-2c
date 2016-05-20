@@ -1,0 +1,20 @@
+<ion-view>
+  <ion-content>
+    <div id = "fb-root"></div>
+
+    <fb:login-button class="fb-login-button button button-block" scope="public_profile,email,publish_actions" onlogin="checkLoginState();"
+                     show-faces="true" max-rows="1" size="large"></fb:login-button>
+
+    <button class="button button-block" id="create-fb-data" ng-click="updateFacebookData()">
+      CREATE FACEBOOK DATA
+    </button>
+
+    <button class="button button-block" id="login-status" ng-click="checkLoginState()">
+      CHECK LOGIN STATUS
+    </button>
+
+    <button class="button button-block" id="post-button" ng-click="post()">
+      POST
+    </button>
+  </ion-content>
+</ion-view>
