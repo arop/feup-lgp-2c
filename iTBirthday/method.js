@@ -277,7 +277,7 @@ module.exports = function(express, app, mongoose, path, nodemailer, CronJob, fs,
     });
 
     app.get('/list_employees', function (req, res) {
-        var query = Employee.find({}, 'name email');
+        var query = Employee.find({}, 'name email exitDate');
         query.exec(function (err, result) {
             if (!err) {
                 if (result.length > 0) {

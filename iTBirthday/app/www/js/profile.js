@@ -1,7 +1,6 @@
 angular.module('itBirthday.profile', ['ngFileUpload'])
 
   .controller('SearchCtrl', function ($scope, $http) {
-
     var cookie = localStorage.getItem('session');
 
     if (cookie == null) {
@@ -29,9 +28,24 @@ angular.module('itBirthday.profile', ['ngFileUpload'])
       });
     };
 
-    var searchLabel = $("#search-label").find("> input");
+    var searchLabel = $($("#search-label").find("> input")[0]);
+    var statusFilter = $("#status-filter").find("> select")[0];
 
     $scope.filterResults = function (element) {
+      var status = statusFilter.options[statusFilter.selectedIndex].value;
+      if(status != undefined) {
+
+        var exitDate = element["exitDate"];
+
+        if(status == "now" && exitDate) {
+          return false;
+        }
+
+        if(status == "old" && !exitDate) {
+          return false;
+        }
+      }
+
       var searchTerm = searchLabel.val();
       if (searchTerm == undefined || searchTerm.length == 0) {
         return true;
