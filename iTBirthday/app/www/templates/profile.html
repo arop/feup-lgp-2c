@@ -16,6 +16,19 @@
                 <input id="file_upload" type="file" file-upload>
               </label>
             </div>
+
+            <div class="list" ng-if="!isNewProfile">
+              <label class="item">
+                <button class="button button-block button-outline button-energized" ng-click="showPopupExitDate()">
+                  Adicionar data de saída
+                </button>
+              </label>
+              <label class="item">
+                <button class="button button-block button-outline button-assertive" ng-click="showConfirmRemove()">
+                  Remover perfil
+                </button>
+              </label>
+            </div>
           </div>
           <div class="col-50">
             <div class="list" style="width:100%; height: 100%;">
@@ -74,15 +87,15 @@
                             ng-disabled="isView">Email de Aniversário
               </ion-checkbox>
 
-              <ion-checkbox ng-model="profile.personalizedEmail"
-                            ng-init="profile.personalizedEmail = false"
+              <ion-checkbox ng-model="profile.sendPersonalizedMail"
+                            ng-init="profile.sendPersonalizedMail = false"
                             ng-show="profile.sendMail"
-                            ng-checked="profile.personalizedEmail"
+                            ng-checked="profile.sendPersonalizedMail"
                             ng-disabled="isView">Email personalizado
               </ion-checkbox>
 
               <label class="item item-input item-stacked-label" ng-if="!isNewProfile"
-                     ng-show="profile.personalizedEmail">
+                     ng-show="profile.sendPersonalizedMail">
                 <input type="text" placeholder="Email personalizado" ng-model="profile.mailText"
                        maxlength="500" class="pencil-edit"
                        ng-readonly="isView"/>
@@ -94,15 +107,15 @@
                             ng-disabled="isView">SMS de Aniversário
               </ion-checkbox>
 
-              <ion-checkbox ng-model="profile.personalizedSMS"
-                            ng-init="profile.personalizedSMS = false"
+              <ion-checkbox ng-model="profile.sendPersonalizedSMS"
+                            ng-init="profile.sendPersonalizedSMS = false"
                             ng-show="profile.sendSMS"
-                            ng-checked="profile.personalizedSMS"
+                            ng-checked="profile.sendPersonalizedSMS"
                             ng-disabled="isView">SMS personalizado
               </ion-checkbox>
 
               <label class="item item-input item-stacked-label" ng-if="!isNewProfile"
-                     ng-show="profile.personalizedSMS">
+                     ng-show="profile.sendPersonalizedSMS">
                 <input type="text" placeholder="SMS personalizado" ng-model="profile.smsText"
                        maxlength="140" class="pencil-edit"
                        ng-readonly="isView"/>
@@ -121,16 +134,13 @@
             Voltar
           </button>
           <button class="button button-inline-block app-color" ng-click="isView=false"
-                  ng-show="isView && !isNewProfile">Editar
-            perfil
+                  ng-show="isView && !isNewProfile">Editar perfil
           </button>
           <button class="button button-inline-block app-color" ng-click="update_profile()"
-                  ng-hide="isView || isNewProfile">
-            Guardar alterações
+                  ng-hide="isView || isNewProfile"> Guardar alterações
           </button>
           <button class="button button-inline-block app-color" ng-click="new_profile(profile)"
-                  ng-show="isNewProfile && !isView">
-            Criar perfil
+                  ng-show="isNewProfile && !isView"> Criar perfil
           </button>
         </div>
       </div>
