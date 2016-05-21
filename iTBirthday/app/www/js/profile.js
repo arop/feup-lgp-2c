@@ -1,7 +1,8 @@
 angular.module('itBirthday.profile', ['ngFileUpload'])
 
   .controller('SearchCtrl', function ($scope, $http) {
-
+    $scope.serverUrl = serverUrl;
+    
     var cookie = localStorage.getItem('session');
 
     if (cookie == null){
@@ -30,19 +31,21 @@ angular.module('itBirthday.profile', ['ngFileUpload'])
     }
   })
 
+  // update and view controller
   .controller('UpdateUserCtrl', function ($scope, $http, $state, $stateParams, $filter, Upload) {
     $scope.profile = {};
     $scope.isView = null;
+    $scope.serverUrl = serverUrl;
 
     $scope.getEmployee = function () {
       $scope.isView = true;
       $http.get(serverUrl + '/employee_profile/' + $stateParams.id).success(function (response) {
         $scope.profile = response;
         $scope.profile.birthDate = $filter('date')($scope.profile.birthDate, 'yyyy-MM-dd');
-        $scope.profile.entryDate = $filter('date')($scope.profile.entryDate, 'yyyy-MM-dd');
+        $scope.profile.entryDate = $filter('date')($scope.profile.entryDate, 'yyyy-MM-dd'); 
       });
     };
-    
+
     //listen for the file selected event
     $("input[type=file]").change(function () {
       console.log("CHANGED");
@@ -111,7 +114,9 @@ angular.module('itBirthday.profile', ['ngFileUpload'])
         email: $scope.profile.email,
         entryDate: new Date($scope.profile.entryDate),
         sendMail: $scope.profile.sendMail,
+        mailText: $scope.profile.mailText,
         sendSMS: $scope.profile.sendSMS,
+        smsText: $scope.profile.smsText,
         facebookPost: $scope.profile.facebookPost,
         gender: $scope.profile.gender
       }).success(function () {
@@ -280,8 +285,9 @@ angular.module('itBirthday.profile', ['ngFileUpload'])
   })
 
   .controller('NewUserCtrl', ['$scope', '$state', '$http', 'Upload', function ($scope, $state, $http, Upload) {
-
+    
     $scope.profile = {};
+    $scope.serverUrl = serverUrl;
 
     $scope.getEmployee = function () {
       $scope.isView = false;
@@ -357,7 +363,9 @@ angular.module('itBirthday.profile', ['ngFileUpload'])
         email: profileData.email,
         entryDate: new Date(profileData.entryDate),
         sendMail: profileData.sendMail,
+        mailText: profileData.mailText,
         sendSMS: profileData.sendSMS,
+        smsText: profileData.smsText,
         facebookPost: profileData.facebookPost,
         gender: profileData.gender
       }).success(function (data) {
