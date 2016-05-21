@@ -1,11 +1,14 @@
 angular.module('itBirthday.profile', ['ngFileUpload'])
 
   .controller('SearchCtrl', function ($scope, $http) {
+<<<<<<< HEAD
     $scope.serverUrl = serverUrl;
     
+=======
+>>>>>>> profile-list-page
     var cookie = localStorage.getItem('session');
 
-    if (cookie == null){
+    if (cookie == null) {
 
     }
     else {
@@ -28,7 +31,46 @@ angular.module('itBirthday.profile', ['ngFileUpload'])
       $http.get(serverUrl + '/list_employees').success(function (response) {
         $scope.profiles = response;
       });
-    }
+    };
+
+    var searchLabel = $($("#search-label").find("> input")[0]);
+    var statusFilter = $("#status-filter").find("> select")[0];
+
+    $scope.filterResults = function (element) {
+      var status = statusFilter.options[statusFilter.selectedIndex].value;
+      if(status != undefined) {
+
+        var exitDate = element["exitDate"];
+
+        if(status == "now" && exitDate) {
+          return false;
+        }
+
+        if(status == "old" && !exitDate) {
+          return false;
+        }
+      }
+
+      var searchTerm = searchLabel.val();
+      if (searchTerm == undefined || searchTerm.length == 0) {
+        return true;
+      }
+
+      searchTerm = searchTerm.toLowerCase().trim();
+
+      if (element["name"].toLowerCase().search(searchTerm) >= 0) {
+        return true;
+      }
+
+      var emailWithoutHost = element["email"].substring(0, Math.max(0, element["email"].search(/@/) - 1));
+
+      if (emailWithoutHost.toLowerCase().indexOf(searchTerm) >= 0) {
+        return true;
+      }
+
+      return false;
+    };
+
   })
 
   // update and view controller
@@ -121,9 +163,9 @@ angular.module('itBirthday.profile', ['ngFileUpload'])
         gender: $scope.profile.gender
       }).success(function () {
         console.log($scope.profile.photo);
-        if ($scope.profile.photo != undefined){
+        if ($scope.profile.photo != undefined) {
           Upload.upload({
-            url: serverUrl +'/save_image_employee/' + $stateParams.id,
+            url: serverUrl + '/save_image_employee/' + $stateParams.id,
             file: $scope.profile.photo,
             progress: function (e) {
             }
@@ -370,7 +412,7 @@ angular.module('itBirthday.profile', ['ngFileUpload'])
         gender: profileData.gender
       }).success(function (data) {
         //console.log('New user POST successful');
-        if (profileData != undefined){
+        if (profileData != undefined) {
           Upload.upload({
             url: serverUrl + '/save_image_employee/' + data,
             file: profileData.photo,
