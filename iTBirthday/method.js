@@ -49,8 +49,10 @@ module.exports = function(express, app, mongoose, path, nodemailer, CronJob, fs,
         exitDate: {type: Date, required: false},
         sendMail: {type: Boolean, required: true, default: false},
         mailText: {type: String, required: false, trim: true},
+        sendPersonalizedMail: {type: bool, required: false, default: false},
         sendSMS: {type: Boolean, required: true, default: false},
         smsText: {type: String, required: false, trim: true},
+        sendPersonalizedSMS: {type: bool, required: false, default: false},
         facebookPost: {type: Boolean, required: true, default: false},
         photoPath: {type: String, required: false, trim: true},
         gender: {type: String, enum: employeeGender, required: true, trim: true}
@@ -174,6 +176,12 @@ module.exports = function(express, app, mongoose, path, nodemailer, CronJob, fs,
         if (req.body.photoPath) {
             emp_temp.photoPath = req.body.photoPath;
         }
+        if(req.body.sendPersonalizedMail){
+            emp_temp.sendPersonalizedMail = req.body.sendPersonalizedMail;
+        }
+        if(req.body.sendPersonalizedSMS){
+            emp_temp.sendPersonalizedSMS = req.body.sendPersonalizedSMS;
+        }
 
         emp_temp.save(function (err, emp) {
             if (err) {
@@ -234,6 +242,8 @@ module.exports = function(express, app, mongoose, path, nodemailer, CronJob, fs,
             req.body.sendMail = false;
             req.body.sendSMS = false;
             req.body.facebookPost = false;
+            req.body.sendPersonalizedMail = false;
+            req.body.sendPersonalizedSMS = false;
         }
         Employee.findOneAndUpdate({_id: req.params.id}, req.body, function (err, emp) {
             console.log("UPDATEIND");
@@ -376,6 +386,7 @@ module.exports = function(express, app, mongoose, path, nodemailer, CronJob, fs,
                     console.log('Message sent: ' + info.response);
                 });
                 if(result[i].sendSMS){
+                    //TODO: get the default or personalized message
                     // SendSMSService("Happy Birthday", "+351" + result[i].phoneNumber); //TO change to the message itself
                 }
 
@@ -388,8 +399,7 @@ module.exports = function(express, app, mongoose, path, nodemailer, CronJob, fs,
             console.log(res);
         });
     }
-
-    //TODO: get the default or personalized message
+    
     app.get('/test_sms', function (req, res) {
         console.log("SENDING TEST SMS");
         //SendSMSService("HAPPY BIRTHDAY!", "+351962901682");
