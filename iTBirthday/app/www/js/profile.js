@@ -109,9 +109,48 @@ angular.module('itBirthday.profile', ['ngFileUpload'])
       });
     };
 
+    // Triggered on a button click, or some other target
+    $scope.showPopupExitDate = function() {
+      var templateDate = '<label class="item item-input">' +
+        '<span class="input-label">Date</span>'+
+        '<input type="date" ng-model="profile.exitDate">'+
+        '</label>';
+
+      // An elaborate, custom popup
+      var myPopup = $ionicPopup.show({
+        template: templateDate,
+        title: 'Data de saída',
+        subTitle: '(Esta ação é irreversível!)',
+        scope: $scope,
+        buttons: [
+          { text: 'Cancelar' },
+          {
+            text: '<b>Guardar</b>',
+            type: 'button-energized',
+            onTap: function(e) {
+              if (!$scope.profile.exitDate) {
+                //don't allow the user to close unless he enters exit date
+                e.preventDefault();
+              } else {
+                return $scope.profile.exitDate;
+              }
+            }
+          }
+        ]
+      });
+
+      myPopup.then(function(res) {
+        console.log('Tapped!', res);
+        if(res != undefined) {
+          //TODO http request to update exitdate
+        } else {}
+      });
+    };
+
     $scope.getEmployee = function () {
       $scope.isView = true;
       $http.get(serverUrl + '/employee_profile/' + $stateParams.id).success(function (response) {
+        console.log(response);
         $scope.profile = response;
         $scope.profile.birthDate = $filter('date')($scope.profile.birthDate, 'yyyy-MM-dd');
         $scope.profile.entryDate = $filter('date')($scope.profile.entryDate, 'yyyy-MM-dd');
@@ -192,7 +231,6 @@ angular.module('itBirthday.profile', ['ngFileUpload'])
         facebookPost: $scope.profile.facebookPost,
         gender: $scope.profile.gender
       }).success(function () {
-        console.log($scope.profile.photo);
         if ($scope.profile.photo != undefined) {
           Upload.upload({
             url: serverUrl + '/save_image_employee/' + $stateParams.id,
@@ -364,14 +402,13 @@ angular.module('itBirthday.profile', ['ngFileUpload'])
     $scope.getEmployee = function () {
       $scope.isView = false;
       $scope.isNewProfile = true;
-    }
+    };
 
     //listen for the file selected event
     $("input[type=file]").change(function () {
       var file = this.files[0];
       $scope.profile.photo = file;
     });
-
 
     $scope.new_profile = function (profileData) {
 
@@ -435,8 +472,10 @@ angular.module('itBirthday.profile', ['ngFileUpload'])
         email: profileData.email,
         entryDate: new Date(profileData.entryDate),
         sendMail: profileData.sendMail,
+        sendPersonalizedMail: profileData.sendPersonalizedMail,
         mailText: profileData.mailText,
         sendSMS: profileData.sendSMS,
+        sendPersonalizedSMS: profileData.sendPersonalizedSMS,
         smsText: profileData.smsText,
         facebookPost: profileData.facebookPost,
         gender: profileData.gender
