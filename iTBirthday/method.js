@@ -1,4 +1,4 @@
-module.exports = function(express, app, mongoose, path, nodemailer, CronJob, fs, busboy, clickatell) {
+module.exports = function(express, app, mongoose, path, nodemailer, CronJob, fs, busboy, clickatell, oauth2) {
     var Finder = require('fs-finder');
     var CryptoJS = require("crypto-js");
     //Database
@@ -25,6 +25,12 @@ module.exports = function(express, app, mongoose, path, nodemailer, CronJob, fs,
             pass: "lgp2teamc"
         }
     });
+
+    var redirectUri = "http://localhost:8080/authorize";
+
+    var scopes = [ "openid",
+                    "https://outlook.office.com/calendars.readwrite",
+                    "profile" ];
 
     //Schemas
     var AdminSchema = new mongoose.Schema({
@@ -82,6 +88,8 @@ module.exports = function(express, app, mongoose, path, nodemailer, CronJob, fs,
         Admin.remove({}, function (err) {
             if (err) {
                 console.log('[MONGOOSE] Error deleting old date in Admin Doc: ' + err);
+            } else {
+                console.log('[MOGOOSE] Deleted all data in Admin');
             }
         });
     }
@@ -90,6 +98,8 @@ module.exports = function(express, app, mongoose, path, nodemailer, CronJob, fs,
         Employee.remove({}, function (err) {
             if (err) {
                 console.log('[MONGOOSE] Error deleting old date in Employee Doc ' + err);
+            } else {
+                console.log('[MOGOOSE] Deleted all data in Employee');
             }
         });
     }
@@ -98,6 +108,8 @@ module.exports = function(express, app, mongoose, path, nodemailer, CronJob, fs,
         Template.remove({}, function (err) {
             if (err) {
                 console.log('[MONGOOSE] Error deleting old date in Template Doc ' + err);
+            } else {
+                console.log('[MOGOOSE] Deleted all data in Template');
             }
         });
     }
@@ -441,6 +453,65 @@ module.exports = function(express, app, mongoose, path, nodemailer, CronJob, fs,
         var utc2 = Date.UTC(b.getFullYear(), b.getMonth(), b.getDate());
 
         return Math.floor((utc2 - utc1) / _MS_PER_DAY);
+    }
+
+    app.get('/authUrl', function(req, res){
+        var returnVal = oauth2.authCode.authorizeURL({
+            redirect_uri: redirectUri,
+            scope: scopes.join(" ")
+        });
+        console.log("Generated auth url: " + returnVal);
+        res.status(200).json(returnVal);
+    });
+
+    var url = require('url');
+    app.get('/authorize', function(req, res) {
+        console.log("Request handler 'authorize' was called.");
+        var url_parts = url.parse(req.url, true);
+        var code = url_parts.query.code;
+        console.log("Code: " + code);
+        getTokenFromCode(code, tokenReceived, res);
+    });
+
+    function getTokenFromCode(auth_code, callback, response) {
+        var token;
+        oauth2.authCode.getToken({
+            code: auth_code,
+            redirect_uri: redirectUri,
+            scope: scopes.join(" ")
+        }, function (error, result) {
+            if (error) {
+                console.log("Access token error: ", error.message);
+                callback(response, error, null);
+            }
+            else {
+                token = oauth2.accessToken.create(result);
+                console.log("Token created: ", token.token);
+                callback(response, null, token);
+            }
+        });
+    }
+
+    function tokenReceived(res, error, token) {
+        if (error) {
+            console.log("Access token error: ", error.message);
+        }
+        else {
+            console.log("Token Received: " + token);
+            /*var cookies = ['iTBirthday-outlook-token=' + token.token.access_token + ';Max-Age=3600',
+                            'iTBirthday-outlook-email=' + authHelper.getEmailFromIdToken(token.token.id_token) + ';Max-Age=3600'];
+            response.setHeader('Set-Cookie', cookies);
+            response.writeHead(302, {'Location': 'http://localhost:8080/getEvents'});
+            response.end();*/
+        }
+    }
+
+    function getEmailFromIdToken(id_token) {
+        var token_parts = id_token.split('.');
+        var encoded_token = new Buffer(token_parts[1].replace("-", "+").replace("_", "/"), 'base64');
+        var decoded_token = encoded_token.toString();
+        var jwt = JSON.parse(decoded_token);
+        return jwt.preferred_username;
     }
 
     /*TESTS
