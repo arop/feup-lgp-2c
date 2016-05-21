@@ -16,6 +16,19 @@
                 <input id="file_upload" type="file" file-upload>
               </label>
             </div>
+
+            <div class="list">
+              <label class="item">
+                <button class="button button-block button-outline button-energized">
+                  Adicionar data de saída
+                </button>
+              </label>
+              <label class="item">
+                <button class="button button-block button-outline button-assertive" ng-click="showConfirmRemove()">
+                  Remover perfil
+                </button>
+              </label>
+            </div>
           </div>
           <div class="col-50">
             <div class="list" style="width:100%; height: 100%;">
@@ -121,16 +134,13 @@
             Voltar
           </button>
           <button class="button button-inline-block app-color" ng-click="isView=false"
-                  ng-show="isView && !isNewProfile">Editar
-            perfil
+                  ng-show="isView && !isNewProfile">Editar perfil
           </button>
           <button class="button button-inline-block app-color" ng-click="update_profile()"
-                  ng-hide="isView || isNewProfile">
-            Guardar alterações
+                  ng-hide="isView || isNewProfile"> Guardar alterações
           </button>
           <button class="button button-inline-block app-color" ng-click="new_profile(profile)"
-                  ng-show="isNewProfile && !isView">
-            Criar perfil
+                  ng-show="isNewProfile && !isView"> Criar perfil
           </button>
         </div>
       </div>
