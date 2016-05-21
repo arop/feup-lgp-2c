@@ -74,9 +74,17 @@ module.exports = function(express, app, mongoose, path, nodemailer, CronJob, fs,
 
     var templateTypes = 'Email SMS Facebook'.split(' ');
 
-    var TemplateSchema = new mongoose.Schema({
-        name: {type: String, enum: templateTypes, required: true, trim: true},
+    var EmailTemplateSchema = new mongoose.Schema({
+        text: {type: String, required: true, trim: true},
         path: {type: String, required: true, trim: true}
+    });
+
+    var SMSTemplateSchema = new mongoose.Schema({
+        text: {type: String, required: true, trim:true}
+    });
+
+    var FacebookTemplateSchema = new mongoose.Schema({
+        text: {type: String, required: true, trim:true}
     });
 
     var FacebookSchema = new mongoose.Schema({
@@ -89,8 +97,10 @@ module.exports = function(express, app, mongoose, path, nodemailer, CronJob, fs,
     //Create the Models
     var Admin = mongoose.model('Admin', AdminSchema);
     var Employee = mongoose.model('Employee', EmployeeSchema);
-    var Template = mongoose.model('Template', TemplateSchema);
     var Facebook = mongoose.model('Facebook', FacebookSchema);
+    var EmailTemplate = mongoose.model('EmailTemplate', EmailTemplateSchema);
+    var SMSTemplate = mongoose.model('SMSTemplate', EmailTemplateSchema);
+    var FacebookTemplate = mongoose.model('FacebookTemplate', EmailTemplateSchema);
 
     function cleanAdmin() {
         Admin.remove({}, function (err) {
