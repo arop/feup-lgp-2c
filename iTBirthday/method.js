@@ -580,17 +580,77 @@ module.exports = function(express, app, mongoose, path, nodemailer, CronJob, fs,
                 res.status(200).json();
             }
         });
-        /*query.exec(function(err, result){
+    });
+
+    app.get('/sms_template', function(req, res){
+        var query = SMSTemplate.find({});
+        query.exec(function(err, result){
+            if(err){
+                console.log('[MONGOOSE] Error ' + err);
+            } else {
+                res.status(200).json(result);
+            }
+        });
+    });
+
+    app.post('/update_sms_template', function(req, res){
+        var query = SMSTemplate.find({});
+        SMSTemplate.update(query, {text:req.body.template}, function(err, result){
             if(err){
                 console.log('[MONGOOSE] Error: ' + err);
                 res.status(500).json(err);
             } else {
-                result.token = req.body.newToken;
-                result.expirationDate = req.body.expDate;
-                result.save();
+                res.status(200).json();
             }
-        });*/
+        });
     });
+
+    app.get('/email_template', function(req, res){
+        var query = EmailTemplate.find({});
+        query.exec(function(err, result){
+            if(err){
+                console.log('[MONGOOSE] Error ' + err);
+            } else {
+                res.status(200).json(result);
+            }
+        });
+    });
+
+    app.post('/update_email_template', function(req, res){
+        var query = EmailTemplate.find({});
+        EmailTemplate.update(query, {text:req.body.template}, function(err, result){
+            if(err){
+                console.log('[MONGOOSE] Error: ' + err);
+                res.status(500).json(err);
+            } else {
+                res.status(200).json();
+            }
+        });
+    });
+
+    app.get('/facebook_template', function(req, res){
+        var query = FacebookTemplate.find({});
+        query.exec(function(err, result){
+            if(err){
+                console.log('[MONGOOSE] Error ' + err);
+            } else {
+                res.status(200).json(result);
+            }
+        });
+    });
+
+    app.post('/update_facebook_template', function(req, res){
+        var query = FacebookTemplate.find({});
+        FacebookTemplate.update(query, {text:req.body.template}, function(err, result){
+            if(err){
+                console.log('[MONGOOSE] Error: ' + err);
+                res.status(500).json(err);
+            } else {
+                res.status(200).json();
+            }
+        });
+    });
+
 
     /*var facebookstuff = new Facebook({'appId':'thisisappid', 'appSecret':'thisisappsecret', 'token':'asdasdasdasdasdasdasd'});
     facebookstuff.save(function(err){if(err) console.log(err);});*/
