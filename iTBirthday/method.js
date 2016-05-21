@@ -49,8 +49,10 @@ module.exports = function(express, app, mongoose, path, nodemailer, CronJob, fs,
         exitDate: {type: Date, required: false},
         sendMail: {type: Boolean, required: true, default: false},
         mailText: {type: String, required: false, trim: true},
+        sendPersonalizedMail: {type: Boolean, required: false, default: false},
         sendSMS: {type: Boolean, required: true, default: false},
         smsText: {type: String, required: false, trim: true},
+        sendPersonalizedSMS: {type: Boolean, required: false, default: false},
         facebookPost: {type: Boolean, required: true, default: false},
         photoPath: {type: String, required: false, trim: true},
         gender: {type: String, enum: employeeGender, required: true, trim: true}
@@ -74,15 +76,33 @@ module.exports = function(express, app, mongoose, path, nodemailer, CronJob, fs,
 
     var templateTypes = 'Email SMS Facebook'.split(' ');
 
-    var TemplateSchema = new mongoose.Schema({
-        name: {type: String, enum: templateTypes, required: true, trim: true},
+    var EmailTemplateSchema = new mongoose.Schema({
+        text: {type: String, required: true, trim: true},
         path: {type: String, required: true, trim: true}
+    });
+
+    var SMSTemplateSchema = new mongoose.Schema({
+        text: {type: String, required: true, trim:true}
+    });
+
+    var FacebookTemplateSchema = new mongoose.Schema({
+        text: {type: String, required: true, trim:true}
+    });
+
+    var FacebookSchema = new mongoose.Schema({
+        appId: {type: String, required: false, trim: true, unique:true},
+        appSecret: {type: String, required: false, trim: true, unique:true},
+        token: {type: String, required: false, trim: true},
+        expirationDate: {type: Date, required: false}
     });
 
     //Create the Models
     var Admin = mongoose.model('Admin', AdminSchema);
     var Employee = mongoose.model('Employee', EmployeeSchema);
-    var Template = mongoose.model('Template', TemplateSchema);
+    var Facebook = mongoose.model('Facebook', FacebookSchema);
+    var EmailTemplate = mongoose.model('EmailTemplate', EmailTemplateSchema);
+    var SMSTemplate = mongoose.model('SMSTemplate', EmailTemplateSchema);
+    var FacebookTemplate = mongoose.model('FacebookTemplate', EmailTemplateSchema);
 
     function cleanAdmin() {
         Admin.remove({}, function (err) {
@@ -156,6 +176,12 @@ module.exports = function(express, app, mongoose, path, nodemailer, CronJob, fs,
         if (req.body.photoPath) {
             emp_temp.photoPath = req.body.photoPath;
         }
+        if(req.body.sendPersonalizedMail){
+            emp_temp.sendPersonalizedMail = req.body.sendPersonalizedMail;
+        }
+        if(req.body.sendPersonalizedSMS){
+            emp_temp.sendPersonalizedSMS = req.body.sendPersonalizedSMS;
+        }
 
         emp_temp.save(function (err, emp) {
             if (err) {
@@ -219,6 +245,8 @@ module.exports = function(express, app, mongoose, path, nodemailer, CronJob, fs,
             req.body.sendMail = false;
             req.body.sendSMS = false;
             req.body.facebookPost = false;
+            req.body.sendPersonalizedMail = false;
+            req.body.sendPersonalizedSMS = false;
         }
         Employee.findOneAndUpdate({_id: req.params.id}, req.body, function (err, emp) {
             console.log("UPDATEIND");
@@ -280,7 +308,7 @@ module.exports = function(express, app, mongoose, path, nodemailer, CronJob, fs,
     });
 
     app.get('/list_employees', function (req, res) {
-        var query = Employee.find({}, 'name email exitDate');
+        var query = Employee.find({}, 'name email exitDate photoPath');
         query.exec(function (err, result) {
             if (!err) {
                 if (result.length > 0) {
@@ -296,8 +324,8 @@ module.exports = function(express, app, mongoose, path, nodemailer, CronJob, fs,
         });
     });
 
-    app.delete('/delete_employee/:email', function (req, res) {
-        Employee.remove({'email': req.params.email}, function (err, result) {
+    app.delete('/delete_employee', function (req, res) {
+        Employee.remove({'email': req.body.email}, function (err, result) {
             if (!err) {
                 if (result) {
                     console.log('[MONGOOSE] Employee Deleted');
@@ -361,6 +389,7 @@ module.exports = function(express, app, mongoose, path, nodemailer, CronJob, fs,
                     console.log('Message sent: ' + info.response);
                 });
                 if(result[i].sendSMS){
+                    //TODO: get the default or personalized message
                     // SendSMSService("Happy Birthday", "+351" + result[i].phoneNumber); //TO change to the message itself
                 }
 
@@ -373,8 +402,7 @@ module.exports = function(express, app, mongoose, path, nodemailer, CronJob, fs,
             console.log(res);
         });
     }
-
-    //TODO: get the default or personalized message
+    
     app.get('/test_sms', function (req, res) {
         console.log("SENDING TEST SMS");
         //SendSMSService("HAPPY BIRTHDAY!", "+351962901682");
@@ -395,7 +423,7 @@ module.exports = function(express, app, mongoose, path, nodemailer, CronJob, fs,
                         'BirthsByMonthTotal':{'Jan':stats[3][0],'Feb':stats[3][1],'Mar':stats[3][2],'Apr':stats[3][3],'May':stats[3][4],'Jun':stats[3][5],
                             'Jul':stats[3][6],'Aug':stats[3][7],'Sep':stats[3][8],'Oct':stats[3][9],'Nov':stats[3][10],'Dec':stats[3][11]},
                         'AverageTime':stats[4],
-                        'AgeGroups':{'18to24':stats[5][0], '25to34':stats[5][1],'35to44':stats[5][2],'45to54':stats[5][3], '55+':stats[5][4]},
+                        'AgeGroups':{'18to21':stats[5][0], '21to25':stats[5][1],'25to30':stats[5][2],'30to40':stats[5][3], '40+':stats[5][4]},
                         'TotalEmployees':stats[6]});
                 } else {
                     console.log('[MONGOOSE] No employees to find');
@@ -418,19 +446,22 @@ module.exports = function(express, app, mongoose, path, nodemailer, CronJob, fs,
         var totalEmployees = employees.length;
         for(var i = 0; i < totalEmployees; i++) {
             var person = employees[i];
-            if(person.gender == "Male") MFtotal[0]++;
-            else MFtotal[1]++;
-
-            birthByMonthTotal[person.birthDate.getMonth()]++;
 
             averageTime += person.timeSpent;
 
-            var age = person.age;
-            if(age >= 18 && age <= 24) ageGroup[0]++;
-            else if(age >= 25 && age <= 34) ageGroup[1]++;
-            else if(age >= 35 && age <= 44) ageGroup[2]++;
-            else if(age >= 45 && age <= 54) ageGroup[3]++;
-            else if(age >= 55) ageGroup[4]++;
+            if(!person.exitDate) {
+                if (person.gender == "Male") MFtotal[0]++;
+                else MFtotal[1]++;
+
+                birthByMonthTotal[person.birthDate.getMonth()]++;
+
+                var age = person.age;
+                if (age >= 18 && age < 21) ageGroup[0]++;
+                else if (age >= 21 && age < 25) ageGroup[1]++;
+                else if (age >= 25 && age < 30) ageGroup[2]++;
+                else if (age >= 30 && age < 40) ageGroup[3]++;
+                else if (age >= 40) ageGroup[4]++;
+            }
         }
         MFratio[0] = MFtotal[0] / totalEmployees;
         MFratio[1] = MFtotal[1] / totalEmployees;
@@ -448,6 +479,29 @@ module.exports = function(express, app, mongoose, path, nodemailer, CronJob, fs,
         statistics[6] = totalEmployees;
         return statistics;
     }
+
+    app.get('/temp_window/:start/:end', function (req, res) {
+        var start = req.params.start;
+        var end = req.params.end;
+        var query = Employee.find({});
+        var returnResult = [];
+        query.exec(function(err, result){
+            if(err) {
+                console.log("[MONGOOSE] Error " + err);
+                res.status(500).json(err);
+            } else {
+                for(var i = 0; i < result.length; i++) {
+                    var person = result[i];
+                    if(!person.exitDate){
+                        if(person.birthDate.getMonth() > start-1 && person.birthDate.getMonth() < end-1){
+                            returnResult[returnResult.length] = person;
+                        }
+                    }
+                }
+                res.status(200).json(returnResult);
+            }
+        });
+    });
 
     var _MS_PER_DAY = 1000 * 60 * 60 * 24;
 
@@ -516,6 +570,103 @@ module.exports = function(express, app, mongoose, path, nodemailer, CronJob, fs,
         var jwt = JSON.parse(decoded_token);
         return jwt.preferred_username;
     }
+
+    app.get('/facebook_info', function(req, res){
+        var query = Facebook.find({});
+        query.exec(function(err, result){
+            if(err){
+                console.log('[MONGOOSE]: ' + err);
+                res.status(500).json(err);
+            } else {
+                res.status(200).json(result);
+            }
+        });
+    });
+
+    app.post('/facebook_token', function(req, res){
+        var query = Facebook.find({});
+        Facebook.update(query, {token: req.body.newToken}, function(err, result){
+            if(err){
+                console.log('[MONGOOSE] Error: ' + err);
+                res.status(500).json(err);
+            } else {
+                res.status(200).json();
+            }
+        });
+    });
+
+    app.get('/sms_template', function(req, res){
+        var query = SMSTemplate.find({});
+        query.exec(function(err, result){
+            if(err){
+                console.log('[MONGOOSE] Error ' + err);
+            } else {
+                res.status(200).json(result);
+            }
+        });
+    });
+
+    app.post('/update_sms_template', function(req, res){
+        var query = SMSTemplate.find({});
+        SMSTemplate.update(query, {text:req.body.template}, function(err, result){
+            if(err){
+                console.log('[MONGOOSE] Error: ' + err);
+                res.status(500).json(err);
+            } else {
+                res.status(200).json();
+            }
+        });
+    });
+
+    app.get('/email_template', function(req, res){
+        var query = EmailTemplate.find({});
+        query.exec(function(err, result){
+            if(err){
+                console.log('[MONGOOSE] Error ' + err);
+            } else {
+                res.status(200).json(result);
+            }
+        });
+    });
+
+    app.post('/update_email_template', function(req, res){
+        var query = EmailTemplate.find({});
+        EmailTemplate.update(query, {text:req.body.template}, function(err, result){
+            if(err){
+                console.log('[MONGOOSE] Error: ' + err);
+                res.status(500).json(err);
+            } else {
+                res.status(200).json();
+            }
+        });
+    });
+
+    app.get('/facebook_template', function(req, res){
+        var query = FacebookTemplate.find({});
+        query.exec(function(err, result){
+            if(err){
+                console.log('[MONGOOSE] Error ' + err);
+            } else {
+                res.status(200).json(result);
+            }
+        });
+    });
+
+    app.post('/update_facebook_template', function(req, res){
+        var query = FacebookTemplate.find({});
+        FacebookTemplate.update(query, {text:req.body.template}, function(err, result){
+            if(err){
+                console.log('[MONGOOSE] Error: ' + err);
+                res.status(500).json(err);
+            } else {
+                res.status(200).json();
+            }
+        });
+    });
+
+
+    /*var facebookstuff = new Facebook({'appId':'thisisappid', 'appSecret':'thisisappsecret', 'token':'asdasdasdasdasdasdasd'});
+    facebookstuff.save(function(err){if(err) console.log(err);});*/
 
     /*TESTS
      cleanAdmin();
