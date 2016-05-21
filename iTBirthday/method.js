@@ -188,8 +188,11 @@ module.exports = function(express, app, mongoose, path, nodemailer, CronJob, fs,
             console.log("Uploading: " + filename);
 
             //removes previous image if it exists
-            var files = Finder.from("images/employees/").findFiles(req.params.id + '.*');
-            fs.unlinkSync(files[0]);
+            var f = __dirname + '/images/employees/';
+            var files = Finder.from(f).findFiles(req.params.id + '.*');
+            if ( file.length > 0)
+                fs.unlinkSync(files[0]);
+
             //Path where image will be uploaded
             var ext = filename.substr(filename.indexOf('.'),filename.lenght);
             fstream = fs.createWriteStream(__dirname + '/images/employees/' + req.params.id + ext);

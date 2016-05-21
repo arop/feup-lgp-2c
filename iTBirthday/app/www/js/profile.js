@@ -1,6 +1,9 @@
 angular.module('itBirthday.profile', ['ngFileUpload'])
 
   .controller('SearchCtrl', function ($scope, $http) {
+
+    $scope.serverUrl = serverUrl;
+
     var cookie = localStorage.getItem('session');
 
     if (cookie == null) {
@@ -59,18 +62,16 @@ angular.module('itBirthday.profile', ['ngFileUpload'])
 
       var emailWithoutHost = element["email"].substring(0, Math.max(0, element["email"].search(/@/) - 1));
 
-      if (emailWithoutHost.toLowerCase().indexOf(searchTerm) >= 0) {
-        return true;
-      }
-
-      return false;
+      return (emailWithoutHost.toLowerCase().indexOf(searchTerm) >= 0);
     };
 
   })
 
+  // update and view controller
   .controller('UpdateUserCtrl', function ($scope, $http, $state, $stateParams, $filter, Upload) {
     $scope.profile = {};
     $scope.isView = null;
+    $scope.serverUrl = serverUrl;
 
     $scope.getEmployee = function () {
       $scope.isView = true;
@@ -149,7 +150,9 @@ angular.module('itBirthday.profile', ['ngFileUpload'])
         email: $scope.profile.email,
         entryDate: new Date($scope.profile.entryDate),
         sendMail: $scope.profile.sendMail,
+        mailText: $scope.profile.mailText,
         sendSMS: $scope.profile.sendSMS,
+        smsText: $scope.profile.smsText,
         facebookPost: $scope.profile.facebookPost,
         gender: $scope.profile.gender
       }).success(function () {
@@ -320,6 +323,7 @@ angular.module('itBirthday.profile', ['ngFileUpload'])
   .controller('NewUserCtrl', ['$scope', '$state', '$http', 'Upload', function ($scope, $state, $http, Upload) {
 
     $scope.profile = {};
+    $scope.serverUrl = serverUrl;
 
     $scope.getEmployee = function () {
       $scope.isView = false;
@@ -395,7 +399,9 @@ angular.module('itBirthday.profile', ['ngFileUpload'])
         email: profileData.email,
         entryDate: new Date(profileData.entryDate),
         sendMail: profileData.sendMail,
+        mailText: profileData.mailText,
         sendSMS: profileData.sendSMS,
+        smsText: profileData.smsText,
         facebookPost: profileData.facebookPost,
         gender: profileData.gender
       }).success(function (data) {
