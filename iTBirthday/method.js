@@ -79,10 +79,18 @@ module.exports = function(express, app, mongoose, path, nodemailer, CronJob, fs,
         path: {type: String, required: true, trim: true}
     });
 
+    var FacebookSchema = new mongoose.Schema({
+        appId: {type: String, required: false, trim: true, unique:true},
+        appSecret: {type: String, required: false, trim: true, unique:true},
+        token: {type: String, required: false, trim: true},
+        expirationDate: {type: Date, required: false}
+    });
+
     //Create the Models
     var Admin = mongoose.model('Admin', AdminSchema);
     var Employee = mongoose.model('Employee', EmployeeSchema);
     var Template = mongoose.model('Template', TemplateSchema);
+    var Facebook = mongoose.model('Facebook', FacebookSchema);
 
     function cleanAdmin() {
         Admin.remove({}, function (err) {
@@ -539,6 +547,43 @@ module.exports = function(express, app, mongoose, path, nodemailer, CronJob, fs,
         var jwt = JSON.parse(decoded_token);
         return jwt.preferred_username;
     }
+
+    app.get('/facebook_info', function(req, res){
+        var query = Facebook.find({});
+        query.exec(function(err, result){
+            if(err){
+                console.log('[MONGOOSE]: ' + err);
+                res.status(500).json(err);
+            } else {
+                res.status(200).json(result);
+            }
+        });
+    });
+
+    app.post('/facebook_token', function(req, res){
+        var query = Facebook.find({});
+        Facebook.update(query, {token: req.body.newToken}, function(err, result){
+            if(err){
+                console.log('[MONGOOSE] Error: ' + err);
+                res.status(500).json(err);
+            } else {
+                res.status(200).json();
+            }
+        });
+        /*query.exec(function(err, result){
+            if(err){
+                console.log('[MONGOOSE] Error: ' + err);
+                res.status(500).json(err);
+            } else {
+                result.token = req.body.newToken;
+                result.expirationDate = req.body.expDate;
+                result.save();
+            }
+        });*/
+    });
+
+    /*var facebookstuff = new Facebook({'appId':'thisisappid', 'appSecret':'thisisappsecret', 'token':'asdasdasdasdasdasdasd'});
+    facebookstuff.save(function(err){if(err) console.log(err);});*/
 
     /*TESTS
      cleanAdmin();
