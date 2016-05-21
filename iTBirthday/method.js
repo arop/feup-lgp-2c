@@ -49,10 +49,10 @@ module.exports = function(express, app, mongoose, path, nodemailer, CronJob, fs,
         exitDate: {type: Date, required: false},
         sendMail: {type: Boolean, required: true, default: false},
         mailText: {type: String, required: false, trim: true},
-        sendPersonalizedMail: {type: bool, required: false, default: false},
+        sendPersonalizedMail: {type: Boolean, required: false, default: false},
         sendSMS: {type: Boolean, required: true, default: false},
         smsText: {type: String, required: false, trim: true},
-        sendPersonalizedSMS: {type: bool, required: false, default: false},
+        sendPersonalizedSMS: {type: Boolean, required: false, default: false},
         facebookPost: {type: Boolean, required: true, default: false},
         photoPath: {type: String, required: false, trim: true},
         gender: {type: String, enum: employeeGender, required: true, trim: true}
@@ -321,8 +321,8 @@ module.exports = function(express, app, mongoose, path, nodemailer, CronJob, fs,
         });
     });
 
-    app.delete('/delete_employee/:email', function (req, res) {
-        Employee.remove({'email': req.params.email}, function (err, result) {
+    app.delete('/delete_employee', function (req, res) {
+        Employee.remove({'email': req.body.email}, function (err, result) {
             if (!err) {
                 if (result) {
                     console.log('[MONGOOSE] Employee Deleted');
