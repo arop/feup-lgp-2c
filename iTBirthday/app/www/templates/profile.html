@@ -73,11 +73,37 @@
                             ng-disabled="isView">Email de Aniversário
               </ion-checkbox>
 
+              <ion-checkbox ng-model="profile.personalizedEmail"
+                            ng-init="profile.personalizedEmail = true"
+                            ng-checked="profile.personalizedEmail"
+                            ng-disabled="isView">Email personalizado
+              </ion-checkbox>
+
+              <label class="item item-input item-stacked-label" ng-if="!isNewProfile"
+                     ng-show="profile.personalizedEmail">
+                <input type="text" placeholder="Email personalizado" ng-model="profile.mailText"
+                       maxlength="500" class="pencil-edit"
+                       ng-readonly="isView"/>
+              </label>
+
               <ion-checkbox ng-model="profile.sendSMS"
                             ng-init="profile.sendSMS = true"
                             ng-checked="profile.sendSMS"
                             ng-disabled="isView">SMS de Aniversário
               </ion-checkbox>
+
+              <ion-checkbox ng-model="profile.personalizedSMS"
+                            ng-init="profile.personalizedSMS = true"
+                            ng-checked="profile.personalizedSMS"
+                            ng-disabled="isView">SMS personalizado
+              </ion-checkbox>
+
+              <label class="item item-input item-stacked-label" ng-if="!isNewProfile"
+                     ng-show="profile.personalizedSMS">
+                <input type="text" placeholder="SMS personalizado" ng-model="profile.smsText"
+                       maxlength="140" class="pencil-edit"
+                       ng-readonly="isView"/>
+              </label>
 
               <ion-checkbox ng-model="profile.facebookPost"
                             ng-init="profile.facebookPost = false"

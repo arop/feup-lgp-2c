@@ -42,7 +42,7 @@ angular.module('itBirthday.profile', ['ngFileUpload'])
         $scope.profile.entryDate = $filter('date')($scope.profile.entryDate, 'yyyy-MM-dd');
       });
     };
-    
+
     //listen for the file selected event
     $("input[type=file]").change(function () {
       console.log("CHANGED");
@@ -111,7 +111,9 @@ angular.module('itBirthday.profile', ['ngFileUpload'])
         email: $scope.profile.email,
         entryDate: new Date($scope.profile.entryDate),
         sendMail: $scope.profile.sendMail,
+        mailText: $scope.profile.mailText,
         sendSMS: $scope.profile.sendSMS,
+        smsText: $scope.profile.smsText,
         facebookPost: $scope.profile.facebookPost,
         gender: $scope.profile.gender
       }).success(function () {
@@ -357,7 +359,9 @@ angular.module('itBirthday.profile', ['ngFileUpload'])
         email: profileData.email,
         entryDate: new Date(profileData.entryDate),
         sendMail: profileData.sendMail,
+        mailText: profileData.mailText,
         sendSMS: profileData.sendSMS,
+        smsText: profileData.smsText,
         facebookPost: profileData.facebookPost,
         gender: profileData.gender
       }).success(function (data) {
