@@ -1,6 +1,7 @@
 angular.module('itBirthday.profile', ['ngFileUpload'])
 
   .controller('SearchCtrl', function ($scope, $http) {
+    
     $scope.serverUrl = serverUrl;
 
     var cookie = localStorage.getItem('session');
@@ -61,11 +62,7 @@ angular.module('itBirthday.profile', ['ngFileUpload'])
 
       var emailWithoutHost = element["email"].substring(0, Math.max(0, element["email"].search(/@/) - 1));
 
-      if (emailWithoutHost.toLowerCase().indexOf(searchTerm) >= 0) {
-        return true;
-      }
-
-      return false;
+      return (emailWithoutHost.toLowerCase().indexOf(searchTerm) >= 0);
     };
 
   })

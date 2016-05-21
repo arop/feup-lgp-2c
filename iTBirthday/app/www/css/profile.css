@@ -28,7 +28,9 @@
   font-size: 20px;
 }
 
-/* SEARCH PAGE */
+/*********************
+     Search Page
+*********************/
 #search-profile-filter {
   padding: 10px 0 0;
   height: auto;
@@ -45,14 +47,17 @@
   outline: none;
   padding-left: 0;
   padding-right: 0;
+  margin-bottom: 0;
 }
 
-#search-profile-filter .row.filters > .col:first-child {
-  padding-right: 5px;
-}
+@media screen and (min-width: 567px) {
+  #search-profile-filter .row.filters > .col:first-child {
+    padding-right: 5px;
+  }
 
-#search-profile-filter .row.filters > .col:last-child {
-  padding-left: 5px;
+  #search-profile-filter .row.filters > .col:last-child {
+    padding-left: 5px;
+  }
 }
 
 #search-profile-filter .row.filters .item.item-input {
@@ -99,7 +104,13 @@
 #search-label input:-moz-placeholder { color: #333333; }
 
 #search-profile {
-  margin-top: 60px;
+  margin-top: 63px;
+}
+
+@media screen and (max-width: 567px) {
+  #search-profile {
+    margin-top: 107px;
+  }
 }
 
 #search-profile-results {
@@ -118,7 +129,7 @@
   width: 50%;
 }
 
-@media (max-width: 500px) {
+@media (max-width: 567px) {
   #search-profile-results .item.item-avatar {
     display: block;
     width: 100%;
@@ -191,8 +202,6 @@
 #new-profile-div .list > label.item > .item-select > .pencil-edit[disabled="disabled"] {
   background-image: none;
 }
-
-
 
 #new-profile-div .list > label.item > input[type="text"]::-webkit-input-placeholder,
 #new-profile-div .list > label.item > input[type="email"]::-webkit-input-placeholder,
