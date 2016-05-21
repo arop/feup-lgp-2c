@@ -71,7 +71,7 @@ angular.module('itBirthday.profile', ['ngFileUpload'])
   })
 
   // update and view controller
-  .controller('UpdateUserCtrl', function ($scope, $http, $state, $stateParams, $filter, Upload) {
+  .controller('UpdateUserCtrl', function ($scope, $http, $state, $stateParams, $filter, $ionicPopup, Upload) {
     $scope.profile = {};
     $scope.isView = null;
     $scope.serverUrl = serverUrl;
