@@ -74,7 +74,7 @@
               </ion-checkbox>
 
               <ion-checkbox ng-model="profile.personalizedEmail"
-                            ng-init="profile.personalizedEmail = true"
+                            ng-init="profile.personalizedEmail = false"
                             ng-show="profile.sendMail"
                             ng-checked="profile.personalizedEmail"
                             ng-disabled="isView">Email personalizado
@@ -94,7 +94,7 @@
               </ion-checkbox>
 
               <ion-checkbox ng-model="profile.personalizedSMS"
-                            ng-init="profile.personalizedSMS = true"
+                            ng-init="profile.personalizedSMS = false"
                             ng-show="profile.sendSMS"
                             ng-checked="profile.personalizedSMS"
                             ng-disabled="isView">SMS personalizado
