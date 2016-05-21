@@ -10,10 +10,10 @@
               </label>
               <label class="item item-image">
                 <img ng-src="/img/icons/novo_membro.png" ng-if="isNewProfile">
-                <img ng-src="/images/employees/{{profile.photoPath}}" ng-if="!isNewProfile">
+                <img ng-src="{{serverUrl}}/images/employees/{{profile.photoPath}}" ng-if="!isNewProfile">
               </label>
-              <label class="item item-file">
-                <input id="file_upload" type="file" file-upload ng-hide="isView">
+              <label class="item item-file" ng-hide="isView">
+                <input id="file_upload" type="file" file-upload>
               </label>
             </div>
           </div>

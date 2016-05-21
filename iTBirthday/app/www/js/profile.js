@@ -1,7 +1,8 @@
 angular.module('itBirthday.profile', ['ngFileUpload'])
 
   .controller('SearchCtrl', function ($scope, $http) {
-
+    $scope.serverUrl = serverUrl;
+    
     var cookie = localStorage.getItem('session');
 
     if (cookie == null){
@@ -30,16 +31,18 @@ angular.module('itBirthday.profile', ['ngFileUpload'])
     }
   })
 
+  // update and view controller
   .controller('UpdateUserCtrl', function ($scope, $http, $state, $stateParams, $filter, Upload) {
     $scope.profile = {};
     $scope.isView = null;
+    $scope.serverUrl = serverUrl;
 
     $scope.getEmployee = function () {
       $scope.isView = true;
       $http.get(serverUrl + '/employee_profile/' + $stateParams.id).success(function (response) {
         $scope.profile = response;
         $scope.profile.birthDate = $filter('date')($scope.profile.birthDate, 'yyyy-MM-dd');
-        $scope.profile.entryDate = $filter('date')($scope.profile.entryDate, 'yyyy-MM-dd');
+        $scope.profile.entryDate = $filter('date')($scope.profile.entryDate, 'yyyy-MM-dd'); 
       });
     };
 
@@ -282,8 +285,9 @@ angular.module('itBirthday.profile', ['ngFileUpload'])
   })
 
   .controller('NewUserCtrl', ['$scope', '$state', '$http', 'Upload', function ($scope, $state, $http, Upload) {
-
+    
     $scope.profile = {};
+    $scope.serverUrl = serverUrl;
 
     $scope.getEmployee = function () {
       $scope.isView = false;
