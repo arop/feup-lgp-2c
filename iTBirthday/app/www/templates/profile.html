@@ -9,7 +9,8 @@
                 <span class="input-label" id="image-label">Avatar</span>
               </label>
               <label class="item item-image">
-                <img ng-src="/images/employees/{{profile.photoPath}}">
+                <img ng-src="/img/icons/novo_membro.png" ng-if="isNewProfile">
+                <img ng-src="/images/employees/{{profile.photoPath}}" ng-if="!isNewProfile">
               </label>
               <label class="item item-file">
                 <input id="file_upload" type="file" file-upload ng-hide="isView">
