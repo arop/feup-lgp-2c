@@ -156,7 +156,6 @@ module.exports = function(express, app, mongoose, path, nodemailer, CronJob, fs,
     //Post of employee
     app.post('/post_employee', function (req, res) {
 
-        console.log(req.body);
         var emp_temp = new Employee({
             name: req.body.name,
             birthDate: req.body.birthDate,
@@ -164,7 +163,7 @@ module.exports = function(express, app, mongoose, path, nodemailer, CronJob, fs,
             email: req.body.email,
             entryDate: req.body.entryDate,
             sendMail: req.body.sendMail,
-            sendSms: req.body.sendSMS,
+            sendSMS: req.body.sendSMS,
             facebookPost: req.body.facebookPost,
             gender: req.body.gender
         });
