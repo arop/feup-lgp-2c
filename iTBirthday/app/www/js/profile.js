@@ -1,7 +1,7 @@
 angular.module('itBirthday.profile', ['ngFileUpload'])
 
   .controller('SearchCtrl', function ($scope, $http) {
-    
+
     $scope.serverUrl = serverUrl;
 
     var cookie = localStorage.getItem('session');
@@ -149,16 +149,14 @@ angular.module('itBirthday.profile', ['ngFileUpload'])
       $http.get(serverUrl + '/employee_profile/' + $stateParams.id).success(function (response) {
         console.log(response);
         $scope.profile = response;
-        $scope.profile.birthDate = $filter('date')($scope.profile.birthDate, 'yyyy-MM-dd');
-        $scope.profile.entryDate = $filter('date')($scope.profile.entryDate, 'yyyy-MM-dd');
+        $scope.profile.birthDate = new Date(String($scope.profile.birthDate));
+        $scope.profile.entryDate = new Date(String($scope.profile.entryDate));
       });
     };
 
     //listen for the file selected event
-    $("input[type=file]").change(function () {
-      console.log("CHANGED");
-      var file = this.files[0];
-      $scope.profile.photo = file;
+    $("input[type=file]").on("changed", function () {
+      $scope.profile.photo = this.files[0];
     });
 
     $scope.update_profile = function () {
@@ -243,7 +241,7 @@ angular.module('itBirthday.profile', ['ngFileUpload'])
       });
     };
 
-    $scope.on_date_key_down = function ($event) {
+    $scope.onDateKeyDown = function ($event) {
       var code = ($event.which || $event.keyCode);
 
       if (IsTab(code) || IsRefresh(code)) {
@@ -323,7 +321,7 @@ angular.module('itBirthday.profile', ['ngFileUpload'])
       return true;
     };
 
-    $scope.on_date_edited = function ($event) {
+    $scope.onDateEdited = function ($event) {
       var code = ($event.which || $event.keyCode);
 
       if (IsTab(code) || IsRefresh(code)) {
@@ -402,12 +400,15 @@ angular.module('itBirthday.profile', ['ngFileUpload'])
     };
 
     //listen for the file selected event
-    $("input[type=file]").change(function () {
-      var file = this.files[0];
-      $scope.profile.photo = file;
+    $("input[type=file]").on("change", function () {
+      $scope.profile.photo = this.files[0];
     });
 
-    $scope.new_profile = function (profileData) {
+    $("select").each(function() {
+      console.log(this);
+    });
+
+    $scope.newProfile = function (profileData) {
 
       if (profileData == undefined) {
         console.error('Profile Data is not valid.');
@@ -497,7 +498,7 @@ angular.module('itBirthday.profile', ['ngFileUpload'])
       });
     };
 
-    $scope.on_date_key_down = function ($event) {
+    $scope.onDateKeyDown = function ($event) {
       var code = ($event.which || $event.keyCode);
 
       if (IsTab(code) || IsRefresh(code)) {
@@ -577,7 +578,7 @@ angular.module('itBirthday.profile', ['ngFileUpload'])
       return true;
     };
 
-    $scope.on_date_edited = function ($event) {
+    $scope.onDateEdited = function ($event) {
       var code = ($event.which || $event.keyCode);
 
       if (IsTab(code) || IsRefresh(code)) {
@@ -642,6 +643,11 @@ angular.module('itBirthday.profile', ['ngFileUpload'])
       inputElem.val(finalText);
       return true;
     };
+
+    $scope.preventDefaultAction = function ($event) {
+      $event.preventDefault();
+      return false;
+    }
   }]);
 
 var ClampYear = function (numericYear) {
