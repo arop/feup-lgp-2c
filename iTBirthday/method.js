@@ -363,20 +363,28 @@ module.exports = function(express, app, mongoose, path, nodemailer, CronJob, fs,
     //Every day of the week at 15.05.00
     //Change to a convenient time
     //TODO choose hour to send
-    new CronJob('00 26 13 * * 1-7', function () {
+    new CronJob('00 43 16 * * 1-7', function () {
         var month = new Date().getMonth();
         var day = new Date().getDate();
         var year = new Date().getFullYear();
         var query;
 
+        // If it is no leap year ( no 29 of february )
+        // and today is 28 of February
+        // also sends mail to people which birthday is the next day
        if ( !leapYear(year) && day == 28 && month == 1 ){
            query = Employee.aggregate([
                {$project: {
                    month: {$month: '$birthDate'},
                    day: {$dayOfMonth:'$birthDate' },
                    name : '$name',
-                   email : '$email'
-
+                   email : '$email',
+                   sendMail : '$sendMail',
+                   mailText : '$mailText',
+                   sendPersonalizedMail : '$sendPersonalizedMail',
+                   sendSMS : '$sendSMS',
+                   smsText : '$smsText',
+                   sendPersonalizedMail : '$sendPersonalizedMail'
                }},
                {$match: { $and: [
                     {month: new Date().getMonth() + 1},
@@ -403,7 +411,6 @@ module.exports = function(express, app, mongoose, path, nodemailer, CronJob, fs,
         }
 
         query.exec(function (err, result) {
-
             for (var i = 0; i < result.length; i++) {
                 var template = "Happy Birthday"; // add template  text
                 if (result[i].mailText) { //if employee has different template
@@ -416,13 +423,16 @@ module.exports = function(express, app, mongoose, path, nodemailer, CronJob, fs,
                     text: "Happy Birthday", // TO be changed
                     html: '<b>' + template + '<b>' // TO be changed
                 }
+
                 //TODO uncomment to send email
-               /* transporter.sendMail(mailOptions, function (error, info) {
-                    if (error) {
-                        return console.log(error);
-                    }
-                    console.log('Message sent: ' + info.response);
-                });*/
+                /* if ( result[i].sendMail) {
+                    transporter.sendMail(mailOptions, function (error, info) {
+                     if (error) {
+                     return console.log(error);
+                     }
+                     console.log('Message sent: ' + info.response);
+                     });
+                }*/
                 if(result[i].sendSMS){
                     //TODO: get the default or personalized message
                     // SendSMSService("Happy Birthday", "+351" + result[i].phoneNumber); //TO change to the message itself
