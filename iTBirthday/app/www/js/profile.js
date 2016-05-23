@@ -1,6 +1,7 @@
 angular.module('itBirthday.profile', ['ngFileUpload'])
 
   .controller('SearchCtrl', function ($scope, $http) {
+
     $scope.serverUrl = serverUrl;
 
     var cookie = localStorage.getItem('session');
@@ -22,7 +23,6 @@ angular.module('itBirthday.profile', ['ngFileUpload'])
       }).error(function (data) {
       });
     }
-    // TODO tentar excluir o "@mail.com" da pesquisa
 
     $scope.getAllEmployees = function () {
       $http.get(serverUrl + '/list_employees').success(function (response) {
@@ -61,11 +61,7 @@ angular.module('itBirthday.profile', ['ngFileUpload'])
 
       var emailWithoutHost = element["email"].substring(0, Math.max(0, element["email"].search(/@/) - 1));
 
-      if (emailWithoutHost.toLowerCase().indexOf(searchTerm) >= 0) {
-        return true;
-      }
-
-      return false;
+      return (emailWithoutHost.toLowerCase().indexOf(searchTerm) >= 0);
     };
 
   })
@@ -75,6 +71,7 @@ angular.module('itBirthday.profile', ['ngFileUpload'])
     $scope.profile = {};
     $scope.isView = null;
     $scope.serverUrl = serverUrl;
+
 
     // A confirm dialog
     $scope.showConfirmRemove = function() {
@@ -88,7 +85,8 @@ angular.module('itBirthday.profile', ['ngFileUpload'])
 
       confirmPopup.then(function(res) {
         if(res) {
-          $http.delete(serverUrl + '/delete_employee', {
+          console.log($scope.profile.email);
+          $http.post(serverUrl + '/delete_employee', {
             email: $scope.profile.email
           }).success(function (data,status) {
             if (status == 200){
@@ -112,8 +110,8 @@ angular.module('itBirthday.profile', ['ngFileUpload'])
     // Triggered on a button click, or some other target
     $scope.showPopupExitDate = function() {
       var templateDate = '<label class="item item-input">' +
-        '<span class="input-label">Date</span>'+
-        '<input type="date" ng-model="profile.exitDate">'+
+        '<span class="input-label">Data</span>'+
+        '<input datepicker type="text" onkeydown="return false" ng-model="profile.exitDate">'+
         '</label>';
 
       // An elaborate, custom popup
@@ -142,8 +140,10 @@ angular.module('itBirthday.profile', ['ngFileUpload'])
       myPopup.then(function(res) {
         console.log('Tapped!', res);
         if(res != undefined) {
-          //TODO http request to update exitdate
-        } else {}
+          $scope.update_profile();
+        } else {
+
+        }
       });
     };
 
@@ -152,16 +152,14 @@ angular.module('itBirthday.profile', ['ngFileUpload'])
       $http.get(serverUrl + '/employee_profile/' + $stateParams.id).success(function (response) {
         console.log(response);
         $scope.profile = response;
-        $scope.profile.birthDate = $filter('date')($scope.profile.birthDate, 'yyyy-MM-dd');
-        $scope.profile.entryDate = $filter('date')($scope.profile.entryDate, 'yyyy-MM-dd');
+        $scope.profile.birthDate = new Date(String($scope.profile.birthDate)).toISOString().slice(0, 10);
+        $scope.profile.entryDate = new Date(String($scope.profile.entryDate)).toISOString().slice(0, 10);
       });
     };
 
     //listen for the file selected event
-    $("input[type=file]").change(function () {
-      console.log("CHANGED");
-      var file = this.files[0];
-      $scope.profile.photo = file;
+    $("input[type=file]").on("changed", function () {
+      $scope.profile.photo = this.files[0];
     });
 
     $scope.update_profile = function () {
@@ -175,7 +173,7 @@ angular.module('itBirthday.profile', ['ngFileUpload'])
         return false;
       }
 
-      if ($scope.profile.birthDate == undefined || !IsProperDate($scope.profile.birthDate)) {
+      if ($scope.profile.birthDate == undefined) {
         console.error('Profile birth date is not valid.');
         return false;
       }
@@ -193,7 +191,7 @@ angular.module('itBirthday.profile', ['ngFileUpload'])
         return false;
       }
 
-      if ($scope.profile.entryDate == undefined || !IsProperDate($scope.profile.entryDate)) {
+      if ($scope.profile.entryDate == undefined) {
         console.error('Profile entry date is not valid.');
         return false;
       }
@@ -218,6 +216,9 @@ angular.module('itBirthday.profile', ['ngFileUpload'])
         return false;
       }
 
+      console.log("profile before update request");
+      console.log($scope.profile);
+
       $http.post(serverUrl + '/update_employee/' + $stateParams.id, {
         name: $scope.profile.name,
         birthDate: new Date($scope.profile.birthDate),
@@ -226,10 +227,13 @@ angular.module('itBirthday.profile', ['ngFileUpload'])
         entryDate: new Date($scope.profile.entryDate),
         sendMail: $scope.profile.sendMail,
         mailText: $scope.profile.mailText,
+        sendPersonalizedMail: $scope.profile.sendPersonalizedMail,
         sendSMS: $scope.profile.sendSMS,
         smsText: $scope.profile.smsText,
+        sendPersonalizedSMS: $scope.profile.sendPersonalizedSMS,
         facebookPost: $scope.profile.facebookPost,
-        gender: $scope.profile.gender
+        gender: $scope.profile.gender,
+        exitDate: $scope.profile.exitDate
       }).success(function () {
         if ($scope.profile.photo != undefined) {
           Upload.upload({
@@ -246,152 +250,6 @@ angular.module('itBirthday.profile', ['ngFileUpload'])
       });
     };
 
-    $scope.on_date_key_down = function ($event) {
-      var code = ($event.which || $event.keyCode);
-
-      if (IsTab(code) || IsRefresh(code)) {
-        return true;
-      }
-
-      if (!IsNumber(code) && !IsBackspace(code)) {
-        $event.preventDefault();
-        return false;
-      }
-
-      var inputElem = $($event.target);
-      var text = String(inputElem.val());
-
-      if (IsBackspace(code)) {
-        $event.preventDefault();
-
-        if (text.length == 5) {
-          text = text.substr(0, 3);
-        }
-        else if (text.length == 8) {
-          text = text.substr(0, 6);
-        }
-        else {
-          text = text.substr(0, text.length - 1);
-        }
-      }
-
-      var parcels = text.split("-");
-
-      if (parcels == undefined || parcels.length == 0) {
-        return false;
-      }
-
-      var finalText = "";
-      if (parcels.length > 0) {
-        if (parcels[0].length < 4) {
-          finalText += parcels[0];
-        }
-        else {
-          var year = ClampYear(parseInt(parcels[0]));
-          finalText += year + "-";
-
-          if (parcels.length > 1) {
-            if (parcels[1].length < 2) {
-              finalText += parcels[1];
-            }
-            else {
-              var month = ClampMonth(parseInt(parcels[1]));
-              if (month < 10) {
-                finalText += "0";
-              }
-              finalText += month + "-";
-
-              if (parcels.length > 2) {
-                if (parcels[2].length < 2) {
-                  finalText += parcels[2];
-                }
-                else {
-                  var day = ClampDay(parseInt(parcels[2]), month, year);
-                  if (day < 10) {
-                    finalText += "0";
-                  }
-                  finalText += day;
-                }
-              }
-            }
-          }
-        }
-      }
-
-      if (finalText.length > 9) {
-        finalText = finalText.substr(0, 9);
-      }
-
-      inputElem.val(finalText);
-      return true;
-    };
-
-    $scope.on_date_edited = function ($event) {
-      var code = ($event.which || $event.keyCode);
-
-      if (IsTab(code) || IsRefresh(code)) {
-        return true;
-      }
-
-      if (!IsNumber(code) && IsBackspace(code)) {
-        $event.preventDefault();
-        return false;
-      }
-
-      var inputElem = $($event.target);
-      var text = String(inputElem.val());
-
-      if (text.length > 10) {
-        text = text.substr(0, 10);
-      }
-
-      var parcels = text.split("-");
-
-      if (parcels == undefined || parcels.length == 0) {
-        return false;
-      }
-
-      var finalText = "";
-      if (parcels.length > 0) {
-        if (parcels[0].length < 4) {
-          finalText += parcels[0];
-        }
-        else {
-          var year = ClampYear(parseInt(parcels[0]));
-          finalText += year + "-";
-
-          if (parcels.length > 1) {
-            if (parcels[1].length < 2) {
-              finalText += parcels[1];
-            }
-            else {
-              var month = ClampMonth(parseInt(parcels[1]));
-              if (month < 10) {
-                finalText += "0";
-              }
-              finalText += month + "-";
-
-              if (parcels.length > 2) {
-                if (parcels[2].length < 2) {
-                  finalText += parcels[2];
-                }
-                else {
-                  var day = ClampDay(parseInt(parcels[2]), month, year);
-                  if (day < 10) {
-                    finalText += "0";
-                  }
-                  finalText += day;
-                }
-              }
-            }
-          }
-        }
-      }
-
-      inputElem.val(finalText);
-      return true;
-    };
-
   })
 
   .controller('NewUserCtrl', ['$scope', '$state', '$http', 'Upload', function ($scope, $state, $http, Upload) {
@@ -405,12 +263,15 @@ angular.module('itBirthday.profile', ['ngFileUpload'])
     };
 
     //listen for the file selected event
-    $("input[type=file]").change(function () {
-      var file = this.files[0];
-      $scope.profile.photo = file;
+    $("input[type=file]").on("change", function () {
+      $scope.profile.photo = this.files[0];
     });
 
-    $scope.new_profile = function (profileData) {
+    $("select").each(function() {
+      console.log(this);
+    });
+
+    $scope.newProfile = function (profileData) {
 
       if (profileData == undefined) {
         console.error('Profile Data is not valid.');
@@ -422,7 +283,7 @@ angular.module('itBirthday.profile', ['ngFileUpload'])
         return false;
       }
 
-      if (profileData.birthDate == undefined || !IsProperDate(profileData.birthDate)) {
+      if (profileData.birthDate == undefined) {
         console.error('Profile birth date is not valid.');
         return false;
       }
@@ -440,7 +301,7 @@ angular.module('itBirthday.profile', ['ngFileUpload'])
         return false;
       }
 
-      if (profileData.entryDate == undefined || !IsProperDate(profileData.entryDate)) {
+      if (profileData.entryDate == undefined) {
         console.error('Profile entry date is not valid.');
         return false;
       }
@@ -499,192 +360,31 @@ angular.module('itBirthday.profile', ['ngFileUpload'])
         return false;
       });
     };
+  }])
 
-    $scope.on_date_key_down = function ($event) {
-      var code = ($event.which || $event.keyCode);
-
-      if (IsTab(code) || IsRefresh(code)) {
-        return true;
-      }
-
-      if (!IsNumber(code) && !IsBackspace(code)) {
-        $event.preventDefault();
-        return false;
-      }
-
-      var inputElem = $($event.target);
-      var text = String(inputElem.val());
-
-      if (IsBackspace(code)) {
-        $event.preventDefault();
-
-        if (text.length == 5) {
-          text = text.substr(0, 3);
-        }
-        else if (text.length == 8) {
-          text = text.substr(0, 6);
-        }
-        else {
-          text = text.substr(0, text.length - 1);
-        }
-      }
-
-      var parcels = text.split("-");
-
-      if (parcels == undefined || parcels.length == 0) {
-        return false;
-      }
-
-      var finalText = "";
-      if (parcels.length > 0) {
-        if (parcels[0].length < 4) {
-          finalText += parcels[0];
-        }
-        else {
-          var year = ClampYear(parseInt(parcels[0]));
-          finalText += year + "-";
-
-          if (parcels.length > 1) {
-            if (parcels[1].length < 2) {
-              finalText += parcels[1];
+  /**
+   * jquery date picker directive
+   */
+  .directive('datepicker', function () {
+    return {
+      require : 'ngModel',
+      link : function (scope, element, attrs, ngModelCtrl) {
+        $(function(){
+          $(element).datepicker({
+            changeYear:true,
+            changeMonth:true,
+            dateFormat:'yy-mm-dd',
+            //maxDate: new Date(),
+            onSelect:function (dateText, inst) {
+              ngModelCtrl.$setViewValue(dateText);
+              scope.$apply();
             }
-            else {
-              var month = ClampMonth(parseInt(parcels[1]));
-              if (month < 10) {
-                finalText += "0";
-              }
-              finalText += month + "-";
-
-              if (parcels.length > 2) {
-                if (parcels[2].length < 2) {
-                  finalText += parcels[2];
-                }
-                else {
-                  var day = ClampDay(parseInt(parcels[2]), month, year);
-                  if (day < 10) {
-                    finalText += "0";
-                  }
-                  finalText += day;
-                }
-              }
-            }
-          }
-        }
+          });
+        });
       }
-
-      if (finalText.length > 9) {
-        finalText = finalText.substr(0, 9);
-      }
-
-      inputElem.val(finalText);
-      return true;
-    };
-
-    $scope.on_date_edited = function ($event) {
-      var code = ($event.which || $event.keyCode);
-
-      if (IsTab(code) || IsRefresh(code)) {
-        return true;
-      }
-
-      if (!IsNumber(code) && IsBackspace(code)) {
-        $event.preventDefault();
-        return false;
-      }
-
-      var inputElem = $($event.target);
-      var text = String(inputElem.val());
-
-      if (text.length > 10) {
-        text = text.substr(0, 10);
-      }
-
-      var parcels = text.split("-");
-
-      if (parcels == undefined || parcels.length == 0) {
-        return false;
-      }
-
-      var finalText = "";
-      if (parcels.length > 0) {
-        if (parcels[0].length < 4) {
-          finalText += parcels[0];
-        }
-        else {
-          var year = ClampYear(parseInt(parcels[0]));
-          finalText += year + "-";
-
-          if (parcels.length > 1) {
-            if (parcels[1].length < 2) {
-              finalText += parcels[1];
-            }
-            else {
-              var month = ClampMonth(parseInt(parcels[1]));
-              if (month < 10) {
-                finalText += "0";
-              }
-              finalText += month + "-";
-
-              if (parcels.length > 2) {
-                if (parcels[2].length < 2) {
-                  finalText += parcels[2];
-                }
-                else {
-                  var day = ClampDay(parseInt(parcels[2]), month, year);
-                  if (day < 10) {
-                    finalText += "0";
-                  }
-                  finalText += day;
-                }
-              }
-            }
-          }
-        }
-      }
-
-      inputElem.val(finalText);
-      return true;
-    };
-  }]);
-
-var ClampYear = function (numericYear) {
-  if (numericYear < 1940) {
-    numericYear = 1940;
-  }
-  else {
-    var currentYear = new Date().getFullYear();
-    if (numericYear > currentYear) {
-      numericYear = currentYear;
     }
-  }
+  });
 
-  return numericYear;
-};
-
-var ClampMonth = function (numericMonth) {
-  if (numericMonth <= 0) {
-    numericMonth = 1;
-  }
-  else if (numericMonth > 12) {
-    numericMonth = 12;
-  }
-
-  return numericMonth;
-};
-
-var ClampDay = function (numericDay, month, year) {
-  if (numericDay <= 0) {
-    numericDay = 1;
-  }
-  else if (numericDay > 28) {
-    var numDays = new Date(year, month, 0).getDate();
-    if (numericDay > numDays) {
-      numericDay = numDays;
-    }
-  }
-
-  return numericDay;
-};
 
 /**
  * @return {string}
@@ -699,27 +399,6 @@ var GetFormattedPhoneNumber = function (number) {
   }
 
   return finalNumber;
-};
-
-/**
- * @return {boolean}
- */
-var IsProperDate = function (text) {
-  if (text.length != 10) {
-    return false;
-  }
-
-  var parcels = text.split("-");
-
-  for (var i = 0; i < parcels.length; i++) {
-    for (var j = 0; j < parcels[i].length; j++) {
-      if (parseInt(parcels[i][j]) < 0 || parseInt(parcels[i][j]) > 9) {
-        return false;
-      }
-    }
-  }
-
-  return true;
 };
 
 /**
@@ -798,4 +477,3 @@ var IsCtrl = function (code) {
 var IsCopyPaste = function (code) {
   return (code == 67 || code == 86);
 };
-
