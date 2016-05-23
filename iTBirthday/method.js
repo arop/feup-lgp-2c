@@ -1,6 +1,7 @@
 module.exports = function(express, app, mongoose, path, nodemailer, CronJob, fs, busboy, clickatell, oauth2) {
     var Finder = require('fs-finder');
     var CryptoJS = require("crypto-js");
+    var leapYear = require('leap-year');
     //Database
     //mongoose.connect('mongodb://localhost/iTBirthday'); // change name of database , local database at the moment
     mongoose.connect('mongodb://lgpteamc:lgp201516@ds036069.mlab.com:36069/itbirthday');
@@ -343,6 +344,7 @@ module.exports = function(express, app, mongoose, path, nodemailer, CronJob, fs,
     app.get('/employee_profile/:id', function (req, res) {
         var query = Employee.findOne({'_id': req.params.id});
         query.exec(function (err, result) {
+            //TODO
             if (!err) {
                 if (result) {
                     console.log('[MONGOOSE] Found employee');
@@ -360,13 +362,46 @@ module.exports = function(express, app, mongoose, path, nodemailer, CronJob, fs,
     //Example of the use of cron
     //Every day of the week at 15.05.00
     //Change to a convenient time
-    //TODO see what to do to 29 February
-    new CronJob('00 37 20 * * 1-7', function () {
-        var query = Employee.find({
-            $where: function () {
-                return this.birthDate.getMonth() == new Date().getMonth() && this.birthDate.getDate() == new Date().getDate()
-            }, sendMail: true
-        });
+    //TODO choose hour to send
+    new CronJob('00 26 13 * * 1-7', function () {
+        var month = new Date().getMonth();
+        var day = new Date().getDate();
+        var year = new Date().getFullYear();
+        var query;
+
+       if ( !leapYear(year) && day == 28 && month == 1 ){
+           query = Employee.aggregate([
+               {$project: {
+                   month: {$month: '$birthDate'},
+                   day: {$dayOfMonth:'$birthDate' },
+                   name : '$name',
+                   email : '$email'
+
+               }},
+               {$match: { $and: [
+                    {month: new Date().getMonth() + 1},
+                    {$or: [
+                        {day : new Date().getDate()-1},
+                        {day : 28}
+                        ]
+                    }  ]} }
+           ]);
+        }else {
+           query = Employee.aggregate([
+               {$project: {
+                   month: {$month: '$birthDate'},
+                   day: {$dayOfMonth:'$birthDate' },
+                   name : '$name',
+                   email : '$email'
+
+               }},
+               {$match: {
+                   $and: [
+                       {month: new Date().getMonth() + 1},
+                       {day : new Date().getDate()-1} ]} }
+           ]);
+        }
+
         query.exec(function (err, result) {
 
             for (var i = 0; i < result.length; i++) {
@@ -381,17 +416,17 @@ module.exports = function(express, app, mongoose, path, nodemailer, CronJob, fs,
                     text: "Happy Birthday", // TO be changed
                     html: '<b>' + template + '<b>' // TO be changed
                 }
-                transporter.sendMail(mailOptions, function (error, info) {
+                //TODO uncomment to send email
+               /* transporter.sendMail(mailOptions, function (error, info) {
                     if (error) {
                         return console.log(error);
                     }
                     console.log('Message sent: ' + info.response);
-                });
+                });*/
                 if(result[i].sendSMS){
                     //TODO: get the default or personalized message
                     // SendSMSService("Happy Birthday", "+351" + result[i].phoneNumber); //TO change to the message itself
                 }
-
             }
         });
     }, null, true, 'Europe/London');
