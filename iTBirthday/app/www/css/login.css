@@ -9,3 +9,8 @@
   height: auto;
   padding: 5%;
 }
+
+#errorMessage {
+  background: #FFD17B !important;
+  padding: 5px;
+}
