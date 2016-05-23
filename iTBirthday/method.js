@@ -324,7 +324,7 @@ module.exports = function(express, app, mongoose, path, nodemailer, CronJob, fs,
         });
     });
 
-    app.delete('/delete_employee', function (req, res) {
+    app.post('/delete_employee', function (req, res) {
         Employee.remove({'email': req.body.email}, function (err, result) {
             if (!err) {
                 if (result) {

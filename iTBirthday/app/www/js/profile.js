@@ -84,7 +84,8 @@ angular.module('itBirthday.profile', ['ngFileUpload'])
 
       confirmPopup.then(function(res) {
         if(res) {
-          $http.delete(serverUrl + '/delete_employee', {
+          console.log($scope.profile.email);
+          $http.post(serverUrl + '/delete_employee', {
             email: $scope.profile.email
           }).success(function (data,status) {
             if (status == 200){
