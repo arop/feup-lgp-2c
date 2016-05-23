@@ -72,6 +72,7 @@ angular.module('itBirthday.profile', ['ngFileUpload'])
     $scope.isView = null;
     $scope.serverUrl = serverUrl;
 
+
     // A confirm dialog
     $scope.showConfirmRemove = function() {
       var confirmPopup = $ionicPopup.confirm({
@@ -109,8 +110,8 @@ angular.module('itBirthday.profile', ['ngFileUpload'])
     // Triggered on a button click, or some other target
     $scope.showPopupExitDate = function() {
       var templateDate = '<label class="item item-input">' +
-        '<span class="input-label">Date</span>'+
-        '<input type="date" ng-model="profile.exitDate">'+
+        '<span class="input-label">Data</span>'+
+        '<input datepicker type="text" onkeydown="return false" ng-model="profile.exitDate">'+
         '</label>';
 
       // An elaborate, custom popup
@@ -139,9 +140,10 @@ angular.module('itBirthday.profile', ['ngFileUpload'])
       myPopup.then(function(res) {
         console.log('Tapped!', res);
         if(res != undefined) {
-          //TODO http request to update exitdate
           $scope.update_profile();
-        } else {}
+        } else {
+
+        }
       });
     };
 
@@ -150,8 +152,8 @@ angular.module('itBirthday.profile', ['ngFileUpload'])
       $http.get(serverUrl + '/employee_profile/' + $stateParams.id).success(function (response) {
         console.log(response);
         $scope.profile = response;
-        $scope.profile.birthDate = new Date(String($scope.profile.birthDate));
-        $scope.profile.entryDate = new Date(String($scope.profile.entryDate));
+        $scope.profile.birthDate = new Date(String($scope.profile.birthDate)).toISOString().slice(0, 10);
+        $scope.profile.entryDate = new Date(String($scope.profile.entryDate)).toISOString().slice(0, 10);
       });
     };
 
@@ -213,6 +215,9 @@ angular.module('itBirthday.profile', ['ngFileUpload'])
         console.error('Gender is not defined.');
         return false;
       }
+
+      console.log("profile before update request");
+      console.log($scope.profile);
 
       $http.post(serverUrl + '/update_employee/' + $stateParams.id, {
         name: $scope.profile.name,
@@ -355,7 +360,31 @@ angular.module('itBirthday.profile', ['ngFileUpload'])
         return false;
       });
     };
-  }]);
+  }])
+
+  /**
+   * jquery date picker directive
+   */
+  .directive('datepicker', function () {
+    return {
+      require : 'ngModel',
+      link : function (scope, element, attrs, ngModelCtrl) {
+        $(function(){
+          $(element).datepicker({
+            changeYear:true,
+            changeMonth:true,
+            dateFormat:'yy-mm-dd',
+            //maxDate: new Date(),
+            onSelect:function (dateText, inst) {
+              ngModelCtrl.$setViewValue(dateText);
+              scope.$apply();
+            }
+          });
+        });
+      }
+    }
+  });
+
 
 /**
  * @return {string}
@@ -448,4 +477,3 @@ var IsCtrl = function (code) {
 var IsCopyPaste = function (code) {
   return (code == 67 || code == 86);
 };
-
