@@ -19,10 +19,9 @@ angular.module('itBirthday.login', [])
         $scope.errorMessage = 'Erro nos valores inseridos.';
         return false;
       }else {
-        $state.go('tabs.dash');
         $http.post(serverUrl + '/check_login', {
           username: user.username,
-          password: user.password
+          password: CryptoJS.SHA256(user.password).toString()
         }).success(function (data) {
           console.log('[APP] Login Successful');
 
@@ -33,6 +32,7 @@ angular.module('itBirthday.login', [])
           $state.go('tabs.dash');
 
         }).error(function (data) {
+          $scope.errorMessage = 'Erro nos valores inseridos.';
           console.log('ERROR: ' + data);
           return false;
         });
