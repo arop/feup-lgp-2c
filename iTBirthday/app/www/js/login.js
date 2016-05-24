@@ -22,7 +22,7 @@ angular.module('itBirthday.login', [])
         $state.go('tabs.dash');
         $http.post(serverUrl + '/check_login', {
           username: user.username,
-          password: user.password
+          password: CryptoJS.SHA256(user.password).toString()
         }).success(function (data) {
           console.log('[APP] Login Successful');
 
