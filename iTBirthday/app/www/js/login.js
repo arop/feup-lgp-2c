@@ -30,9 +30,11 @@ angular.module('itBirthday.login', [])
           localStorage.setItem("session", JSON.stringify(data));
 
           $state.go('tabs.dash');
+          user.password = '';
 
         }).error(function (data) {
           $scope.errorMessage = 'Erro nos valores inseridos.';
+          user.password = '';
           console.log('ERROR: ' + data);
           return false;
         });
