@@ -158,7 +158,7 @@ angular.module('itBirthday.profile', ['ngFileUpload'])
     };
 
     //listen for the file selected event
-    $("input[type=file]").on("changed", function () {
+    $("input[type=file]").change(function () {
       $scope.profile.photo = this.files[0];
     });
 
