@@ -7,6 +7,11 @@
       </div>
     </div>
 
+    <div ng-if="errorMessage">
+      <div class="col-33 col-offset-33" id="errorMessage">
+        <strong>Info:</strong> {{errorMessage}}
+      </div>
+    </div>
     <div class="row responsive-sm">
       <div class="col-33 col-offset-33" id="login-input-div">
         <label class="item item-input">

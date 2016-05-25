@@ -1,3 +1,11 @@
+var credentials = {
+  clientID: "6b8183f7-0d61-4fa9-8909-6bc421331ce4",
+  clientSecret: "ggMy0Y0HMjzUUZumTceGYDB",
+  site: "https://login.microsoftonline.com/common",
+  authorizationPath: "/oauth2/v2.0/authorize",
+  tokenPath: "/oauth2/v2.0/token"
+}
+
 var application_root = __dirname,
     express = require("express"),
     path = require("path"),
@@ -8,7 +16,8 @@ var application_root = __dirname,
     CronJob = require('cron').CronJob,
     fs = require('fs-extra'), // File System - for file manipulation
     busboy = require('connect-busboy'), //middleware for form/file upload
-    clickatell = require('node-clickatell'); //SMS
+    clickatell = require('node-clickatell'), //SMS
+    oauth2 = require("simple-oauth2")(credentials); // Outlook
 
 var app = express();
 
@@ -19,7 +28,7 @@ app.use(bodyParser.json());
 require('./routes')(express, app, path);
 
 //require file with methods/api, access to database
-require('./method')(express, app, mongoose, path, nodemailer, CronJob, fs, busboy, clickatell);
+require('./method')(express, app, mongoose, path, nodemailer, CronJob, fs, busboy, clickatell, oauth2);
 
 //Launch server
 /*app.listen(4242, function(){

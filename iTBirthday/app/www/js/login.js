@@ -4,21 +4,24 @@ angular.module('itBirthday.login', [])
 
     $scope.user = {};
 
+    $scope.errorMessage = '';
+
     //log out
-    /*$scope.logout = function() {
+    $scope.logout = function() {
       if ("session" in localStorage) localStorage.removeItem("session");
-    };*/
+      $state.go('login');
+    };
 
     $scope.login = function(user) {
+      $scope.errorMessage = '';
       //console.log("LOGIN user: " + user.username + " - PW: " + user.password);
       if ( user.username == undefined || user.password == undefined){
-        alert("Erro nos valores inseridos.");
+        $scope.errorMessage = 'Erro nos valores inseridos.';
         return false;
       }else {
-        $state.go('tabs.dash');
         $http.post(serverUrl + '/check_login', {
           username: user.username,
-          password: user.password
+          password: CryptoJS.SHA256(user.password).toString()
         }).success(function (data) {
           console.log('[APP] Login Successful');
 
@@ -27,8 +30,11 @@ angular.module('itBirthday.login', [])
           localStorage.setItem("session", JSON.stringify(data));
 
           $state.go('tabs.dash');
-          
+          user.password = '';
+
         }).error(function (data) {
+          $scope.errorMessage = 'Erro nos valores inseridos.';
+          user.password = '';
           console.log('ERROR: ' + data);
           return false;
         });
