@@ -2,6 +2,7 @@ module.exports = function(express, app, mongoose, path, nodemailer, CronJob, fs,
     var Finder = require('fs-finder');
     var CryptoJS = require("crypto-js");
     var leapYear = require('leap-year');
+    var crypto = require('crypto');
     //Database
     //mongoose.connect('mongodb://localhost/iTBirthday'); // change name of database , local database at the moment
     mongoose.connect('mongodb://lgpteamc:lgp201516@ds036069.mlab.com:36069/itbirthday');
@@ -156,7 +157,6 @@ module.exports = function(express, app, mongoose, path, nodemailer, CronJob, fs,
 
     //Post of employee
     app.post('/post_employee', function (req, res) {
-
         var emp_temp = new Employee({
             name: req.body.name,
             birthDate: req.body.birthDate,
@@ -197,6 +197,7 @@ module.exports = function(express, app, mongoose, path, nodemailer, CronJob, fs,
 
     app.use(busboy());
     app.post('/save_image_employee/:id',function (req, res) {
+        console.log("UPDATE");
         var fstream;
         //checks if a folder named 'images' exists in directory
         //if it does not exist, the folder is created
@@ -212,27 +213,33 @@ module.exports = function(express, app, mongoose, path, nodemailer, CronJob, fs,
         req.pipe(req.busboy);
         req.busboy.on('file', function (fieldname, file, filename) {
             console.log("Uploading: " + filename);
+            var new_name = crypto.createHash('md5').update(req.params.id ).digest("hex");
+            Employee.findOne({_id : req.params.id}, function(err, emp){
+                console.log(emp);
+                if ( !err ) {
+                    //removes previous image if it exists
+                    var f = __dirname + '/images/employees/';
 
-            //removes previous image if it exists
-            var f = __dirname + '/images/employees/';
-            var files = Finder.from(f).findFiles(req.params.id + '.*');
-            if ( file.length > 0)
-                fs.unlinkSync(files[0]);
-
+                    if ( emp.photoPath != undefined) {
+                        var files = Finder.from(f).findFiles(emp.photoPath);
+                        if (files.length > 0)
+                            fs.unlinkSync(files[0])
+                    }
+                }
+            });
             //Path where image will be uploaded
             var ext = filename.substr(filename.indexOf('.'),filename.lenght);
-            fstream = fs.createWriteStream(__dirname + '/images/employees/' + req.params.id + ext);
+            fstream = fs.createWriteStream(__dirname + '/images/employees/' + new_name + ext);
             file.pipe(fstream);
             fstream.on('close', function () {
-                var photo = { photoPath : req.params.id + ext };
+                var photo = { photoPath : new_name + ext };
                 //changes the value of the photoPath of the employee
                 Employee.findOneAndUpdate({_id: req.params.id},photo, function(err,emp) {
                 });
-                console.log("Upload Finished of " + req.params.id + ext);
+                console.log("Upload Finished of " + new_name + ext);
                 res.redirect('back');           //where to go next
             });
         });
-
     });
 
 
@@ -325,20 +332,35 @@ module.exports = function(express, app, mongoose, path, nodemailer, CronJob, fs,
     });
 
     app.post('/delete_employee', function (req, res) {
-        Employee.remove({'email': req.body.email}, function (err, result) {
-            if (!err) {
-                if (result) {
-                    console.log('[MONGOOSE] Employee Deleted');
-                    res.status(202).json('[MONGOOSE] Employee Deleted');
-                } else {
-                    console.log('[MONGOOSE] Employee not found');
-                    res.status(200).json('[MONGOOSE] Employee not found');
+        Employee.findOne({'email' : req.body.email}, function(err, emp){
+            console.log(emp);
+            if ( !err ) {
+                //removes previous image if it exists
+                var f = __dirname + '/images/employees/';
+
+                if ( emp.photoPath != undefined) {
+                    var files = Finder.from(f).findFiles(emp.photoPath);
+                    if (files.length > 0)
+                        fs.unlinkSync(files[0])
                 }
-            } else {
-                console.error('[MONGOOSE] Error deleting user: ' + err);
-                res.status(500).json(err);
+
+                Employee.remove({'email': req.body.email}, function (err, result) {
+                    if (!err) {
+                        if (result) {
+                            console.log('[MONGOOSE] Employee Deleted');
+                            res.status(202).json('[MONGOOSE] Employee Deleted');
+                        } else {
+                            console.log('[MONGOOSE] Employee not found');
+                            res.status(200).json('[MONGOOSE] Employee not found');
+                        }
+                    } else {
+                        console.error('[MONGOOSE] Error deleting user: ' + err);
+                        res.status(500).json(err);
+                    }
+                });
             }
         });
+
     });
 
     app.get('/employee_profile/:id', function (req, res) {
@@ -413,9 +435,12 @@ module.exports = function(express, app, mongoose, path, nodemailer, CronJob, fs,
         query.exec(function (err, result) {
             for (var i = 0; i < result.length; i++) {
                 var template = "Happy Birthday"; // add template  text
-                if (result[i].mailText) { //if employee has different template
+                if (result[i].sendPersonalizedMail) { //if employee has different template
                     template = result[i].mailText;
+                }else{
+
                 }
+
                 var mailOptions = {
                     from: 'lgp2.teamc@gmail.com', // <-- change this
                     to: result[i].email,
