@@ -1,8 +1,9 @@
-module.exports = function(express, app, mongoose, path, nodemailer, CronJob, fs, busboy, clickatell, oauth2) {
+module.exports = function(express, app, mongoose, path, nodemailer, CronJob, fs, busboy, clickatell, oauth2, outlook) {
     var Finder = require('fs-finder');
     var CryptoJS = require("crypto-js");
     var leapYear = require('leap-year');
     var crypto = require('crypto');
+
     //Database
     //mongoose.connect('mongodb://localhost/iTBirthday'); // change name of database , local database at the moment
     mongoose.connect('mongodb://lgpteamc:lgp201516@ds036069.mlab.com:36069/itbirthday');
@@ -98,10 +99,16 @@ module.exports = function(express, app, mongoose, path, nodemailer, CronJob, fs,
         expirationDate: {type: Date, required: false}
     });
 
+    var OutlookSchema = new mongoose.Schema({
+        token: {type: String, required: false, trim: true},
+        expirationDate: {type: Date, required: false}
+    });
+
     //Create the Models
     var Admin = mongoose.model('Admin', AdminSchema);
     var Employee = mongoose.model('Employee', EmployeeSchema);
     var Facebook = mongoose.model('Facebook', FacebookSchema);
+    var Outlook = mongoose.model('Outlook', OutlookSchema);
     var EmailTemplate = mongoose.model('EmailTemplate', EmailTemplateSchema);
     var SMSTemplate = mongoose.model('SMSTemplate', EmailTemplateSchema);
     var FacebookTemplate = mongoose.model('FacebookTemplate', EmailTemplateSchema);
@@ -623,21 +630,8 @@ module.exports = function(express, app, mongoose, path, nodemailer, CronJob, fs,
             console.log("Access token error: ", error.message);
         }
         else {
-            console.log("Token Received: " + token);
-            /*var cookies = ['iTBirthday-outlook-token=' + token.token.access_token + ';Max-Age=3600',
-                            'iTBirthday-outlook-email=' + authHelper.getEmailFromIdToken(token.token.id_token) + ';Max-Age=3600'];
-            response.setHeader('Set-Cookie', cookies);
-            response.writeHead(302, {'Location': 'http://localhost:8080/getEvents'});
-            response.end();*/
+            setOutlookToken(token.token.access_token);
         }
-    }
-
-    function getEmailFromIdToken(id_token) {
-        var token_parts = id_token.split('.');
-        var encoded_token = new Buffer(token_parts[1].replace("-", "+").replace("_", "/"), 'base64');
-        var decoded_token = encoded_token.toString();
-        var jwt = JSON.parse(decoded_token);
-        return jwt.preferred_username;
     }
 
     app.get('/facebook_info', function(req, res){
@@ -654,7 +648,7 @@ module.exports = function(express, app, mongoose, path, nodemailer, CronJob, fs,
 
     app.post('/facebook_token', function(req, res){
         var query = Facebook.find({});
-        Facebook.update(query, {token: req.body.newToken}, function(err, result){
+        Facebook.update(query, {token: req.body.newToken, expirationDate: req.body.expirationDate}, function(err, result){
             if(err){
                 console.log('[MONGOOSE] Error: ' + err);
                 res.status(500).json(err);
@@ -733,9 +727,95 @@ module.exports = function(express, app, mongoose, path, nodemailer, CronJob, fs,
         });
     });
 
+    app.get('/update_calendar', function (req, res){
+        console.log('Getting token');
+        var query = Outlook.find({});
+        query.exec(function(err, tokenResult){
+            if(err){
+                console.log('[MONGOOSE]: ' + err);
+            } else {
+                var query = Employee.find({}, 'name birthDate');
+                query.exec(function (err, result) {
+                    if (!err) {
+                        if (result.length > 0) {
+                            console.log('[MONGOOSE] Found all employees');
+                            for(var i = 0; i < result.length; i++){
+                                var person = result[i];
+                                createEvent(person, tokenResult[0]);
+                            }
+                        } else {
+                            console.log('[MONGOOSE] No employees to find');
+                        }
+                        res.status(200).json(result);
+                    } else {
+                        console.error('[MONGOOSE] ' + err);
+                        res.status(500).json('[MONGOOSE] ' + err);
+                    }
+                });
+            }
+        });
+    });
+
+    function setOutlookToken(token){
+        var query = Outlook.find({});
+        Outlook.update(query, {token: token}, function(err, result){
+            if(err){
+                console.log('[MONGOOSE] Error: ' + err);
+                return false;
+            } else {
+                return true;
+            }
+        });
+    }
+
+    function createEvent(person, tokenInfo) {
+        var token = tokenInfo.token;
+        console.log(tokenInfo.token);
+        var email = 'lgptest@xiiiorg.onmicrosoft.com';
+        console.log('Creatint event');
+        if (token) {
+            outlook.base.setApiEndpoint('https://outlook.office.com/api/v2.0');
+            outlook.base.setAnchorMailbox(email);
+            outlook.base.setPreferredTimeZone('Eastern Standard Time');
+
+            var newEvent = {
+                "Subject": "Aniversário de " + person.name,
+                "Body": {
+                    "ContentType": "HTML",
+                    "Content": "Aniversário de " + person.name
+                },
+                "Start": {
+                    "DateTime": "2016-05-27T00:00:00",
+                    "TimeZone": "Eastern Standard Time"
+                },
+                "End": {
+                    "DateTime": "2016-05-27T00:00:00",
+                    "TimeZone": "Eastern Standard Time"
+                },
+                "Attendees": []
+            };
+
+            var userInfo = {
+                email: 'lgptest@xiiiorg.onmicrosoft.com'
+            };
+
+            outlook.calendar.createEvent({token: token, event: newEvent, user: userInfo},
+                function (error, result) {
+                    if (error) {
+                        console.log('createEvent returned an error: ' + error);
+                    }
+                    else if (result) {
+                        console.log('Created Event with success');
+                    }
+                });
+        }
+    }
 
     /*var facebookstuff = new Facebook({'appId':'thisisappid', 'appSecret':'thisisappsecret', 'token':'asdasdasdasdasdasdasd'});
     facebookstuff.save(function(err){if(err) console.log(err);});*/
+
+    /*var facebookstuff = new Outlook({'token':'asdasdasdasdasdasdasd'});
+     facebookstuff.save(function(err){if(err) console.log(err);});*/
 
     /*TESTS
      cleanAdmin();
