@@ -111,7 +111,8 @@ angular.module('itBirthday.profile', ['ngFileUpload'])
     $scope.showPopupExitDate = function() {
       var templateDate = '<label class="item item-input">' +
         '<span class="input-label">Data</span>'+
-        '<input datepicker type="text" onkeydown="return false" ng-model="profile.exitDate">'+
+        '<input datepicker type="text" onkeydown="return false" ng-model="profile.exitDate" ' +
+        'style="position: relative; z-index: 100000 !important; ">'+
         '</label>';
 
       // An elaborate, custom popup
