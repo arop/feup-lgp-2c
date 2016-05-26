@@ -71,6 +71,7 @@ angular.module('itBirthday.profile', ['ngFileUpload'])
     $scope.profile = {};
     $scope.isView = null;
     $scope.serverUrl = serverUrl;
+    $scope.changedPhoto = false;
 
     $scope.isChoosingExitDate = false;
     $scope.hasExited = false;
@@ -146,6 +147,7 @@ angular.module('itBirthday.profile', ['ngFileUpload'])
     //listen for the file selected event
     $("input[type=file]").change(function () {
       $scope.profile.photo = this.files[0];
+      $scope.changedPhoto = true;
     });
 
     //post request to the server to update profile
@@ -168,7 +170,7 @@ angular.module('itBirthday.profile', ['ngFileUpload'])
         gender: $scope.profile.gender,
         exitDate: new Date($scope.profile.exitDate)
       }).success(function () {
-        if ($scope.profile.photo != undefined) {
+        if ($scope.profile.photo != undefined && $scope.changedPhoto == true) {
           Upload.upload({
             url: serverUrl + '/save_image_employee/' + $stateParams.id,
             file: $scope.profile.photo,
