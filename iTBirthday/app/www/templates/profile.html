@@ -17,9 +17,15 @@
               </label>
             </div>
 
-            <div class="list" ng-if="!isNewProfile && !isView">
+            <div class="list" ng-if="!isView && (!isNewProfile || profile.exitDate)">
+              <label class="item item-input item-stacked-label" ng-show="isChoosingExitDate">
+                <span class="input-label">Data de saída</span>
+                <input class="input-date pencil-edit" datepicker type="text" ng-model="profile.exitDate"
+                       placeholder="yyyy-mm-dd" ng-readonly="isView" ng-disabled="isView" onkeydown="return false" maxlength="10"/>
+              </label>
+
               <label class="item">
-                <button class="button button-block button-outline button-energized" ng-click="showPopupExitDate()"
+                <button class="button button-block button-outline button-energized" ng-click="toggleShowExitDate()"
                         ng-if="!profile.exitDate">
                   Adicionar data de saída
                 </button>
@@ -36,7 +42,7 @@
               <label class="item item-input item-stacked-label">
                 <span class="input-label">Nome</span>
                 <input type="text" placeholder="Nome" ng-model="profile.name" maxlength="75" class="pencil-edit"
-                       ng-readonly="isView" ng-disabled="isView"/>
+                       ng-readonly="isView || hasExited" ng-disabled="isView || hasExited"/>
               </label>
 
               <label class="item item-input item-stacked-label">
@@ -46,7 +52,7 @@
                 <label class="item-select">
                   <select class="" ng-model="profile.gender"
                           ng-init="profile.gender = (profile.gender == undefined ? 'Male' : profile.gender)"
-                          selected="selected" ng-disabled="isView">
+                          selected="selected" ng-disabled="isView || hasExited">
                     <option selected="selected" value="Male">Masculino</option>
                     <option value="Female">Feminino</option>
                   </select>
@@ -56,25 +62,27 @@
               <label class="item item-input item-stacked-label">
                 <span class="input-label">Número de Telemóvel</span>
                 <input type="tel" placeholder="Telemóvel" ng-model="profile.phoneNumber" maxlength="9"
-                       class="pencil-edit" ng-readonly="isView" ng-disabled="isView" />
+                       class="pencil-edit" ng-readonly="isView || hasExited" ng-disabled="isView || hasExited" />
               </label>
 
               <label class="item item-input item-stacked-label">
                 <span class="input-label">Endereço de Email</span>
                 <input type="email" placeholder="Email" ng-model="profile.email" maxlength="40" class="pencil-edit"
-                       ng-readonly="isView" ng-disabled="isView" />
+                       ng-readonly="isView || hasExited" ng-disabled="isView || hasExited" />
               </label>
 
               <label class="item item-input item-stacked-label">
                 <span class="input-label">Data de nascimento</span>
                 <input class="input-date pencil-edit" datepicker type="text" ng-model="profile.birthDate"
-                       placeholder="yyyy-mm-dd" ng-readonly="isView" ng-disabled="isView" onkeydown="return false" maxlength="10"/>
+                       placeholder="yyyy-mm-dd" ng-readonly="isView || hasExited" ng-disabled="isView || hasExited"
+                       onkeydown="return false" maxlength="10"/>
               </label>
 
               <label class="item item-input item-stacked-label">
                 <span class="input-label">Data de admissão</span>
                 <input class="input-date pencil-edit" datepicker type="text" ng-model="profile.entryDate"
-                       placeholder="yyyy-mm-dd" ng-readonly="isView" ng-disabled="isView" onkeydown="return false" maxlength="10"/>
+                       placeholder="yyyy-mm-dd" ng-readonly="isView || hasExited" ng-disabled="isView || hasExited"
+                       onkeydown="return false" maxlength="10"/>
               </label>
 
               <div class="separator"></div>
@@ -82,20 +90,20 @@
               <ion-checkbox ng-model="profile.sendMail"
                             ng-init="profile.sendMail = true"
                             ng-checked="profile.sendMail"
-                            ng-disabled="isView">Email de Aniversário
+                            ng-disabled="isView || hasExited">Email de Aniversário
               </ion-checkbox>
 
               <ion-checkbox ng-model="profile.sendPersonalizedMail"
                             ng-init="profile.sendPersonalizedMail = false"
                             ng-show="profile.sendMail && !isNewProfile"
                             ng-checked="profile.sendPersonalizedMail"
-                            ng-disabled="isView">Personalizar:
+                            ng-disabled="isView || hasExited">Personalizar:
               </ion-checkbox>
 
               <label class="item item-input item-stacked-label" ng-if="!isNewProfile"
                      ng-show="profile.sendMail && profile.sendPersonalizedMail">
                 <textarea type="textarea" placeholder="Email personalizado" ng-model="profile.mailText"
-                          maxlength="500" ng-readonly="isView" ng-disabled="isView"></textarea>
+                          maxlength="500" ng-readonly="isView || hasExited" ng-disabled="isView || hasExited"></textarea>
               </label>
 
               <div class="separator"></div>
@@ -103,20 +111,20 @@
               <ion-checkbox ng-model="profile.sendSMS"
                             ng-init="profile.sendSMS = true"
                             ng-checked="profile.sendSMS && !isNewProfile"
-                            ng-disabled="isView">SMS de Aniversário
+                            ng-disabled="isView || hasExited">SMS de Aniversário
               </ion-checkbox>
 
               <ion-checkbox ng-model="profile.sendPersonalizedSMS"
                             ng-init="profile.sendPersonalizedSMS = false"
                             ng-show="profile.sendSMS && !isNewProfile"
                             ng-checked="profile.sendPersonalizedSMS"
-                            ng-disabled="isView">Personalizar:
+                            ng-disabled="isView || hasExited">Personalizar:
               </ion-checkbox>
 
               <label class="item item-input item-stacked-label" ng-if="!isNewProfile"
                      ng-show="profile.sendSMS && profile.sendPersonalizedSMS">
                 <textarea placeholder="SMS personalizado" ng-model="profile.smsText"
-                          ng-readonly="isView" ng-disabled="isView"></textarea>
+                          ng-readonly="isView || hasExited" ng-disabled="isView"></textarea>
               </label>
 
               <div class="separator"></div>
@@ -124,7 +132,7 @@
               <ion-checkbox ng-model="profile.facebookPost"
                             ng-init="profile.facebookPost = false"
                             ng-checked="profile.facebookPost"
-                            ng-disabled="isView">Post do Facebook
+                            ng-disabled="isView || hasExited">Post do Facebook
               </ion-checkbox>
             </div>
           </div>
