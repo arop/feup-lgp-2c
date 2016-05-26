@@ -17,7 +17,8 @@ var application_root = __dirname,
     fs = require('fs-extra'), // File System - for file manipulation
     busboy = require('connect-busboy'), //middleware for form/file upload
     clickatell = require('node-clickatell'), //SMS
-    oauth2 = require("simple-oauth2")(credentials); // Outlook
+    oauth2 = require("simple-oauth2")(credentials), // Outlook
+    outlook = require("node-outlook");
 
 var app = express();
 
@@ -28,7 +29,7 @@ app.use(bodyParser.json());
 require('./routes')(express, app, path);
 
 //require file with methods/api, access to database
-require('./method')(express, app, mongoose, path, nodemailer, CronJob, fs, busboy, clickatell, oauth2);
+require('./method')(express, app, mongoose, path, nodemailer, CronJob, fs, busboy, clickatell, oauth2, outlook);
 
 //Launch server
 /*app.listen(4242, function(){
