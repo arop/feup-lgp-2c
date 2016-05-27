@@ -82,19 +82,7 @@ angular.module('itBirthday', ['ionic', 'ngFileUpload', 'ngPageTitle',
           }
         }
       })
-
-      .state('tabs.profile.main', {
-        url: '/main',
-        views: {
-          'inside-profile-tab@tabs.profile': {
-            templateUrl: defaultPath + 'templates/default-profile.html'
-          }
-        },
-        data: {
-          pageTitle: 'Perfis'
-        }
-      })
-
+      
       .state('tabs.profile.new', {
         url: '/new',
         views: {
