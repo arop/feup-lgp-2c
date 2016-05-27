@@ -1,5 +1,23 @@
-#default_messages_div {
-  text-align: center;
-  width: 70%;
-  margin: auto;
+#default_messages_div .row {
+  margin-top: 20px;
+}
+
+#default_messages_div .row .title {
+  font-size: 20px;
+  font-weight: 600;
+}
+
+#default_messages_div .row label.item.item-input {
+  margin-top: 10px;
+  padding: 10px;
+}
+
+#default_messages_div .row label.item.item-input > textarea {
+  margin-top: 5px;
+  padding: 5px;
+  border: solid 1px black;
+  max-width: 100%;
+  min-width: 100%;
+  min-height: 8em;
+  max-height: 20em;
 }

@@ -1,20 +1,26 @@
 <ion-view>
-  <ion-content class="padding" data-ng-init="getDefaultMsg()">
+  <ion-content padding="true" overflow-scroll="true" data-ng-init="getDefaultMsg()">
     <div id="default_messages_div">
-      <h1>Default messages</h1>
-      <div>
-        <label class="item item-input item-floating-label">
-          <span class="input-label">E-mail</span>
-          <textarea placeholder="E-mail" ng-model="defaultMsg.email" class="app-color"></textarea>
-        </label>
+      <div class="row responsive-sm responsive-md">
+        <div class="col-50 col-offset-25">
+          <label class="title">Template Email</label>
+          <label class="item item-input item-stacked-label  app-color">
+            <span class="item-label">Mensagem</span>
+            <textarea rows="6" class="app-color" placeholder="E-mail" ng-model="defaultMsg.email"></textarea>
+          </label>
+        </div>
       </div>
 
-      <div>
-        <label class="item item-input item-floating-label">
-          <span class="input-label">SMS</span>
-          <textarea placeholder="SMS" ng-model="defaultMsg.sms" class="app-color"></textarea>
-        </label>
+      <div class="row responsive-sm responsive-md">
+        <div class="col-50 col-offset-25">
+          <label class="title">Template SMS</label>
+          <label class="item item-input item-stacked-label app-color ">
+            <span class="item-label">Mensagem</span>
+            <textarea rows="6" class="app-color" placeholder="SMS" ng-model="defaultMsg.sms"></textarea>
+          </label>
+        </div>
       </div>
+
     </div>
   </ion-content>
 </ion-view>

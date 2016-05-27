@@ -35,15 +35,15 @@ angular.module('itBirthday.profile', ['ngFileUpload'])
 
     $scope.filterResults = function (element) {
       var status = statusFilter.options[statusFilter.selectedIndex].value;
-      if(status != undefined) {
+      if (status != undefined) {
 
         var exitDate = element["exitDate"];
 
-        if(status == "now" && exitDate) {
+        if (status == "now" && exitDate) {
           return false;
         }
 
-        if(status == "old" && !exitDate) {
+        if (status == "old" && !exitDate) {
           return false;
         }
       }
@@ -70,6 +70,7 @@ angular.module('itBirthday.profile', ['ngFileUpload'])
   .controller('UpdateUserCtrl', function ($scope, $http, $state, $stateParams, $filter, $ionicPopup, Upload) {
     $scope.profile = {};
     $scope.isView = null;
+    $scope.notCreating = null;
     $scope.serverUrl = serverUrl;
     $scope.changedPhoto = false;
 
@@ -77,11 +78,11 @@ angular.module('itBirthday.profile', ['ngFileUpload'])
     $scope.hasExited = false;
 
     $scope.toggleShowExitDate = function () {
-      $scope.isChoosingExitDate = true;
+      $scope.isChoosingExitDate = !$scope.isChoosingExitDate;
     };
 
     // A confirm dialog
-    $scope.showConfirmRemove = function() {
+    $scope.showConfirmRemove = function () {
       var confirmPopup = $ionicPopup.confirm({
         title: 'Remover perfil',
         template: 'Tem a certeza que quer remover este perfil? (Esta ação é irreversível)',
@@ -90,13 +91,13 @@ angular.module('itBirthday.profile', ['ngFileUpload'])
         okType: 'button-assertive'
       });
 
-      confirmPopup.then(function(res) {
-        if(res) {
+      confirmPopup.then(function (res) {
+        if (res) {
           console.log($scope.profile.email);
           $http.post(serverUrl + '/delete_employee', {
             email: $scope.profile.email
-          }).success(function (data,status) {
-            if (status == 200){
+          }).success(function (data, status) {
+            if (status == 200) {
               window.alert("Perfil não existe");
             } else if (status == 202) {
               window.alert("Perfil removido com sucesso");
@@ -115,7 +116,7 @@ angular.module('itBirthday.profile', ['ngFileUpload'])
     };
 
     // Triggered on a button click, or some other target
-    $scope.showPopupExitDate = function() {
+    $scope.showPopupExitDate = function () {
       var confirmPopup = $ionicPopup.confirm({
         title: 'Adicionar data de saída',
         template: 'Tem a certeza que quer adicionar uma data de saída? (Esta ação é irreversível)',
@@ -124,20 +125,21 @@ angular.module('itBirthday.profile', ['ngFileUpload'])
         okType: 'button-assertive'
       });
 
-      confirmPopup.then(function(res) {
-        if(res) $scope.update_profile_http_request();
+      confirmPopup.then(function (res) {
+        if (res) $scope.update_profile_http_request();
         else return false;
       });
     };
 
     $scope.getEmployee = function () {
       $scope.isView = true;
+      $scope.notCreating = true;
       $http.get(serverUrl + '/employee_profile/' + $stateParams.id).success(function (response) {
-        console.log(response);
+        //console.log(response);
         $scope.profile = response;
         $scope.profile.birthDate = new Date(String($scope.profile.birthDate)).toISOString().slice(0, 10);
         $scope.profile.entryDate = new Date(String($scope.profile.entryDate)).toISOString().slice(0, 10);
-        if($scope.profile.exitDate != undefined) {
+        if ($scope.profile.exitDate != undefined) {
           $scope.profile.exitDate = new Date(String($scope.profile.exitDate)).toISOString().slice(0, 10);
           $scope.hasExited = true;
         }
@@ -240,9 +242,11 @@ angular.module('itBirthday.profile', ['ngFileUpload'])
       }
 
       // if used so that if the user selects an exit date it has to confirm the update
-      if($scope.profile.exitDate != undefined)
+      if ($scope.profile.exitDate != undefined && !$scope.hasExited) {
         $scope.showPopupExitDate();
-      else $scope.update_profile_http_request();
+      } else {
+        $scope.update_profile_http_request();
+      }
     };
 
   })
@@ -358,16 +362,16 @@ angular.module('itBirthday.profile', ['ngFileUpload'])
    */
   .directive('datepicker', function () {
     return {
-      require : 'ngModel',
-      link : function (scope, element, attrs, ngModelCtrl) {
-        $(function(){
+      require: 'ngModel',
+      link: function (scope, element, attrs, ngModelCtrl) {
+        $(function () {
           $(element).datepicker({
-            changeYear:true,
-            changeMonth:true,
-            dateFormat:'yy-mm-dd',
+            changeYear: true,
+            changeMonth: true,
+            dateFormat: 'yy-mm-dd',
             yearRange: "c-100:c+1",
             //maxDate: new Date(),
-            onSelect:function (dateText, inst) {
+            onSelect: function (dateText, inst) {
               ngModelCtrl.$setViewValue(dateText);
               scope.$apply();
             }
