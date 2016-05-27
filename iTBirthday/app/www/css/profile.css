@@ -200,7 +200,10 @@
   -moz-border-radius: 0;
   border-radius: 0;
   background-color: #FFE47A !important;
-  /*cursor: pointer;*/
+}
+
+#new-profile-div .list > label.item > input.input-date {
+  cursor: pointer;
 }
 
 #new-profile-div .list > label.item > input[type="text"].pencil-edit,
