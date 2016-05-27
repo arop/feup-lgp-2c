@@ -369,6 +369,7 @@ angular.module('itBirthday.profile', ['ngFileUpload'])
             changeYear:true,
             changeMonth:true,
             dateFormat:'yy-mm-dd',
+            yearRange: "c-100:c+1",
             //maxDate: new Date(),
             onSelect:function (dateText, inst) {
               ngModelCtrl.$setViewValue(dateText);
