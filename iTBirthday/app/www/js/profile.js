@@ -262,10 +262,6 @@ angular.module('itBirthday.profile', ['ngFileUpload'])
       $scope.profile.photo = this.files[0];
     });
 
-    $("select").each(function() {
-      console.log(this);
-    });
-
     $scope.newProfile = function (profileData) {
 
       if (profileData == undefined) {
