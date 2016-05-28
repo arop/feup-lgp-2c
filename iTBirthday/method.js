@@ -160,6 +160,25 @@ module.exports = function(express, app, mongoose, path, nodemailer, CronJob, fs,
         });
     }
 
+    //SMS Template POST
+    app.post('/post_sms_template', function(req,res){
+        var temp_sms = new SMSTemplate({
+                text: req.body.text
+        });
+
+        temp_sms.save(function (err, emp) {
+            if (err) {
+                console.error(err);
+                res.status(500).json('[MONGOOSE] Error inserting new SMS Template');
+            }
+            else {
+                console.log("SMS Template inserted correctly");
+                res.status(200).json(emp._id);
+            }
+        });
+
+    });
+
     //Post of employee
     app.post('/post_employee', function (req, res) {
         var emp_temp = new Employee({
@@ -444,36 +463,41 @@ module.exports = function(express, app, mongoose, path, nodemailer, CronJob, fs,
         }
 
         query.exec(function (err, result) {
-            for (var i = 0; i < result.length; i++) {
-                var template = "Happy Birthday"; // add template  text
-                if (result[i].sendPersonalizedMail) { //if employee has different template
-                    template = result[i].mailText;
-                }else{
+            if ( err ) {
+                console.log(err);
+                return;
+            }else {
+                for (var i = 0; i < result.length; i++) {
+                    var template = "Happy Birthday"; // add template  text
+                    if (result[i].sendPersonalizedMail) { //if employee has different template
+                        template = result[i].mailText;
+                    } else {
 
-                }
+                    }
 
-                var mailOptions = {
-                    from: 'lgp2.teamc@gmail.com', // <-- change this
-                    to: result[i].email,
-                    subject: "Happy Birthday", // TO be changed
-                    text: "Happy Birthday", // TO be changed
-                    html: '<b>' + template + '<b>' // TO be changed
-                }
-                //TODO uncomment to send email
-                /*
-                console.log(result[i].sendMail);
-                 if ( result[i].sendMail) {
+                    var mailOptions = {
+                        from: 'lgp2.teamc@gmail.com', // <-- change this
+                        to: result[i].email,
+                        subject: "Happy Birthday", // TO be changed
+                        text: "Happy Birthday", // TO be changed
+                        html: '<b>' + template + '<b>' // TO be changed
+                    }
+                    //TODO uncomment to send email
+                    /*
+                     console.log(result[i].sendMail);
+                     if ( result[i].sendMail) {
                      console.log("MAILING");
                      transporter.sendMail(mailOptions, function (error, info) {
-                         if (error) {
-                         return console.log(error);
-                         }
-                         console.log('Message sent: ' + info.response);
+                     if (error) {
+                     return console.log(error);
+                     }
+                     console.log('Message sent: ' + info.response);
                      });
-                }*/
-                if(result[i].sendSMS){
-                    //TODO: get the default or personalized message
-                    // SendSMSService("Happy Birthday", "+351" + result[i].phoneNumber);
+                     }*/
+                    if (result[i].sendSMS) {
+                        //TODO: get the default or personalized message
+                        // SendSMSService("Happy Birthday", "+351" + result[i].phoneNumber);
+                    }
                 }
             }
         });
