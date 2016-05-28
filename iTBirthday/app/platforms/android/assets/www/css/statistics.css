@@ -1,0 +1,25 @@
+#dashboard div.title {
+  display: block;
+  text-align: center;
+  font-size: 150%;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+#dashboard div.info {
+  display: block;
+  padding: 10px;
+}
+
+#ratio_and_years.row .row {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+#ratio_and_years.row .row > .col-33 {
+  padding-left: 0;
+}
+
+#ratio_and_years.row .row > .col-66 {
+  padding-right: 0;
+}
