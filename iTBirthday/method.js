@@ -62,19 +62,17 @@ module.exports = function(express, app, mongoose, path, nodemailer, CronJob, fs,
     });
 
     EmployeeSchema.virtual('age').get(function () {
-        var today = new Date();
-        var birthDate = this.birthDate;
-        var age = today.getFullYear() - birthDate.getFullYear();
-        var m = today.getMonth() - birthDate.getMonth();
-        if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
-            age--;
-        }
-        return age;
+        return dateDiffInYears(this.birthDate, new Date());
     });
 
-    EmployeeSchema.virtual('timeSpent').get(function() {
+    EmployeeSchema.virtual('daysSpent').get(function() {
         if(this.exitDate) return dateDiffInDays(this.entryDate, this.exitDate);
         else return dateDiffInDays(this.entryDate, new Date());
+    });
+
+    EmployeeSchema.virtual('yearsSpent').get(function(){
+        if(this.exitDate) return dateDiffInYears(this.entryDate, this.exitDate);
+        else return dateDiffInYears(this.entryDate, new Date());
     });
 
     var templateTypes = 'Email SMS Facebook'.split(' ');
@@ -322,7 +320,7 @@ module.exports = function(express, app, mongoose, path, nodemailer, CronJob, fs,
     });
 
     app.get('/list_employees', function (req, res) {
-        var query = Employee.find({}, 'name email exitDate photoPath');
+        var query = Employee.find({}/*, 'name email exitDate photoPath'*/);
         query.exec(function (err, result) {
             if (!err) {
                 if (result.length > 0) {
@@ -453,7 +451,7 @@ module.exports = function(express, app, mongoose, path, nodemailer, CronJob, fs,
                 }else{
 
                 }
-               
+
                 var mailOptions = {
                     from: 'lgp2.teamc@gmail.com', // <-- change this
                     to: result[i].email,
@@ -528,12 +526,15 @@ module.exports = function(express, app, mongoose, path, nodemailer, CronJob, fs,
         var averageTime = 0;
         var ageGroup = [0,0,0,0,0]; //18-24, 25-34, 35-44, 45-54, 55+
         var totalEmployees = employees.length;
+        var activeEmployees = 0;
         for(var i = 0; i < totalEmployees; i++) {
             var person = employees[i];
 
-            averageTime += person.timeSpent;
+            averageTime += person.daysSpent;
 
             if(!person.exitDate) {
+                activeEmployees++;
+
                 if (person.gender == "Male") MFtotal[0]++;
                 else MFtotal[1]++;
 
@@ -547,20 +548,20 @@ module.exports = function(express, app, mongoose, path, nodemailer, CronJob, fs,
                 else if (age >= 40) ageGroup[4]++;
             }
         }
-        MFratio[0] = MFtotal[0] / totalEmployees;
-        MFratio[1] = MFtotal[1] / totalEmployees;
+        MFratio[0] = MFtotal[0] / activeEmployees;
+        MFratio[1] = MFtotal[1] / activeEmployees;
 
         for(var i = 0; i < birthByMonthTotal.length; i++) {
-            birthByMonthRatio[i] = birthByMonthTotal[i] / totalEmployees;
+            birthByMonthRatio[i] = birthByMonthTotal[i] / activeEmployees;
         }
 
         statistics[0] = MFratio;
         statistics[1] = MFtotal;
         statistics[2] = birthByMonthRatio;
         statistics[3] = birthByMonthTotal;
-        statistics[4] = Math.ceil(averageTime / employees.length);
+        statistics[4] = Math.ceil(averageTime / totalEmployees);
         statistics[5] = ageGroup;
-        statistics[6] = totalEmployees;
+        statistics[6] = activeEmployees;
         return statistics;
     }
 
@@ -594,6 +595,17 @@ module.exports = function(express, app, mongoose, path, nodemailer, CronJob, fs,
         var utc2 = Date.UTC(b.getFullYear(), b.getMonth(), b.getDate());
 
         return Math.floor((utc2 - utc1) / _MS_PER_DAY);
+    }
+
+    function dateDiffInYears(a, b){
+        var today = b;
+        var birthDate = a;
+        var age = today.getFullYear() - birthDate.getFullYear();
+        var m = today.getMonth() - birthDate.getMonth();
+        if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+            age--;
+        }
+        return age;
     }
 
     app.get('/authUrl', function(req, res){
