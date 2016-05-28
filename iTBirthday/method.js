@@ -392,11 +392,12 @@ module.exports = function(express, app, mongoose, path, nodemailer, CronJob, fs,
     //Every day of the week at 15.05.00
     //Change to a convenient time
     //TODO choose hour to send
-    new CronJob('00 43 16 * * 1-7', function () {
+    new CronJob('13 * * * * *', function () {
         var month = new Date().getMonth();
         var day = new Date().getDate();
         var year = new Date().getFullYear();
         var query;
+
 
         // If it is no leap year ( no 29 of february )
         // and today is 28 of February
@@ -418,7 +419,7 @@ module.exports = function(express, app, mongoose, path, nodemailer, CronJob, fs,
                {$match: { $and: [
                     {month: new Date().getMonth() + 1},
                     {$or: [
-                        {day : new Date().getDate()-1},
+                        {day : new Date().getDate()},
                         {day : 28}
                         ]
                     }  ]} }
@@ -429,13 +430,18 @@ module.exports = function(express, app, mongoose, path, nodemailer, CronJob, fs,
                    month: {$month: '$birthDate'},
                    day: {$dayOfMonth:'$birthDate' },
                    name : '$name',
-                   email : '$email'
-
+                   email : '$email',
+                   sendMail : '$sendMail',
+                   mailText : '$mailText',
+                   sendPersonalizedMail : '$sendPersonalizedMail',
+                   sendSMS : '$sendSMS',
+                   smsText : '$smsText',
+                   sendPersonalizedMail : '$sendPersonalizedMail'
                }},
                {$match: {
                    $and: [
                        {month: new Date().getMonth() + 1},
-                       {day : new Date().getDate()-1} ]} }
+                       {day : new Date().getDate()} ]} }
            ]);
         }
 
@@ -447,7 +453,7 @@ module.exports = function(express, app, mongoose, path, nodemailer, CronJob, fs,
                 }else{
 
                 }
-
+               
                 var mailOptions = {
                     from: 'lgp2.teamc@gmail.com', // <-- change this
                     to: result[i].email,
@@ -455,19 +461,21 @@ module.exports = function(express, app, mongoose, path, nodemailer, CronJob, fs,
                     text: "Happy Birthday", // TO be changed
                     html: '<b>' + template + '<b>' // TO be changed
                 }
-
                 //TODO uncomment to send email
-                /* if ( result[i].sendMail) {
-                    transporter.sendMail(mailOptions, function (error, info) {
-                     if (error) {
-                     return console.log(error);
-                     }
-                     console.log('Message sent: ' + info.response);
+                /*
+                console.log(result[i].sendMail);
+                 if ( result[i].sendMail) {
+                     console.log("MAILING");
+                     transporter.sendMail(mailOptions, function (error, info) {
+                         if (error) {
+                         return console.log(error);
+                         }
+                         console.log('Message sent: ' + info.response);
                      });
                 }*/
                 if(result[i].sendSMS){
                     //TODO: get the default or personalized message
-                    // SendSMSService("Happy Birthday", "+351" + result[i].phoneNumber); //TO change to the message itself
+                    // SendSMSService("Happy Birthday", "+351" + result[i].phoneNumber);
                 }
             }
         });
