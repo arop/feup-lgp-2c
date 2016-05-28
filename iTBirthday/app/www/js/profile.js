@@ -1,16 +1,12 @@
 angular.module('itBirthday.profile', ['ngFileUpload'])
 
-  .controller('SearchCtrl', function ($scope, $http) {
+  .controller('SearchCtrl', ['$scope', '$http', function ($scope, $http) {
 
     $scope.serverUrl = serverUrl;
 
     var cookie = localStorage.getItem('session');
 
-    if (cookie == null) {
-
-    }
-    else {
-      //removes """ from cookie
+    if (cookie != null) {
       var cookie2 = cookie.replace('\"', '');
 
       $http.get(serverUrl + '/Session/' + cookie2).success(function (data) {
@@ -64,7 +60,7 @@ angular.module('itBirthday.profile', ['ngFileUpload'])
       return (emailWithoutHost.toLowerCase().indexOf(searchTerm) >= 0);
     };
 
-  })
+  }])
 
   // update and view controller
   .controller('UpdateUserCtrl', function ($scope, $http, $state, $stateParams, $filter, $ionicPopup, Upload) {
@@ -126,8 +122,12 @@ angular.module('itBirthday.profile', ['ngFileUpload'])
       });
 
       confirmPopup.then(function (res) {
-        if (res) $scope.update_profile_http_request();
-        else return false;
+        if (res) {
+          $scope.update_profile_http_request();
+        }
+        else {
+          return false;
+        }
       });
     };
 
@@ -147,15 +147,15 @@ angular.module('itBirthday.profile', ['ngFileUpload'])
     };
 
     //listen for the file selected event
-    $("input[type=file]").change(function () {
+    $("input[type=file]").on("change", function () {
       $scope.profile.photo = this.files[0];
       $scope.changedPhoto = true;
     });
 
     //post request to the server to update profile
     $scope.update_profile_http_request = function () {
-      //console.log("profile before request");
-      //console.log($scope.profile);
+      var date = ($scope.profile.exitDate == undefined) ? undefined : new Date($scope.profile.exitDate);
+
       $http.post(serverUrl + '/update_employee/' + $stateParams.id, {
         name: $scope.profile.name,
         birthDate: new Date($scope.profile.birthDate),
@@ -170,7 +170,7 @@ angular.module('itBirthday.profile', ['ngFileUpload'])
         sendPersonalizedSMS: $scope.profile.sendPersonalizedSMS,
         facebookPost: $scope.profile.facebookPost,
         gender: $scope.profile.gender,
-        exitDate: new Date($scope.profile.exitDate)
+        exitDate: date
       }).success(function () {
         if ($scope.profile.photo != undefined && $scope.changedPhoto == true) {
           Upload.upload({
@@ -369,7 +369,7 @@ angular.module('itBirthday.profile', ['ngFileUpload'])
             changeYear: true,
             changeMonth: true,
             dateFormat: 'yy-mm-dd',
-            yearRange: "c-100:c+1",
+            yearRange: "-100:+1",
             //maxDate: new Date(),
             onSelect: function (dateText, inst) {
               ngModelCtrl.$setViewValue(dateText);
