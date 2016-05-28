@@ -24,7 +24,7 @@
 
                 <label class="item item-input item-stacked-label" ng-show="isChoosingExitDate">
                   <input class="input-date pencil-edit" datepicker type="text" ng-model="profile.exitDate"
-                         placeholder="yyyy-mm-dd" ng-readonly="isView" ng-disabled="isView" onkeydown="return false"
+                         placeholder="yyyy-mm-dd" ng-readonly="true" ng-disabled="isView" onkeydown="return false"
                          maxlength="10"/>
                 </label>
 
@@ -72,14 +72,14 @@
               <label class="item item-input item-stacked-label">
                 <span class="input-label">Data de nascimento</span>
                 <input class="input-date pencil-edit" datepicker type="text" ng-model="profile.birthDate"
-                       placeholder="yyyy-mm-dd" ng-readonly="isView || hasExited" ng-disabled="isView || hasExited"
+                       placeholder="yyyy-mm-dd" ng-readonly="true" ng-disabled="isView || hasExited"
                        onkeydown="return false" maxlength="10"/>
               </label>
 
               <label class="item item-input item-stacked-label">
                 <span class="input-label">Data de admissão</span>
                 <input class="input-date pencil-edit" datepicker type="text" ng-model="profile.entryDate"
-                       placeholder="yyyy-mm-dd" ng-readonly="isView || hasExited" ng-disabled="isView || hasExited"
+                       placeholder="yyyy-mm-dd" ng-readonly="true" ng-disabled="isView || hasExited"
                        onkeydown="return false" maxlength="10"/>
               </label>
 
