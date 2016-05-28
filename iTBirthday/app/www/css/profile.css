@@ -117,10 +117,21 @@
   width: 100%;
 }
 
-#search-label input:-ms-input-placeholder { color: #333333; }
-#search-label input::-webkit-input-placeholder { color: #333333; }
-#search-label input::-moz-placeholder { color: #333333; }
-#search-label input:-moz-placeholder { color: #333333; }
+#search-label input:-ms-input-placeholder {
+  color: #333333;
+}
+
+#search-label input::-webkit-input-placeholder {
+  color: #333333;
+}
+
+#search-label input::-moz-placeholder {
+  color: #333333;
+}
+
+#search-label input:-moz-placeholder {
+  color: #333333;
+}
 
 #search-profile.has-header {
   top: 55px;
@@ -214,25 +225,21 @@
   padding: 5px;
 }
 
-#new-profile-div .list > label.item {
+#profile-div .list > label.item {
   border: none;
   padding: 1px 2px 1px 2px;
 }
 
-#new-profile-div .list > label.item > span {
+#profile-div .list > label.item > span {
   padding: 2px 0;
 }
 
-#new-profile-div .list > label.item > textarea {
+#profile-div .list > label.item > textarea {
   min-width: 100%;
   max-width: 100%;
 }
 
-#new-profile-div .list > label.item > input[type="text"],
-#new-profile-div .list > label.item > input[type="email"],
-#new-profile-div .list > label.item > input[type="date"],
-#new-profile-div .list > label.item > input[type="tel"],
-#new-profile-div .list > label.item > textarea {
+#profile-div .list > label.item.item-input input {
   padding: 1px 3px 1px 3px;
   height: 2em;
   -webkit-border-radius: 0;
@@ -241,72 +248,60 @@
   background-color: #f0f0f0 !important;
 }
 
-#new-profile-div .list > label.item > input.input-date {
-  cursor: pointer;
+#profile-div .list > label.item.item-input.not-editable {
+  pointer-events: none;
 }
 
-#new-profile-div .list > label.item > input[type="text"].pencil-edit,
-#new-profile-div .list > label.item > input[type="email"].pencil-edit,
-#new-profile-div .list > label.item > input[type="tel"].pencil-edit,
-#new-profile-div .list > label.item > input[type="date"].pencil-edit,
-#new-profile-div .list > label.item > textarea.pencil-edit,
-#new-profile-div .list > label.item > .item-select > .pencil-edit {
+#profile-div .list > label.item.item-input.not-editable input.icon-pencil {
+  background: none;
+}
+
+#profile-div .list > label.item.item-input.editable {
+  pointer-events: all;
+}
+
+#profile-div .list > label.item.item-input.editable input.icon-pencil {
   background: url(../img/icons/pencil.png) no-repeat right #FFE47A;
   -webkit-background-size: 20px;
   background-size: 20px;
 }
 
-#new-profile-div .list > label.item > input[readonly="readonly"],
-#new-profile-div .list > label.item > textarea[readonly="readonly"],
-#new-profile-div .list > label.item > .item-select > select[disabled="disabled"] {
-  pointer-events: none;
+#profile-div .list > label.item.item-input.editable input.icon-calendar {
+  background: url(../img/icons/calendar.png) no-repeat right #FFE47A;
+  -webkit-background-size: 20px;
+  background-size: 20px;
 }
 
-#new-profile-div .list > label.item > input[readonly="readonly"].pencil-edit,
-#new-profile-div .list > label.item > textarea[readonly="readonly"].pencil-edit,
-#new-profile-div .list > label.item > .item-select > .pencil-edit[disabled="disabled"] {
-  background-image: none;
-  pointer-events: none;
+#profile-div .list > label.item.item-input.date {
+  cursor: pointer;
 }
 
-#new-profile-div .list > label.item > input[type="text"]::-webkit-input-placeholder,
-#new-profile-div .list > label.item > input[type="email"]::-webkit-input-placeholder,
-#new-profile-div .list > label.item > input[type="tel"]::-webkit-input-placeholder,
-#new-profile-div .list > label.item > input[type="date"]::-webkit-input-placeholder,
-#new-profile-div .list > label.item > textarea::-webkit-input-placeholder {
-  color: rgba(0, 0, 0, 0.4);
+#profile-div .list > label.item.item-input.date input {
+  cursor: pointer;
 }
 
-#new-profile-div .list > label.item > input[type="text"]:-moz-placeholder,
-#new-profile-div .list > label.item > input[type="email"]:-moz-placeholder,
-#new-profile-div .list > label.item > input[type="tel"]:-moz-placeholder,
-#new-profile-div .list > label.item > input[type="date"]:-moz-placeholder,
-#new-profile-div .list > label.item > textarea:-moz-placeholder {
-  color: rgba(0, 0, 0, 0.4);
+#profile-div .list > label.item.item-input input::-webkit-input-placeholder {
+  color: #808080;
 }
 
-#new-profile-div .list > label.item > input[type="text"]::-moz-placeholder,
-#new-profile-div .list > label.item > input[type="email"]::-moz-placeholder,
-#new-profile-div .list > label.item > input[type="date"]::-moz-placeholder,
-#new-profile-div .list > label.item > input[type="tel"]::-moz-placeholder,
-#new-profile-div .list > label.item > textarea::-moz-placeholder {
-  color: rgba(0, 0, 0, 0.4);
+#profile-div .list > label.item.item-input input:-moz-placeholder {
+  color: #808080;
 }
 
-#new-profile-div .list > label.item > input[type="text"]:-ms-input-placeholder,
-#new-profile-div .list > label.item > input[type="email"]:-ms-input-placeholder,
-#new-profile-div .list > label.item > input[type="date"]:-ms-input-placeholder,
-#new-profile-div .list > label.item > input[type="tel"]:-ms-input-placeholder,
-#new-profile-div .list > label.item > textarea:-ms-input-placeholder {
-  color: rgba(0, 0, 0, 0.4);
+#profile-div .list > label.item.item-input input::-moz-placeholder {
+  color: #808080;
 }
 
-#new-profile-div .list label.item-checkbox {
+#profile-div .list > label.item.item-input input:-ms-input-placeholder {
+  color: #808080;
+}
+
+#profile-div .list label.item-checkbox {
   border: none;
   padding: 4px 30px 4px 2px;
 }
 
-#new-profile-div .list label.item-checkbox > .checkbox {
+#profile-div .list label.item-checkbox > .checkbox {
   top: 0;
   right: 2px;
   left: auto;
@@ -314,14 +309,14 @@
   margin-top: 0;
 }
 
-#new-profile-div .list label.item-checkbox > .checkbox .checkbox-icon {
+#profile-div .list label.item-checkbox > .checkbox .checkbox-icon {
   right: 0;
   width: 22px;
   height: 22px;
   cursor: pointer;
 }
 
-#new-profile-div .list label.item-checkbox > .checkbox .checkbox-icon::before {
+#profile-div .list label.item-checkbox > .checkbox .checkbox-icon::before {
   -webkit-border-radius: 0;
   -moz-border-radius: 0;
   border-radius: 0;
@@ -329,21 +324,17 @@
   background-color: #f0f0f0;
 }
 
-#new-profile-div .list label.item-checkbox > .checkbox .checkbox-icon::after {
+#profile-div .list label.item-checkbox > .checkbox .checkbox-icon::after {
   width: 12px;
   border-bottom-width: 2px;
   border-left-width: 2px;
   border-color: #2C4E7D;
 }
 
-#new-profile-div .list label.item-checkbox > .checkbox input:checked + .checkbox-icon::after {
+#profile-div .list label.item-checkbox > .checkbox input:checked + .checkbox-icon::after {
   border-bottom-width: 2px;
   border-left-width: 2px;
   border-color: #2C4E7D;
-}
-
-#new-profile-div .row.space-up {
-  padding-top: 80px;
 }
 
 @media screen and (max-width: 767px) {
@@ -352,7 +343,7 @@
   }
 }
 
-#new-profile-div .input-date {
+#profile-div .input-date {
   -webkit-touch-callout: none;
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -360,20 +351,15 @@
   user-select: none;
 }
 
-  #new-profile-div .input-date::-moz-selection {
-  background: transparent;
-}
+#profile-div .input-date::-moz-selection { background: transparent; }
+#profile-div .input-date::selection { background: transparent; }
 
-#new-profile-div .input-date::selection {
-  background: transparent;
-}
-
-#new-profile-div .toggle input:checked + .track {
+#profile-div .toggle input:checked + .track {
   border-color: #f0f0f0;
   background-color: #f0f0f0;
 }
 
-#new-profile-div label.item-select {
+#profile-div label.item-select {
   display: block;
   position: relative;
   padding: 2px 0;
@@ -385,20 +371,20 @@
   text-align: center;
 }
 
-#new-profile-div .item-select::after {
+#profile-div .item-select::after {
   margin-top: -1px;
   right: 8px;
   color: #434343;
   display: none;
 }
 
-#new-profile-div .item-select select[disabled="disabled"]::after {
+#profile-div .item-select select[disabled="disabled"]::after {
   margin-top: -1px;
   right: 8px;
   color: rgba(0, 0, 0, 0.25);
 }
 
-#new-profile-div .item-select select {
+#profile-div .item-select select {
   display: block;
   position: inherit;
   width: 100%;
@@ -414,22 +400,22 @@
   direction: inherit;
 }
 
-#new-profile-div .item-select select[disabled="disabled"] {
+#profile-div .item-select select[disabled="disabled"] {
   pointer-events: none;
   background: none;
 }
 
-#new-profile-div .list {
+#profile-div .list {
   margin-bottom: 0;
 }
 
-#new-profile-div .list > .item.item-image {
+#profile-div .list > .item.item-image {
   padding-top: 25px;
   /*padding-bottom: 25px;*/
   height: 160px;
 }
 
-#new-profile-div .list > .item.item-image > img {
+#profile-div .list > .item.item-image > img {
   border: none;
   max-height: 100% !important;
   max-width: 100% !important;
@@ -437,12 +423,12 @@
   height: auto;
 }
 
-#new-profile-div .list > .item.item-file {
+#profile-div .list > .item.item-file {
   padding-top: 0;
   margin-top: 0;
 }
 
-#new-profile-div .list > .item.item-file input[type="file"] {
+#profile-div .list > .item.item-file input[type="file"] {
   cursor: pointer;
   width: 100%;
   text-align: center;
@@ -451,27 +437,27 @@
   background-color: transparent !important;
 }
 
-#new-profile-div #profile-buttons-row {
+#profile-div #profile-buttons-row {
   padding: 10px 10px 20px 10px;
 }
 
-#new-profile-div #profile-buttons-row > a {
+#profile-div #profile-buttons-row > a {
   float: right;
   padding: 5px 20px 5px 10px;
   margin: auto 5px auto auto;
 }
 
-#new-profile-div #profile-buttons-row > #edit-profile-btn {
+#profile-div #profile-buttons-row > #edit-profile-btn {
   background: transparent url("../img/icons/pencil_no_border.png") no-repeat right center !important;
   background-size: 16px !important;
 }
 
-#new-profile-div #profile-buttons-row > #create-profile-btn {
+#profile-div #profile-buttons-row > #create-profile-btn {
   background: transparent url("../img/icons/confirm.png") no-repeat right center !important;
   background-size: 16px !important;
 }
 
-#new-profile-div #profile-buttons-row > #save-profile-changes-btn {
+#profile-div #profile-buttons-row > #save-profile-changes-btn {
   background: transparent url("../img/icons/confirm.png") no-repeat right center !important;
   background-size: 16px !important;
 }
