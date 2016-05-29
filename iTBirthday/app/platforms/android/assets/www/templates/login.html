@@ -1,0 +1,27 @@
+<ion-view>
+  <ion-content>
+
+    <div class="row responsive-sm">
+      <div class="col-33 col-offset-33" id="login-logo">
+        <img ng-src="{{defaultPath}}img/itgrow-logo.png" class="img-responsive" width="695" height="240"/>
+      </div>
+    </div>
+
+    <div ng-if="errorMessage">
+      <div class="col-33 col-offset-33" id="errorMessage">
+        <strong>Info:</strong> {{errorMessage}}
+      </div>
+    </div>
+    <div class="row responsive-sm">
+      <div class="col-33 col-offset-33" id="login-input-div">
+        <label class="item item-input">
+          <input type="text" placeholder="Utilizador" ng-model="user.username">
+        </label>
+        <label class="item item-input">
+          <input type="password" placeholder="Password" ng-model="user.password">
+        </label>
+        <button class="button button-block app-color" ng-click="login(user)">Login</button>
+      </div>
+    </div>
+  </ion-content>
+</ion-view>

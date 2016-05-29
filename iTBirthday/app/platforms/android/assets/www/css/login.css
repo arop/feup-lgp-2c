@@ -1,0 +1,16 @@
+@media (orientation:landscape) and (min-width: 767px) {
+  #login-logo {
+    margin-top: 5%;
+  }
+}
+
+#login-logo img {
+  width: 100%;
+  height: auto;
+  padding: 5%;
+}
+
+#errorMessage {
+  background: #FFD17B !important;
+  padding: 5px;
+}

@@ -1,145 +1,183 @@
 <ion-view data-ng-init="getEmployee()">
   <ion-content padding="true" overflow-scroll="true">
-    <div class="row responsive-sm responsive-md" id="new-profile-div">
+    <div class="row responsive-sm responsive-md" id="profile-div">
       <div class="col col-50 col-offset-25">
+        <div class="row responsive-sm go-back-btn" ng-if="notCreating">
+          <a ui-sref="tabs.profile.search">Voltar</a>
+        </div>
         <div class="row responsive-sm" id="profile_row">
           <div class="col-50">
             <div class="list">
               <label class="item item-image">
-                <img ng-src="img/icons/novo_membro.png" ng-if="isNewProfile">
-                <img ng-src="{{serverUrl}}/images/employees/{{profile.photoPath}}" ng-if="!isNewProfile">
+                <img ng-src="img/icons/novo_membro.png" title="Avatar" alt="Error displaying avatar"
+                     ng-if="isNewProfile">
+                <img ng-src="{{serverUrl}}/images/employees/{{profile.photoPath}}" title="Avatar"
+                     alt="Error displaying avatar"
+                     ng-if="!isNewProfile">
               </label>
               <label class="item item-file" ng-hide="isView || hasExited">
                 <input id="file_upload" type="file" file-upload>
               </label>
             </div>
 
-            <div class="separator" ng-if="!isView && !isNewProfile"></div>
+            <div class="list" id="profile-dread-options" ng-if="!isNewProfile">
+              <div class="separator" ng-if="hasExited || !isView"></div>
 
-            <div class="list" id="profile-dread-options" ng-if="!isView && (!isNewProfile || profile.exitDate)">
-              <div ng-show="!profile.exitDate || isChoosingExitDate" >
+              <div ng-if="!isView && !hasExited"
+                   ng-show="!profile.exitDate || isChoosingExitDate">
+
+                <!-- INSERIR DATA DE SAIDA -->
                 <label ng-if="!profile.exitDate" class="item" id="add-exit-date-btn" ng-click="toggleShowExitDate()">
-                  Adicionar data de saída
+                  <a>Adicionar data de saída</a>
                 </label>
 
-                <label class="item item-input item-stacked-label" ng-show="isChoosingExitDate">
-                  <input class="input-date pencil-edit" datepicker type="text" ng-model="profile.exitDate"
-                         placeholder="yyyy-mm-dd" ng-readonly="isView" ng-disabled="isView" onkeydown="return false"
-                         maxlength="10"/>
+                <!-- DATA DE SAIDA -->
+                <label class="item item-input item-stacked-label date" ng-show="isChoosingExitDate">
+                  <input class="input-date icon-calendar" datepicker type="text" placeholder="yyyy-mm-dd" maxlength="10"
+                         onkeydown="return false" ng-readonly="true"
+                         ng-model="profile.exitDate"/>
                 </label>
 
                 <div class="separator"></div>
               </div>
-              <label class="item" id="remove-profile-btn" ng-click="showConfirmRemove()">
+              <label class="item" id="remove-profile-btn"
+                     ng-if="hasExited || !isView"
+                     ng-click="showConfirmRemove()">
                 <a>Remover perfil</a>
               </label>
             </div>
           </div>
           <div class="col-50">
-            <div class="list" style="width:100%; height: 100%;">
-              <label class="item item-input item-stacked-label">
+            <div class="list">
+              <!-- NOME -->
+              <label class="item item-input item-stacked-label {{(isView || hasExited) ? 'not-editable' : 'editable'}}">
                 <span class="input-label">Nome</span>
-                <input type="text" placeholder="Nome" ng-model="profile.name" maxlength="75" class="pencil-edit"
-                       ng-readonly="isView || hasExited" ng-disabled="isView || hasExited"/>
+                <input class="icon-pencil" type="text" placeholder="Nome" maxlength="75"
+                       ng-model="profile.name" ng-readonly="isView"/>
               </label>
 
-              <label class="item item-input item-stacked-label">
-              <span class="input-label">
-                Sexo
-              </span>
+              <!-- SEXO -->
+              <label class="item item-input item-stacked-label {{(isView || hasExited) ? 'not-editable' : 'editable'}}">
+                <span class="input-label">Sexo</span>
                 <label class="item-select">
-                  <select class="" ng-model="profile.gender"
-                          ng-init="profile.gender = (profile.gender == undefined ? 'Male' : profile.gender)"
-                          selected="selected" ng-disabled="isView || hasExited">
-                    <option selected="selected" value="Male">Masculino</option>
+                  <select ng-model="profile.gender"
+                          ng-init="profile.gender = (profile.gender == undefined ? 'Male' : profile.gender)">
+                    <option value="Male">Masculino</option>
                     <option value="Female">Feminino</option>
                   </select>
                 </label>
               </label>
 
-              <label class="item item-input item-stacked-label">
-                <span class="input-label">Número de Telemóvel</span>
-                <input type="tel" placeholder="Telemóvel" ng-model="profile.phoneNumber" maxlength="9"
-                       class="pencil-edit" ng-readonly="isView || hasExited" ng-disabled="isView || hasExited"/>
+              <!-- TEL -->
+              <label class="item item-input item-stacked-label {{(isView || hasExited) ? 'not-editable' : 'editable'}}">
+                <span class="input-label">Telefone / Telemóvel</span>
+                <input class="icon-pencil" type="tel" placeholder="Telemóvel" ng-model="profile.phoneNumber"
+                       maxlength="9"/>
               </label>
 
-              <label class="item item-input item-stacked-label">
+              <!-- EMAIL -->
+              <label class="item item-input item-stacked-label {{(isView || hasExited) ? 'not-editable' : 'editable'}}">
                 <span class="input-label">Endereço de Email</span>
-                <input type="email" placeholder="Email" ng-model="profile.email" maxlength="40" class="pencil-edit"
-                       ng-readonly="isView || hasExited" ng-disabled="isView || hasExited"/>
+                <input class="icon-pencil" type="email" placeholder="Email" maxlength="40"
+                       ng-model="profile.email"/>
               </label>
 
-              <label class="item item-input item-stacked-label">
+              <!-- DATA DE NASCIMENTO -->
+              <label
+                class="item item-input item-stacked-label date {{(isView || hasExited) ? 'not-editable' : 'editable'}}">
                 <span class="input-label">Data de nascimento</span>
-                <input class="input-date pencil-edit" datepicker type="text" ng-model="profile.birthDate"
-                       placeholder="yyyy-mm-dd" ng-readonly="isView || hasExited" ng-disabled="isView || hasExited"
-                       onkeydown="return false" maxlength="10"/>
+                <input class="input-date icon-calendar" datepicker type="text" placeholder="yyyy-mm-dd" maxlength="10"
+                       onkeydown="return false" ng-readonly="true"
+                       ng-model="profile.birthDate"/>
               </label>
 
-              <label class="item item-input item-stacked-label">
+              <!-- DATA DE ADMISSAO -->
+              <label
+                class="item item-input item-stacked-label date {{(isView || hasExited) ? 'not-editable' : 'editable'}}">
                 <span class="input-label">Data de admissão</span>
-                <input class="input-date pencil-edit" datepicker type="text" ng-model="profile.entryDate"
-                       placeholder="yyyy-mm-dd" ng-readonly="isView || hasExited" ng-disabled="isView || hasExited"
-                       onkeydown="return false" maxlength="10"/>
+                <input class="input-date icon-calendar" datepicker type="text" placeholder="yyyy-mm-dd" maxlength="10"
+                       onkeydown="return false" ng-readonly="true"
+                       ng-model="profile.entryDate"/>
               </label>
 
-              <div class="separator"></div>
+              <!-- DATA DE SAIDA -->
+              <label class="item item-input item-stacked-label date exit-date not-editable" ng-if="hasExited">
+                <span class="input-label">Data de Saída</span>
+                <input class="input-date icon-calendar" datepicker type="text" placeholder="yyyy-mm-dd" maxlength="10"
+                       onkeydown="return false" ng-readonly="true"
+                       ng-model="profile.exitDate"/>
+              </label>
 
-              <ion-checkbox ng-model="profile.sendMail"
-                            ng-init="profile.sendMail = true"
-                            ng-checked="profile.sendMail"
-                            ng-disabled="isView || hasExited">Email de Aniversário
-              </ion-checkbox>
+              <div ng-if="!hasExited">
+                <div class="separator"></div>
 
-              <ion-checkbox ng-model="profile.sendPersonalizedMail"
-                            ng-init="profile.sendPersonalizedMail = false"
-                            ng-show="!isView && profile.sendMail && !isNewProfile"
-                            ng-checked="profile.sendPersonalizedMail"
-                            ng-disabled="isView || hasExited">Personalizar:
-              </ion-checkbox>
+                <!-- EMAIL -->
+                <ion-checkbox ng-model="profile.sendMail"
+                              ng-init="profile.sendMail = true"
+                              ng-checked="profile.sendMail"
+                              ng-disabled="isView || hasExited">Email de Aniversário
+                </ion-checkbox>
 
-              <label class="item item-input item-stacked-label" ng-if="!isNewProfile"
-                     ng-show="profile.sendMail && profile.sendPersonalizedMail">
-                <textarea type="textarea" placeholder="Email personalizado" ng-model="profile.mailText"
+                <!-- PERSONALIZAR -->
+                <ion-checkbox ng-model="profile.sendPersonalizedMail"
+                              ng-init="profile.sendPersonalizedMail = false"
+                              ng-show="!isView && profile.sendMail"
+                              ng-checked="profile.sendPersonalizedMail"
+                              ng-disabled="isView || hasExited">Personalizar
+                </ion-checkbox>
+
+                <!-- TEXTO PERSONALIZAVEL -->
+                <label
+                  class="item item-input item-stacked-label {{(isView || hasExited) ? 'not-editable' : 'editable'}}"
+                  ng-show="profile.sendMail && profile.sendPersonalizedMail">
+                <textarea rows="4" placeholder="Email personalizado" ng-model="profile.mailText"
                           maxlength="500" ng-readonly="isView || hasExited"
                           ng-disabled="isView || hasExited"></textarea>
-              </label>
+                </label>
 
-              <div class="separator"></div>
+                <!-- SMS -->
+                <div class="separator"></div>
 
-              <ion-checkbox ng-model="profile.sendSMS"
-                            ng-init="profile.sendSMS = true"
-                            ng-checked="profile.sendSMS && !isNewProfile"
-                            ng-disabled="isView || hasExited">SMS de Aniversário
-              </ion-checkbox>
+                <ion-checkbox ng-model="profile.sendSMS"
+                              ng-init="profile.sendSMS = true"
+                              ng-checked="profile.sendSMS"
+                              ng-disabled="isView || hasExited">SMS de Aniversário
+                </ion-checkbox>
 
-              <ion-checkbox ng-model="profile.sendPersonalizedSMS"
-                            ng-init="profile.sendPersonalizedSMS = false"
-                            ng-show="!isView && profile.sendSMS && !isNewProfile"
-                            ng-checked="profile.sendPersonalizedSMS"
-                            ng-disabled="isView || hasExited">Personalizar:
-              </ion-checkbox>
+                <!-- PERSONALIZAR -->
+                <ion-checkbox ng-model="profile.sendPersonalizedSMS"
+                              ng-init="profile.sendPersonalizedSMS = false"
+                              ng-show="!isView && profile.sendSMS"
+                              ng-checked="profile.sendPersonalizedSMS"
+                              ng-disabled="isView || hasExited">Personalizar
+                </ion-checkbox>
 
-              <label class="item item-input item-stacked-label" ng-if="!isNewProfile"
-                     ng-show="profile.sendSMS && profile.sendPersonalizedSMS">
+                <!-- TEXTO PERSONALIZAVEL -->
+                <label
+                  class="item item-input item-stacked-label {{(isView || hasExited) ? 'not-editable' : 'editable'}}"
+                  ng-show="profile.sendSMS && profile.sendPersonalizedSMS">
                 <textarea placeholder="SMS personalizado" ng-model="profile.smsText"
                           ng-readonly="isView || hasExited"
                           ng-disabled="isView"></textarea>
-              </label>
+                </label>
 
-              <div class="separator"></div>
+                <div class="separator"></div>
 
-              <ion-checkbox ng-model="profile.facebookPost"
-                            ng-init="profile.facebookPost = false"
-                            ng-checked="profile.facebookPost"
-                            ng-disabled="isView || hasExited">Post do Facebook
-              </ion-checkbox>
+                <!-- FACEBOOK -->
+                <ion-checkbox ng-model="profile.facebookPost"
+                              ng-init="profile.facebookPost = false"
+                              ng-checked="profile.facebookPost"
+                              ng-disabled="isView || hasExited">Post do Facebook
+                </ion-checkbox>
+              </div>
             </div>
           </div>
         </div>
+
         <div class="row responsive-sm" id="profile-buttons-row">
-          <a id="edit-profile-btn" ng-click="isView=false" ng-show="isView && !isNewProfile">Editar</a>
-          <a id="save-profile-changes-btn" ng-click="update_profile()" ng-hide="isView || isNewProfile">Guardar alterações</a>
+          <a id="edit-profile-btn" ng-click="isView = false" ng-show="isView && !isNewProfile && !hasExited">Editar</a>
+          <a id="save-profile-changes-btn" ng-click="update_profile(profile)" ng-hide="isView || isNewProfile">Guardar
+            alterações</a>
           <a id="create-profile-btn" ng-click="newProfile(profile)" ng-show="isNewProfile && !isView">Criar perfil</a>
         </div>
       </div>
