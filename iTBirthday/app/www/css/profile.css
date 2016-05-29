@@ -41,6 +41,15 @@
   background-size: 10px !important;
 }
 
+.separator {
+  box-sizing: border-box;
+  min-width: 100%;
+  width: 100%;
+  height: auto;
+  border: 1px solid #dddddd;
+  margin: 5px auto 5px auto;
+}
+
 /*********************
      Search Page
 *********************/
@@ -227,15 +236,6 @@
 **************************************************************************
      New Profile
 *************************************************************************/
-.separator {
-  box-sizing: border-box;
-  min-width: 100%;
-  width: 100%;
-  height: auto;
-  border: 1px solid #dddddd;
-  margin: 10px auto;
-}
-
 #profile_row .col-50 {
   padding: 5px;
 }
@@ -472,7 +472,7 @@
 }
 
 #profile-dread-options.list label.item {
-  padding: 5px;
+  padding: 5px 3px 5px 3px;
   border: none;
 }
 

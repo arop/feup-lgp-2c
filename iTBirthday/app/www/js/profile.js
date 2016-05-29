@@ -1,24 +1,7 @@
 angular.module('itBirthday.profile', ['ngFileUpload'])
 
   .controller('SearchCtrl', ['$scope', '$http', function ($scope, $http) {
-
     $scope.serverUrl = serverUrl;
-
-    var cookie = localStorage.getItem('session');
-
-    if (cookie != null) {
-      var cookie2 = cookie.replace('\"', '');
-
-      $http.get(serverUrl + '/Session/' + cookie2).success(function (data) {
-        if (data.length == 0) {
-          $scope.session = {username: undefined};
-        }
-        else {
-          $scope.session = {username: "admin"};
-        }
-      }).error(function (data) {
-      });
-    }
 
     $scope.getAllEmployees = function () {
       $http.get(serverUrl + '/list_employees').success(function (response) {
@@ -60,9 +43,23 @@ angular.module('itBirthday.profile', ['ngFileUpload'])
       return (emailWithoutHost.toLowerCase().indexOf(searchTerm) >= 0);
     };
 
+    var cookie = localStorage.getItem('session');
+
+    if (cookie != null) {
+      var cookie2 = cookie.replace('\"', '');
+
+      $http.get(serverUrl + '/Session/' + cookie2).success(function (data) {
+        if (data.length == 0) {
+          $scope.session = {username: undefined};
+        }
+        else {
+          $scope.session = {username: "admin"};
+        }
+      }).error(function (data) {
+      });
+    }
   }])
 
-  // update and view controller
   .controller('UpdateUserCtrl', function ($scope, $http, $state, $stateParams, $filter, $ionicPopup, Upload) {
     $scope.profile = {};
     $scope.isView = null;
@@ -187,57 +184,10 @@ angular.module('itBirthday.profile', ['ngFileUpload'])
       });
     };
 
-    $scope.update_profile = function () {
-      if ($scope.profile == undefined) {
-        console.error('Profile Data is not valid.');
-        return false;
-      }
+    $scope.update_profile = function (profileData) {
 
-      if ($scope.profile.name == undefined || $scope.profile.name.length == 0) {
-        console.error('Profile name is not valid.');
-        return false;
-      }
-
-      if ($scope.profile.birthDate == undefined) {
-        console.error('Profile birth date is not valid.');
-        return false;
-      }
-
-      if ($scope.profile.phoneNumber == undefined || !IsProperPhoneNumber($scope.profile.phoneNumber)) {
-        console.error('Profile phone number is not valid.');
-        return false;
-      }
-      else {
-        $scope.profile.phoneNumber = GetFormattedPhoneNumber($scope.profile.phoneNumber);
-      }
-
-      if ($scope.profile.email == undefined) {
-        console.error('Profile email is not valid.');
-        return false;
-      }
-
-      if ($scope.profile.entryDate == undefined) {
-        console.error('Profile entry date is not valid.');
-        return false;
-      }
-
-      if ($scope.profile.sendMail == undefined) {
-        console.error('Send mail is not defined.');
-        return false;
-      }
-
-      if ($scope.profile.sendSMS == undefined) {
-        console.error('Send SMS is not defined.');
-        return false;
-      }
-
-      if ($scope.profile.facebookPost == undefined) {
-        console.error('Facebook post presence is not defined.');
-        return false;
-      }
-
-      if ($scope.profile.gender == undefined) {
-        console.error('Gender is not defined.');
+      if(!VerifyProfileData(profileData)) {
+        console.error("Profile data is wrong. Returning...");
         return false;
       }
 
@@ -268,56 +218,8 @@ angular.module('itBirthday.profile', ['ngFileUpload'])
 
     $scope.newProfile = function (profileData) {
 
-      if (profileData == undefined) {
-        console.error('Profile Data is not valid.');
-        return false;
-      }
-
-      if (profileData.name == undefined || profileData.name.length == 0) {
-        console.error('Profile name is not valid.');
-        return false;
-      }
-
-      if (profileData.birthDate == undefined) {
-        console.error('Profile birth date is not valid.');
-        return false;
-      }
-
-      if (profileData.phoneNumber == undefined || !IsProperPhoneNumber(profileData.phoneNumber)) {
-        console.error('Profile phone number is not valid.');
-        return false;
-      }
-      else {
-        profileData.phoneNumber = GetFormattedPhoneNumber(profileData.phoneNumber);
-      }
-
-      if (profileData.email == undefined) {
-        console.error('Profile email is not valid.');
-        return false;
-      }
-
-      if (profileData.entryDate == undefined) {
-        console.error('Profile entry date is not valid.');
-        return false;
-      }
-
-      if (profileData.sendMail == undefined) {
-        console.error('Send mail is not defined.');
-        return false;
-      }
-
-      if (profileData.sendSMS == undefined) {
-        console.error('Send SMS is not defined.');
-        return false;
-      }
-
-      if (profileData.facebookPost == undefined) {
-        console.error('Facebook post presence is not defined.');
-        return false;
-      }
-
-      if ($scope.profile.gender == undefined) {
-        console.error('Gender is not defined.');
+      if(!VerifyProfileData(profileData)) {
+        console.error("Profile data is wrong. Returning...");
         return false;
       }
 
@@ -336,7 +238,6 @@ angular.module('itBirthday.profile', ['ngFileUpload'])
         facebookPost: profileData.facebookPost,
         gender: profileData.gender
       }).success(function (data) {
-        //console.log('New user POST successful');
         if (profileData != undefined) {
           Upload.upload({
             url: serverUrl + '/save_image_employee/' + data,
@@ -354,7 +255,7 @@ angular.module('itBirthday.profile', ['ngFileUpload'])
         console.log('Error while creating new user: ' + err);
         return false;
       });
-    };
+    }
   }])
 
   /**
@@ -370,7 +271,6 @@ angular.module('itBirthday.profile', ['ngFileUpload'])
             changeMonth: true,
             dateFormat: 'yy-mm-dd',
             yearRange: "-100:+1",
-            //maxDate: new Date(),
             onSelect: function (dateText, inst) {
               ngModelCtrl.$setViewValue(dateText);
               scope.$apply();
@@ -381,6 +281,122 @@ angular.module('itBirthday.profile', ['ngFileUpload'])
     }
   });
 
+/**
+ * @return {boolean}
+ */
+var VerifyProfileData = function (profileData) {
+  if (profileData == undefined) {
+    console.error('Profile Data is not valid.');
+    return false;
+  }
+
+  if (profileData.name == undefined || profileData.name.length == 0) {
+    console.error('Profile name is not valid.');
+    return false;
+  }
+
+  if (profileData.gender == undefined) {
+    console.error('Gender is not defined.');
+    return false;
+  }
+
+  if (profileData.phoneNumber == undefined || !IsProperPhoneNumber(profileData.phoneNumber)) {
+    console.error('Profile phone number is not valid.');
+    return false;
+  }
+  else {
+    profileData.phoneNumber = GetFormattedPhoneNumber(profileData.phoneNumber);
+  }
+
+  if (profileData.email == undefined || profileData.email.length == 0) {
+    console.error('Profile email is not valid.');
+    return false;
+  }
+
+  if (profileData.birthDate == undefined || profileData.birthDate.length == 0) {
+    console.error('Profile birth date is not valid.');
+    return false;
+  }
+  if (profileData.entryDate == undefined || profileData.entryDate.length == 0) {
+    console.error('Profile entry date is not valid.');
+    return false;
+  }
+
+  if (profileData.sendMail == undefined) {
+    console.error('Send mail is not defined.');
+    return false;
+  }
+  else if (profileData.sendMail == true) {
+    if (profileData.sendPersonalizedMail == undefined) {
+      console.error('Send personalized mail is not defined.');
+      return false;
+    }
+    else if (profileData.sendPersonalizedMail == true) {
+      if (profileData.mailText == undefined) {
+        console.error('Send personalized mail is set to true, but the text is not.');
+        return false;
+      }
+      else {
+        var mailTextTrimmed = profileData.mailText.trim();
+        if (mailTextTrimmed.length == 0) {
+          console.error('Personalized Email text is empty. Discarding...');
+          return false;
+        }
+        else {
+          profileData.mailText = mailTextTrimmed;
+        }
+      }
+    }
+    else {
+      profileData.mailText = "";
+    }
+  }
+  else {
+    profileData.sendPersonalizedMail = false;
+    profileData.mailText = "";
+  }
+
+  if (profileData.sendSMS == undefined) {
+    console.error('Send SMS is not defined.');
+    return false;
+  }
+  else if (profileData.sendSMS == true) {
+    if (profileData.sendPersonalizedSMS == undefined) {
+      console.error('Send personalized SMS is not defined.');
+      return false;
+    }
+    else if (profileData.sendPersonalizedSMS == true) {
+      if (profileData.smsText == undefined) {
+        console.error('Send personalized SMS is set to true, but the text is not.');
+        return false;
+      }
+      else {
+        var smsTextTrimmed = profileData.smsText.trim();
+        if (smsTextTrimmed.length == 0) {
+          console.error('Personalized SMS text is empty. Discarding...');
+          return false;
+        }
+        else {
+          profileData.smsText = smsTextTrimmed;
+        }
+      }
+    }
+    else {
+      profileData.smsText = "";
+    }
+  }
+  else {
+    profileData.sendPersonalizedSMS = false;
+    profileData.smsText = "";
+  }
+
+  if (profileData.facebookPost == undefined) {
+    console.error('Facebook post is not defined.');
+    return false;
+  }
+
+  return true;
+};
 
 /**
  * @return {string}
@@ -416,60 +432,4 @@ var IsProperPhoneNumber = function (text) {
   }
 
   return (count == 9);
-};
-
-/**
- * @return {boolean}
- */
-var IsBackspace = function (code) {
-  return (code == 8);
-};
-
-/**
- * @return {boolean}
- */
-var IsTab = function (code) {
-  return (code == 9);
-};
-
-/**
- * @return {boolean}
- */
-var IsSpace = function (code) {
-  return (code == 32);
-};
-
-/**
- * @return {boolean}
- */
-var IsRefresh = function (code) {
-  return (code == 116);
-};
-
-/**
- * @return {boolean}
- */
-var IsLetter = function (code) {
-  return (code >= 65 && code <= 90);
-};
-
-/**
- * @return {boolean}
- */
-var IsNumber = function (code) {
-  return (code >= 48 && code <= 57) || (code >= 96 && code <= 105);
-};
-
-/**
- * @return {boolean}
- */
-var IsCtrl = function (code) {
-  return (code == 17);
-};
-
-/**
- * @return {boolean}
- */
-var IsCopyPaste = function (code) {
-  return (code == 67 || code == 86);
 };

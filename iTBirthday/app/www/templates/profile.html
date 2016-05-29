@@ -17,9 +17,9 @@
               </label>
             </div>
 
-            <div class="separator" ng-if="!isView && !isNewProfile"></div>
-
             <div class="list" id="profile-dread-options" ng-if="!isView && (!isNewProfile || profile.exitDate)">
+              <div class="separator"></div>
+
               <div ng-show="!profile.exitDate || isChoosingExitDate">
                 <label ng-if="!profile.exitDate" class="item" id="add-exit-date-btn" ng-click="toggleShowExitDate()">
                   <a>Adicionar data de saída</a>
@@ -110,13 +110,15 @@
                               ng-disabled="isView || hasExited">Email de Aniversário
                 </ion-checkbox>
 
+                <!-- PERSONALIZAR -->
                 <ion-checkbox ng-model="profile.sendPersonalizedMail"
                               ng-init="profile.sendPersonalizedMail = false"
                               ng-show="!isView && profile.sendMail"
                               ng-checked="profile.sendPersonalizedMail"
-                              ng-disabled="isView || hasExited">Personalizar:
+                              ng-disabled="isView || hasExited">Personalizar
                 </ion-checkbox>
 
+                <!-- TEXTO PERSONALIZAVEL -->
                 <label class="item item-input item-stacked-label"
                        ng-show="profile.sendMail && profile.sendPersonalizedMail">
                 <textarea rows="4" placeholder="Email personalizado" ng-model="profile.mailText"
@@ -133,13 +135,15 @@
                               ng-disabled="isView || hasExited">SMS de Aniversário
                 </ion-checkbox>
 
+                <!-- PERSONALIZAR -->
                 <ion-checkbox ng-model="profile.sendPersonalizedSMS"
                               ng-init="profile.sendPersonalizedSMS = false"
                               ng-show="!isView && profile.sendSMS"
                               ng-checked="profile.sendPersonalizedSMS"
-                              ng-disabled="isView || hasExited">Personalizar:
+                              ng-disabled="isView || hasExited">Personalizar
                 </ion-checkbox>
 
+                <!-- TEXTO PERSONALIZAVEL -->
                 <label class="item item-input item-stacked-label"
                        ng-show="profile.sendSMS && profile.sendPersonalizedSMS">
                 <textarea placeholder="SMS personalizado" ng-model="profile.smsText"
@@ -162,7 +166,7 @@
 
         <div class="row responsive-sm" id="profile-buttons-row">
           <a id="edit-profile-btn" ng-click="isView = false" ng-show="isView && !isNewProfile && !hasExited">Editar</a>
-          <a id="save-profile-changes-btn" ng-click="update_profile()" ng-hide="isView || isNewProfile">Guardar
+          <a id="save-profile-changes-btn" ng-click="update_profile(profile)" ng-hide="isView || isNewProfile">Guardar
             alterações</a>
           <a id="create-profile-btn" ng-click="newProfile(profile)" ng-show="isNewProfile && !isView">Criar perfil</a>
         </div>
