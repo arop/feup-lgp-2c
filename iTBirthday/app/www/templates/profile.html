@@ -112,14 +112,14 @@
 
                 <ion-checkbox ng-model="profile.sendPersonalizedMail"
                               ng-init="profile.sendPersonalizedMail = false"
-                              ng-show="!isView && profile.sendMail && !isNewProfile"
+                              ng-show="!isView && profile.sendMail"
                               ng-checked="profile.sendPersonalizedMail"
                               ng-disabled="isView || hasExited">Personalizar:
                 </ion-checkbox>
 
-                <label class="item item-input item-stacked-label" ng-if="!isNewProfile"
+                <label class="item item-input item-stacked-label"
                        ng-show="profile.sendMail && profile.sendPersonalizedMail">
-                <textarea type="textarea" placeholder="Email personalizado" ng-model="profile.mailText"
+                <textarea rows="4" placeholder="Email personalizado" ng-model="profile.mailText"
                           maxlength="500" ng-readonly="isView || hasExited"
                           ng-disabled="isView || hasExited"></textarea>
                 </label>
@@ -129,18 +129,18 @@
 
                 <ion-checkbox ng-model="profile.sendSMS"
                               ng-init="profile.sendSMS = true"
-                              ng-checked="profile.sendSMS && !isNewProfile"
+                              ng-checked="profile.sendSMS"
                               ng-disabled="isView || hasExited">SMS de Aniversário
                 </ion-checkbox>
 
                 <ion-checkbox ng-model="profile.sendPersonalizedSMS"
                               ng-init="profile.sendPersonalizedSMS = false"
-                              ng-show="!isView && profile.sendSMS && !isNewProfile"
+                              ng-show="!isView && profile.sendSMS"
                               ng-checked="profile.sendPersonalizedSMS"
                               ng-disabled="isView || hasExited">Personalizar:
                 </ion-checkbox>
 
-                <label class="item item-input item-stacked-label" ng-if="!isNewProfile"
+                <label class="item item-input item-stacked-label"
                        ng-show="profile.sendSMS && profile.sendPersonalizedSMS">
                 <textarea placeholder="SMS personalizado" ng-model="profile.smsText"
                           ng-readonly="isView || hasExited"

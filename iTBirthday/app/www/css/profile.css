@@ -240,21 +240,25 @@
   padding: 5px;
 }
 
-#profile-div .list > label.item {
+#profile-div .list label.item {
   border: none;
   padding: 1px 2px 1px 2px;
 }
 
-#profile-div .list > label.item > span {
+#profile-div .list label.item > span {
   padding: 2px 0;
 }
 
-#profile-div .list > label.item > textarea {
+#profile-div .list label.item.item-input textarea {
   min-width: 100%;
   max-width: 100%;
+  min-height: 8em;
+  max-height: 12em;
+  background-color: #f0f0f0 !important;
+  padding: 4px;
 }
 
-#profile-div .list > label.item.item-input input {
+#profile-div .list label.item.item-input input {
   padding: 1px 3px 1px 3px;
   height: 2em;
   -webkit-border-radius: 0;
@@ -263,31 +267,31 @@
   background-color: #f0f0f0 !important;
 }
 
-#profile-div .list > label.item.item-input.not-editable {
+#profile-div .list label.item.item-input.not-editable {
   pointer-events: none;
 }
 
-#profile-div .list > label.item.item-input.not-editable input.icon-pencil {
+#profile-div .list label.item.item-input.not-editable input.icon-pencil {
   background: none;
 }
 
-#profile-div .list > label.item.item-input.editable {
+#profile-div .list label.item.item-input.editable {
   pointer-events: all;
 }
 
-#profile-div .list > label.item.item-input.editable input.icon-pencil {
+#profile-div .list label.item.item-input.editable input.icon-pencil {
   background: url(../img/icons/pencil.png) no-repeat right #FFE47A;
   -webkit-background-size: 20px;
   background-size: 20px;
 }
 
-#profile-div .list > label.item.item-input.editable input.icon-calendar {
+#profile-div .list label.item.item-input.editable input.icon-calendar {
   background: url(../img/icons/calendar.png) no-repeat right #FFE47A;
   -webkit-background-size: 20px;
   background-size: 20px;
 }
 
-#profile-div .list > label.item label.item-select {
+#profile-div .list label.item label.item-select {
   display: block;
   position: relative;
   padding: 2px 0;
@@ -299,11 +303,11 @@
   text-align: center;
 }
 
-#profile-div .list > label.item label.item-select::after {
+#profile-div .list label.item label.item-select::after {
   display: none;
 }
 
-#profile-div .list > label.item label.item-select select {
+#profile-div .list label.item label.item-select select {
   display: block;
   position: inherit;
   width: 100%;
@@ -319,27 +323,27 @@
   direction: inherit;
 }
 
-#profile-div .list > label.item.not-editable label.item-select select {
+#profile-div .list label.item.not-editable label.item-select select {
   background: none;
 }
 
-#profile-div .list > label.item.item-input.date {
+#profile-div .list label.item.item-input.date {
   cursor: pointer;
 }
 
-#profile-div .list > label.item.item-input.date.exit-date input {
+#profile-div .list label.item.item-input.date.exit-date input {
   color: #c00000 !important;
   font-weight: 600;
 }
 
-#profile-div .list > label.item.item-input.date input {
+#profile-div .list label.item.item-input.date input {
   cursor: pointer;
 }
 
-#profile-div .list > label.item.item-input input::-webkit-input-placeholder { color: #808080; }
-#profile-div .list > label.item.item-input input:-moz-placeholder { color: #808080; }
-#profile-div .list > label.item.item-input input::-moz-placeholder { color: #808080; }
-#profile-div .list > label.item.item-input input:-ms-input-placeholder { color: #808080; }
+#profile-div .list label.item.item-input input::-webkit-input-placeholder { color: #808080; }
+#profile-div .list label.item.item-input input:-moz-placeholder { color: #808080; }
+#profile-div .list label.item.item-input input::-moz-placeholder { color: #808080; }
+#profile-div .list label.item.item-input input:-ms-input-placeholder { color: #808080; }
 
 #profile-div .list label.item-checkbox {
   border: none;
