@@ -120,6 +120,14 @@ angular.module('itBirthday.profile', ['ngFileUpload'])
 
       confirmPopup.then(function (res) {
         if (res) {
+          $scope.profile.sendMail = false;
+          $scope.profile.sendPersonalizedMail = false;
+          $scope.profile.mailText = "";
+          $scope.profile.sendSMS = false;
+          $scope.profile.sendPersonalizedSMS = false;
+          $scope.profile.smsText = "";
+          $scope.profile.facebookPost = false;
+
           $scope.update_profile_http_request();
         }
         else {
@@ -185,7 +193,6 @@ angular.module('itBirthday.profile', ['ngFileUpload'])
     };
 
     $scope.update_profile = function (profileData) {
-
       if(!VerifyProfileData(profileData)) {
         console.error("Profile data is wrong. Returning...");
         return false;
@@ -198,7 +205,6 @@ angular.module('itBirthday.profile', ['ngFileUpload'])
         $scope.update_profile_http_request();
       }
     };
-
   })
 
   .controller('NewUserCtrl', ['$scope', '$state', '$http', 'Upload', function ($scope, $state, $http, Upload) {

@@ -9,24 +9,30 @@
           <div class="col-50">
             <div class="list">
               <label class="item item-image">
-                <img ng-src="img/icons/novo_membro.png" ng-if="isNewProfile">
-                <img ng-src="{{serverUrl}}/images/employees/{{profile.photoPath}}" ng-if="!isNewProfile">
+                <img ng-src="img/icons/novo_membro.png" title="Avatar" alt="Error displaying avatar"
+                     ng-if="isNewProfile">
+                <img ng-src="{{serverUrl}}/images/employees/{{profile.photoPath}}" title="Avatar"
+                     alt="Error displaying avatar"
+                     ng-if="!isNewProfile">
               </label>
               <label class="item item-file" ng-hide="isView || hasExited">
                 <input id="file_upload" type="file" file-upload>
               </label>
             </div>
 
-            <div class="list" id="profile-dread-options" ng-if="!isView && (!isNewProfile || profile.exitDate)">
-              <div class="separator"></div>
+            <div class="list" id="profile-dread-options" ng-if="!isNewProfile">
+              <div class="separator" ng-if="hasExited || !isView"></div>
 
-              <div ng-show="!profile.exitDate || isChoosingExitDate">
+              <div ng-if="!isView && !hasExited"
+                   ng-show="!profile.exitDate || isChoosingExitDate">
+
+                <!-- INSERIR DATA DE SAIDA -->
                 <label ng-if="!profile.exitDate" class="item" id="add-exit-date-btn" ng-click="toggleShowExitDate()">
                   <a>Adicionar data de saída</a>
                 </label>
 
-                <!-- INSERIR DATA DE SAIDA -->
-                <label class="item item-input item-stacked-label date not-editable" ng-show="isChoosingExitDate">
+                <!-- DATA DE SAIDA -->
+                <label class="item item-input item-stacked-label date" ng-show="isChoosingExitDate">
                   <input class="input-date icon-calendar" datepicker type="text" placeholder="yyyy-mm-dd" maxlength="10"
                          onkeydown="return false" ng-readonly="true"
                          ng-model="profile.exitDate"/>
@@ -34,7 +40,9 @@
 
                 <div class="separator"></div>
               </div>
-              <label class="item" id="remove-profile-btn" ng-click="showConfirmRemove()">
+              <label class="item" id="remove-profile-btn"
+                     ng-if="hasExited || !isView"
+                     ng-click="showConfirmRemove()">
                 <a>Remover perfil</a>
               </label>
             </div>
@@ -119,8 +127,9 @@
                 </ion-checkbox>
 
                 <!-- TEXTO PERSONALIZAVEL -->
-                <label class="item item-input item-stacked-label"
-                       ng-show="profile.sendMail && profile.sendPersonalizedMail">
+                <label
+                  class="item item-input item-stacked-label {{(isView || hasExited) ? 'not-editable' : 'editable'}}"
+                  ng-show="profile.sendMail && profile.sendPersonalizedMail">
                 <textarea rows="4" placeholder="Email personalizado" ng-model="profile.mailText"
                           maxlength="500" ng-readonly="isView || hasExited"
                           ng-disabled="isView || hasExited"></textarea>
@@ -144,8 +153,9 @@
                 </ion-checkbox>
 
                 <!-- TEXTO PERSONALIZAVEL -->
-                <label class="item item-input item-stacked-label"
-                       ng-show="profile.sendSMS && profile.sendPersonalizedSMS">
+                <label
+                  class="item item-input item-stacked-label {{(isView || hasExited) ? 'not-editable' : 'editable'}}"
+                  ng-show="profile.sendSMS && profile.sendPersonalizedSMS">
                 <textarea placeholder="SMS personalizado" ng-model="profile.smsText"
                           ng-readonly="isView || hasExited"
                           ng-disabled="isView"></textarea>
