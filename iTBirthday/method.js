@@ -508,11 +508,11 @@ module.exports = function(express, app, mongoose, path, nodemailer, CronJob, fs,
                 else if (age >= 40) ageGroup[4]++;
             }
         }
-        MFratio[0] = MFtotal[0] / activeEmployees;
-        MFratio[1] = MFtotal[1] / activeEmployees;
+        MFratio[0] = ((MFtotal[0] / activeEmployees)*100).toFixed(1) + "%";
+        MFratio[1] = ((MFtotal[1] / activeEmployees)*100).toFixed(1) + "%";
 
         for(var i = 0; i < birthByMonthTotal.length; i++) {
-            birthByMonthRatio[i] = birthByMonthTotal[i] / activeEmployees;
+            birthByMonthRatio[i] = ((birthByMonthTotal[i] / activeEmployees)*100).toFixed(1) + "%";
         }
 
         statistics[0] = MFratio;
@@ -614,6 +614,24 @@ module.exports = function(express, app, mongoose, path, nodemailer, CronJob, fs,
                 res.status(200).json();
             }
         });
+    });
+
+    app.post('/post_email_template', function(req,res){
+        var temp_email = new EmailTemplate({
+            text: req.body.text
+        });
+
+        temp_email.save(function (err, emp) {
+            if (err) {
+                console.error(err);
+                res.status(500).json('[MONGOOSE] Error inserting new Email Template');
+            }
+            else {
+                console.log("Email Template inserted correctly");
+                res.status(200).json(emp._id);
+            }
+        });
+
     });
 
     /************** FACEBOOK TEMPLATE ********************/
