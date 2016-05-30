@@ -1,0 +1,30 @@
+{
+    "prepare_queue": {
+        "installed": [],
+        "uninstalled": []
+    },
+    "config_munge": {
+        "files": {}
+    },
+    "installed_plugins": {
+        "com.phonegap.plugins.facebookconnect": {
+            "APP_ID": "1046778285368752",
+            "APP_NAME": "iTBirthday",
+            "PACKAGE_NAME": "com.ionicframework.itbirthday311954"
+        }
+    },
+    "dependent_plugins": {},
+    "modules": [
+        {
+            "file": "plugins/com.phonegap.plugins.facebookconnect/facebookConnectPlugin.js",
+            "id": "com.phonegap.plugins.facebookconnect.FacebookConnectPlugin",
+            "pluginId": "com.phonegap.plugins.facebookconnect",
+            "clobbers": [
+                "facebookConnectPlugin"
+            ]
+        }
+    ],
+    "plugin_metadata": {
+        "com.phonegap.plugins.facebookconnect": "1.0.1.1"
+    }
+}

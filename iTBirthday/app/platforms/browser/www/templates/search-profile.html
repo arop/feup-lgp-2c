@@ -1,0 +1,32 @@
+<ion-view data-ng-init="getAllEmployees()">
+  <ion-header-bar id="search-profile-filter">
+    <div class="row responsive-sm">
+      <div class="col-50 col-offset-25">
+        <button class="button button-inline-block app-color" ui-sref="tabs.profile.main">Voltar</button>
+        <label id="search-label" class="item item-input app-color">
+          <input type="text" ng-model="searchInput" placeholder="Filtrar resultados">
+        </label>
+      </div>
+    </div>
+  </ion-header-bar>
+  <ion-content id="search-profile">
+    <div class="row responsive-sm">
+      <div class="col-50 col-offset-25">
+        <h4>Resultados</h4>
+        <label class="item app-color">
+          <div id="search-profile-results" class="app-color">
+            <ion-list class="card">
+              <ion-item class="item-avatar" ng-repeat="p in profiles | filter: searchInput" ui-sref="tabs.profile.show({id: p._id})">
+                <div class="item-content">
+                  <img src="http://tutorialsplane.com/runtest/ionic/img/profile.jpg">
+                  <h2>{{p.name}}</h2>
+                  <p>{{p.email}}</p>
+                </div>
+              </ion-item>
+            </ion-list>
+          </div>
+        </label>
+      </div>
+    </div>
+  </ion-content>
+</ion-view>
