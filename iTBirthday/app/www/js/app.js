@@ -82,7 +82,7 @@ angular.module('itBirthday', ['ionic', 'ngFileUpload', 'ngPageTitle',
           }
         }
       })
-      
+
       .state('tabs.profile.new', {
         url: '/new',
         views: {
@@ -144,7 +144,7 @@ angular.module('itBirthday', ['ionic', 'ngFileUpload', 'ngPageTitle',
           }
         },
         data: {
-          pageTitle: 'Opções'
+          pageTitle: 'Templates'
         }
       });
 
