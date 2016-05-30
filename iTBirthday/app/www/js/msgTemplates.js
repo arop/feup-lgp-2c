@@ -19,7 +19,20 @@ angular.module('itBirthday.settings', ['ngFileUpload'])
 
       $scope.defaultMsg.sms = "A iTGrow deseja-lhe um feliz aniversário! Esperamos que tenha um ótimo dia" +
         " e que celebre muitos mais anos connosco.";
-        
+
+      $scope.defaultMsg.fb = "lhol";
     };
 
-  })
+    $scope.saveChanges = function () {
+      var emailTemplate = $scope.defaultMsg.email.trim();
+      var smsTemplate = $scope.defaultMsg.sms.trim();
+      var fbTemplate = $scope.defaultMsg.fb.trim();
+
+      $http.post(serverUrl + '/update_sms_template/', {
+        text: smsTemplate
+      }).success(function () {
+        console.log("Updated sms template");
+      });
+    }
+
+  });

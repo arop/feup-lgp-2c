@@ -18,3 +18,11 @@
   max-height: 20em;
   height: 8em;
 }
+
+#templates_save_changes a {
+  float: right;
+  padding: 5px 20px 5px 10px;
+  margin: auto 5px auto auto;
+  background: transparent url("../img/icons/confirm.png") no-repeat right center !important;
+  background-size: 16px !important;
+}
