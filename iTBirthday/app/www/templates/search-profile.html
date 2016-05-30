@@ -1,9 +1,8 @@
 <ion-view data-ng-init="getAllEmployees()">
   <ion-header-bar id="search-profile-filter">
-    <div class="row responsive-sm responsive-md">
-      <div class="col col-50 col-offset-25">
-        <button class="button button-inline-block app-color" ui-sref="tabs.profile.main">Voltar</button>
-        <div class="row responsive-sm filters">
+    <div class="row responsive-sm responsive-md" >
+      <div class="col-50 col-offset-25">
+        <div class="row responsive-sm responsive-md filters">
           <div class="col col-50">
             <label id="search-label" class="item item-input app-color">
               <input type="text" ng-model="searchInput" placeholder="Filtrar resultados">
@@ -11,10 +10,11 @@
           </div>
           <div class="col col-50">
             <label id="status-filter" class="item item-input item-select">
-              <select selected="selected" ng-model="statusFilter" ng-init="statusFilter='now'" ng-change="filterResults">
-                <option value="now" selected>Ativos</option>
-                <option value="old">Antigos</option>
-                <option value="all">Todos</option>
+              <select selected="selected" ng-model="statusFilter" ng-init="statusFilter='now'"
+                      ng-change="filterResults">
+                <option value="now" selected>Colaboradores no ativo</option>
+                <option value="old">Antigos colaboradores</option>
+                <option value="all">Todos (sem filtro)</option>
               </select>
             </label>
           </div>
@@ -22,18 +22,21 @@
       </div>
     </div>
   </ion-header-bar>
-  <ion-content id="search-profile">
+  <ion-content padding="true" overflow-scroll="true" id="search-profile">
+    <div class="row responsive-sm responsive-md title">
+      <div class="col-50 col-offset-25">Resultados</div>
+    </div>
     <div class="row responsive-sm responsive-md">
-      <div class="col col-50 col-offset-25">
+      <div class="col-50 col-offset-25">
         <div id="search-profile-results" class="row responsive-sm responsive-md app-color">
-            <ion-item class="item-avatar col-50" ng-repeat="p in profiles | filter: filterResults"
-                      ui-sref="tabs.profile.show({id: p._id})">
-              <div class="item-content">
-                <img src="http://tutorialsplane.com/runtest/ionic/img/profile.jpg">
-                <h2>{{p.name}}</h2>
-                <p>{{p.email}}</p>
-              </div>
-            </ion-item>
+          <ion-item class="item-avatar col-50" ng-repeat="p in profiles | filter: filterResults"
+                    ui-sref="tabs.profile.show({id: p._id})">
+            <div class="item-content">
+              <img src="http://tutorialsplane.com/runtest/ionic/img/profile.jpg">
+              <h2>{{p.name}}</h2>
+              <p>{{p.email}}</p>
+            </div>
+          </ion-item>
         </div>
       </div>
     </div>

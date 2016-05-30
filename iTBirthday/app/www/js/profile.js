@@ -1,28 +1,7 @@
 angular.module('itBirthday.profile', ['ngFileUpload'])
 
-  .controller('SearchCtrl', function ($scope, $http) {
-
+  .controller('SearchCtrl', ['$scope', '$http', function ($scope, $http) {
     $scope.serverUrl = serverUrl;
-
-    var cookie = localStorage.getItem('session');
-
-    if (cookie == null) {
-
-    }
-    else {
-      //removes """ from cookie
-      var cookie2 = cookie.replace('\"', '');
-
-      $http.get(serverUrl + '/Session/' + cookie2).success(function (data) {
-        if (data.length == 0) {
-          $scope.session = {username: undefined};
-        }
-        else {
-          $scope.session = {username: "admin"};
-        }
-      }).error(function (data) {
-      });
-    }
 
     $scope.getAllEmployees = function () {
       $http.get(serverUrl + '/list_employees').success(function (response) {
@@ -35,15 +14,15 @@ angular.module('itBirthday.profile', ['ngFileUpload'])
 
     $scope.filterResults = function (element) {
       var status = statusFilter.options[statusFilter.selectedIndex].value;
-      if(status != undefined) {
+      if (status != undefined) {
 
         var exitDate = element["exitDate"];
 
-        if(status == "now" && exitDate) {
+        if (status == "now" && exitDate) {
           return false;
         }
 
-        if(status == "old" && !exitDate) {
+        if (status == "old" && !exitDate) {
           return false;
         }
       }
@@ -64,17 +43,39 @@ angular.module('itBirthday.profile', ['ngFileUpload'])
       return (emailWithoutHost.toLowerCase().indexOf(searchTerm) >= 0);
     };
 
-  })
+    var cookie = localStorage.getItem('session');
 
-  // update and view controller
+    if (cookie != null) {
+      var cookie2 = cookie.replace('\"', '');
+
+      $http.get(serverUrl + '/Session/' + cookie2).success(function (data) {
+        if (data.length == 0) {
+          $scope.session = {username: undefined};
+        }
+        else {
+          $scope.session = {username: "admin"};
+        }
+      }).error(function (data) {
+      });
+    }
+  }])
+
   .controller('UpdateUserCtrl', function ($scope, $http, $state, $stateParams, $filter, $ionicPopup, Upload) {
     $scope.profile = {};
     $scope.isView = null;
+    $scope.notCreating = null;
     $scope.serverUrl = serverUrl;
+    $scope.changedPhoto = false;
 
+    $scope.isChoosingExitDate = false;
+    $scope.hasExited = false;
+
+    $scope.toggleShowExitDate = function () {
+      $scope.isChoosingExitDate = !$scope.isChoosingExitDate;
+    };
 
     // A confirm dialog
-    $scope.showConfirmRemove = function() {
+    $scope.showConfirmRemove = function () {
       var confirmPopup = $ionicPopup.confirm({
         title: 'Remover perfil',
         template: 'Tem a certeza que quer remover este perfil? (Esta ação é irreversível)',
@@ -83,13 +84,13 @@ angular.module('itBirthday.profile', ['ngFileUpload'])
         okType: 'button-assertive'
       });
 
-      confirmPopup.then(function(res) {
-        if(res) {
+      confirmPopup.then(function (res) {
+        if (res) {
           console.log($scope.profile.email);
           $http.post(serverUrl + '/delete_employee', {
             email: $scope.profile.email
-          }).success(function (data,status) {
-            if (status == 200){
+          }).success(function (data, status) {
+            if (status == 200) {
               window.alert("Perfil não existe");
             } else if (status == 202) {
               window.alert("Perfil removido com sucesso");
@@ -108,116 +109,57 @@ angular.module('itBirthday.profile', ['ngFileUpload'])
     };
 
     // Triggered on a button click, or some other target
-    $scope.showPopupExitDate = function() {
-      var templateDate = '<label class="item item-input">' +
-        '<span class="input-label">Data</span>'+
-        '<input datepicker type="text" onkeydown="return false" ng-model="profile.exitDate">'+
-        '</label>';
-
-      // An elaborate, custom popup
-      var myPopup = $ionicPopup.show({
-        template: templateDate,
-        title: 'Data de saída',
-        subTitle: '(Esta ação é irreversível!)',
-        scope: $scope,
-        buttons: [
-          { text: 'Cancelar' },
-          {
-            text: '<b>Guardar</b>',
-            type: 'button-energized',
-            onTap: function(e) {
-              if (!$scope.profile.exitDate) {
-                //don't allow the user to close unless he enters exit date
-                e.preventDefault();
-              } else {
-                return $scope.profile.exitDate;
-              }
-            }
-          }
-        ]
+    $scope.showPopupExitDate = function () {
+      var confirmPopup = $ionicPopup.confirm({
+        title: 'Adicionar data de saída',
+        template: 'Tem a certeza que quer adicionar uma data de saída? (Esta ação é irreversível)',
+        cancelText: 'Cancelar',
+        okText: 'Sim',
+        okType: 'button-assertive'
       });
 
-      myPopup.then(function(res) {
-        console.log('Tapped!', res);
-        if(res != undefined) {
-          $scope.update_profile();
-        } else {
+      confirmPopup.then(function (res) {
+        if (res) {
+          $scope.profile.sendMail = false;
+          $scope.profile.sendPersonalizedMail = false;
+          $scope.profile.mailText = "";
+          $scope.profile.sendSMS = false;
+          $scope.profile.sendPersonalizedSMS = false;
+          $scope.profile.smsText = "";
+          $scope.profile.facebookPost = false;
 
+          $scope.update_profile_http_request();
+        }
+        else {
+          return false;
         }
       });
     };
 
     $scope.getEmployee = function () {
       $scope.isView = true;
+      $scope.notCreating = true;
       $http.get(serverUrl + '/employee_profile/' + $stateParams.id).success(function (response) {
-        console.log(response);
+        //console.log(response);
         $scope.profile = response;
         $scope.profile.birthDate = new Date(String($scope.profile.birthDate)).toISOString().slice(0, 10);
         $scope.profile.entryDate = new Date(String($scope.profile.entryDate)).toISOString().slice(0, 10);
+        if ($scope.profile.exitDate != undefined) {
+          $scope.profile.exitDate = new Date(String($scope.profile.exitDate)).toISOString().slice(0, 10);
+          $scope.hasExited = true;
+        }
       });
     };
 
     //listen for the file selected event
-    $("input[type=file]").change(function () {
+    $("input[type=file]").on("change", function () {
       $scope.profile.photo = this.files[0];
+      $scope.changedPhoto = true;
     });
 
-    $scope.update_profile = function () {
-      if ($scope.profile == undefined) {
-        console.error('Profile Data is not valid.');
-        return false;
-      }
-
-      if ($scope.profile.name == undefined || $scope.profile.name.length == 0) {
-        console.error('Profile name is not valid.');
-        return false;
-      }
-
-      if ($scope.profile.birthDate == undefined) {
-        console.error('Profile birth date is not valid.');
-        return false;
-      }
-
-      if ($scope.profile.phoneNumber == undefined || !IsProperPhoneNumber($scope.profile.phoneNumber)) {
-        console.error('Profile phone number is not valid.');
-        return false;
-      }
-      else {
-        $scope.profile.phoneNumber = GetFormattedPhoneNumber($scope.profile.phoneNumber);
-      }
-
-      if ($scope.profile.email == undefined) {
-        console.error('Profile email is not valid.');
-        return false;
-      }
-
-      if ($scope.profile.entryDate == undefined) {
-        console.error('Profile entry date is not valid.');
-        return false;
-      }
-
-      if ($scope.profile.sendMail == undefined) {
-        console.error('Send mail is not defined.');
-        return false;
-      }
-
-      if ($scope.profile.sendSMS == undefined) {
-        console.error('Send SMS is not defined.');
-        return false;
-      }
-
-      if ($scope.profile.facebookPost == undefined) {
-        console.error('Facebook post presence is not defined.');
-        return false;
-      }
-
-      if ($scope.profile.gender == undefined) {
-        console.error('Gender is not defined.');
-        return false;
-      }
-
-      console.log("profile before update request");
-      console.log($scope.profile);
+    //post request to the server to update profile
+    $scope.update_profile_http_request = function () {
+      var date = ($scope.profile.exitDate == undefined) ? undefined : new Date($scope.profile.exitDate);
 
       $http.post(serverUrl + '/update_employee/' + $stateParams.id, {
         name: $scope.profile.name,
@@ -233,9 +175,9 @@ angular.module('itBirthday.profile', ['ngFileUpload'])
         sendPersonalizedSMS: $scope.profile.sendPersonalizedSMS,
         facebookPost: $scope.profile.facebookPost,
         gender: $scope.profile.gender,
-        exitDate: $scope.profile.exitDate
+        exitDate: date
       }).success(function () {
-        if ($scope.profile.photo != undefined) {
+        if ($scope.profile.photo != undefined && $scope.changedPhoto == true) {
           Upload.upload({
             url: serverUrl + '/save_image_employee/' + $stateParams.id,
             file: $scope.profile.photo,
@@ -250,6 +192,19 @@ angular.module('itBirthday.profile', ['ngFileUpload'])
       });
     };
 
+    $scope.update_profile = function (profileData) {
+      if(!VerifyProfileData(profileData)) {
+        console.error("Profile data is wrong. Returning...");
+        return false;
+      }
+
+      // if used so that if the user selects an exit date it has to confirm the update
+      if ($scope.profile.exitDate != undefined && !$scope.hasExited) {
+        $scope.showPopupExitDate();
+      } else {
+        $scope.update_profile_http_request();
+      }
+    };
   })
 
   .controller('NewUserCtrl', ['$scope', '$state', '$http', 'Upload', function ($scope, $state, $http, Upload) {
@@ -267,62 +222,10 @@ angular.module('itBirthday.profile', ['ngFileUpload'])
       $scope.profile.photo = this.files[0];
     });
 
-    $("select").each(function() {
-      console.log(this);
-    });
-
     $scope.newProfile = function (profileData) {
 
-      if (profileData == undefined) {
-        console.error('Profile Data is not valid.');
-        return false;
-      }
-
-      if (profileData.name == undefined || profileData.name.length == 0) {
-        console.error('Profile name is not valid.');
-        return false;
-      }
-
-      if (profileData.birthDate == undefined) {
-        console.error('Profile birth date is not valid.');
-        return false;
-      }
-
-      if (profileData.phoneNumber == undefined || !IsProperPhoneNumber(profileData.phoneNumber)) {
-        console.error('Profile phone number is not valid.');
-        return false;
-      }
-      else {
-        profileData.phoneNumber = GetFormattedPhoneNumber(profileData.phoneNumber);
-      }
-
-      if (profileData.email == undefined) {
-        console.error('Profile email is not valid.');
-        return false;
-      }
-
-      if (profileData.entryDate == undefined) {
-        console.error('Profile entry date is not valid.');
-        return false;
-      }
-
-      if (profileData.sendMail == undefined) {
-        console.error('Send mail is not defined.');
-        return false;
-      }
-
-      if (profileData.sendSMS == undefined) {
-        console.error('Send SMS is not defined.');
-        return false;
-      }
-
-      if (profileData.facebookPost == undefined) {
-        console.error('Facebook post presence is not defined.');
-        return false;
-      }
-
-      if ($scope.profile.gender == undefined) {
-        console.error('Gender is not defined.');
+      if(!VerifyProfileData(profileData)) {
+        console.error("Profile data is wrong. Returning...");
         return false;
       }
 
@@ -341,7 +244,6 @@ angular.module('itBirthday.profile', ['ngFileUpload'])
         facebookPost: profileData.facebookPost,
         gender: profileData.gender
       }).success(function (data) {
-        //console.log('New user POST successful');
         if (profileData != undefined) {
           Upload.upload({
             url: serverUrl + '/save_image_employee/' + data,
@@ -359,7 +261,7 @@ angular.module('itBirthday.profile', ['ngFileUpload'])
         console.log('Error while creating new user: ' + err);
         return false;
       });
-    };
+    }
   }])
 
   /**
@@ -367,15 +269,15 @@ angular.module('itBirthday.profile', ['ngFileUpload'])
    */
   .directive('datepicker', function () {
     return {
-      require : 'ngModel',
-      link : function (scope, element, attrs, ngModelCtrl) {
-        $(function(){
+      require: 'ngModel',
+      link: function (scope, element, attrs, ngModelCtrl) {
+        $(function () {
           $(element).datepicker({
-            changeYear:true,
-            changeMonth:true,
-            dateFormat:'yy-mm-dd',
-            //maxDate: new Date(),
-            onSelect:function (dateText, inst) {
+            changeYear: true,
+            changeMonth: true,
+            dateFormat: 'yy-mm-dd',
+            yearRange: "-100:+1",
+            onSelect: function (dateText, inst) {
               ngModelCtrl.$setViewValue(dateText);
               scope.$apply();
             }
@@ -385,6 +287,122 @@ angular.module('itBirthday.profile', ['ngFileUpload'])
     }
   });
 
+/**
+ * @return {boolean}
+ */
+var VerifyProfileData = function (profileData) {
+  if (profileData == undefined) {
+    console.error('Profile Data is not valid.');
+    return false;
+  }
+
+  if (profileData.name == undefined || profileData.name.length == 0) {
+    console.error('Profile name is not valid.');
+    return false;
+  }
+
+  if (profileData.gender == undefined) {
+    console.error('Gender is not defined.');
+    return false;
+  }
+
+  if (profileData.phoneNumber == undefined || !IsProperPhoneNumber(profileData.phoneNumber)) {
+    console.error('Profile phone number is not valid.');
+    return false;
+  }
+  else {
+    profileData.phoneNumber = GetFormattedPhoneNumber(profileData.phoneNumber);
+  }
+
+  if (profileData.email == undefined || profileData.email.length == 0) {
+    console.error('Profile email is not valid.');
+    return false;
+  }
+
+  if (profileData.birthDate == undefined || profileData.birthDate.length == 0) {
+    console.error('Profile birth date is not valid.');
+    return false;
+  }
+  if (profileData.entryDate == undefined || profileData.entryDate.length == 0) {
+    console.error('Profile entry date is not valid.');
+    return false;
+  }
+
+  if (profileData.sendMail == undefined) {
+    console.error('Send mail is not defined.');
+    return false;
+  }
+  else if (profileData.sendMail == true) {
+    if (profileData.sendPersonalizedMail == undefined) {
+      console.error('Send personalized mail is not defined.');
+      return false;
+    }
+    else if (profileData.sendPersonalizedMail == true) {
+      if (profileData.mailText == undefined) {
+        console.error('Send personalized mail is set to true, but the text is not.');
+        return false;
+      }
+      else {
+        var mailTextTrimmed = profileData.mailText.trim();
+        if (mailTextTrimmed.length == 0) {
+          console.error('Personalized Email text is empty. Discarding...');
+          return false;
+        }
+        else {
+          profileData.mailText = mailTextTrimmed;
+        }
+      }
+    }
+    else {
+      profileData.mailText = "";
+    }
+  }
+  else {
+    profileData.sendPersonalizedMail = false;
+    profileData.mailText = "";
+  }
+
+  if (profileData.sendSMS == undefined) {
+    console.error('Send SMS is not defined.');
+    return false;
+  }
+  else if (profileData.sendSMS == true) {
+    if (profileData.sendPersonalizedSMS == undefined) {
+      console.error('Send personalized SMS is not defined.');
+      return false;
+    }
+    else if (profileData.sendPersonalizedSMS == true) {
+      if (profileData.smsText == undefined) {
+        console.error('Send personalized SMS is set to true, but the text is not.');
+        return false;
+      }
+      else {
+        var smsTextTrimmed = profileData.smsText.trim();
+        if (smsTextTrimmed.length == 0) {
+          console.error('Personalized SMS text is empty. Discarding...');
+          return false;
+        }
+        else {
+          profileData.smsText = smsTextTrimmed;
+        }
+      }
+    }
+    else {
+      profileData.smsText = "";
+    }
+  }
+  else {
+    profileData.sendPersonalizedSMS = false;
+    profileData.smsText = "";
+  }
+
+  if (profileData.facebookPost == undefined) {
+    console.error('Facebook post is not defined.');
+    return false;
+  }
+
+  return true;
+};
 
 /**
  * @return {string}
@@ -420,60 +438,4 @@ var IsProperPhoneNumber = function (text) {
   }
 
   return (count == 9);
-};
-
-/**
- * @return {boolean}
- */
-var IsBackspace = function (code) {
-  return (code == 8);
-};
-
-/**
- * @return {boolean}
- */
-var IsTab = function (code) {
-  return (code == 9);
-};
-
-/**
- * @return {boolean}
- */
-var IsSpace = function (code) {
-  return (code == 32);
-};
-
-/**
- * @return {boolean}
- */
-var IsRefresh = function (code) {
-  return (code == 116);
-};
-
-/**
- * @return {boolean}
- */
-var IsLetter = function (code) {
-  return (code >= 65 && code <= 90);
-};
-
-/**
- * @return {boolean}
- */
-var IsNumber = function (code) {
-  return (code >= 48 && code <= 57) || (code >= 96 && code <= 105);
-};
-
-/**
- * @return {boolean}
- */
-var IsCtrl = function (code) {
-  return (code == 17);
-};
-
-/**
- * @return {boolean}
- */
-var IsCopyPaste = function (code) {
-  return (code == 67 || code == 86);
 };
