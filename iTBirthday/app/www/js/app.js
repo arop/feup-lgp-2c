@@ -1,7 +1,7 @@
 // Ionic Starter App
 
-var serverUrl = "https://897e01a9.ngrok.io";
-//var serverUrl = "http://localhost:8080";
+//var serverUrl = "https://897e01a9.ngrok.io";
+var serverUrl = "http://localhost:8080";
 //var defaultPath = '/app/www/';
 var defaultPath = '';
 
@@ -157,7 +157,7 @@ angular.module('itBirthday', ['ionic', 'ngFileUpload', 'ngPageTitle',
           }
         },
         data: {
-          pageTitle: 'Facebook Info'
+          pageTitle: 'Facebook'
         }
       });
 

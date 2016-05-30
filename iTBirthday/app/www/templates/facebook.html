@@ -1,10 +1,30 @@
-<ion-view>
+<ion-view data-ng-init="getFacebookInfo()">
   <ion-content class="padding">
-    <div id = "fb-root"></div>
-    <button class = "button button-block" ng-click = "loginFacebook()">LOG IN</button>
-    <button class = "button button-block" ng-click = "logoutFacebook()">LOG OUT</button>
-    <button class = "button button-block" ng-click = "checkLoginStatus()">CHECK</button>
-    <button class = "button button-block" ng-click = "facebookAPI()">API</button>
-    <button class = "button button-block" ng-click = "postFacebook()">POST</button>
+    <div id="fb-root"></div>
+    <div class="row responsive-sm responsive-md">
+      <div class="col-50 col-offset-25">
+        <div class="card">
+          <div class="item item-divider"><a ng-click="loginFacebook()">LOG IN</a></div>
+        </div>
+        <div class="card">
+          <div class="item item-divider"><a ng-click="logoutFacebook()">LOG OUT</a></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row responsive-sm responsive-md">
+      <div class="col-50 col-offset-25">
+        <div class="card">
+          <div class="item item-divider {{loggedIn ? 'logged-in' : 'not-logged-in'}}" ng-if="loggedIn">
+            Está autenticado. Não é precisa nenhuma ação.
+          </div>
+          <div class="item item-divider {{loggedIn ? 'logged-in' : 'not-logged-in'}}" ng-if="!loggedIn">
+          </div>
+          <div class="item item-text-wrap {{loggedIn ? 'logged-in' : 'not-logged-in'}}" ng-if="loggedIn">
+            Login expires in: {{expirationDate}}
+          </div>
+        </div>
+      </div>
+    </div>
   </ion-content>
 </ion-view>
