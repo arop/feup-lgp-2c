@@ -660,7 +660,7 @@ module.exports = function (express, app, mongoose, path, nodemailer, CronJob, fs
 
     app.post('/update_email_template', function (req, res) {
         var query = EmailTemplate.find({});
-        EmailTemplate.update(query, {text: req.body.template}, function (err, result) {
+        EmailTemplate.update(query, {text: req.body.text}, function (err, result) {
             if (err) {
                 console.log('[MONGOOSE] Error: ' + err);
                 res.status(500).json(err);
@@ -689,32 +689,119 @@ module.exports = function (express, app, mongoose, path, nodemailer, CronJob, fs
     });
 
     /************************** FACEBOOK **************************/
-    new CronJob('00 0-59 * * * *', function () {
+    /****************** CRON ************************
+     * * * * * *
+     | | | | | |
+     | | | | | +---- Day of the Week   (range: 0-6, 0 standing for Sunday)
+     | | | | +------ Month of the Year (range: 0-11)
+     | | | +-------- Day of the Month  (range: 1-31)
+     | | +---------- Hour              (range: 0-23)
+     | +------------ Minute            (range: 0-59)
+     +-------------- Seconds           (range: 0-59)
+     /********************CRON ***********************/
+    new CronJob('00 1 00 1 * *', function () {
         var month = new Date().getMonth();
         var day = new Date().getDate();
         var year = new Date().getFullYear();
 
         // if(day == 30) {
-        //     var query = Facebook.find({}, 'token');
-        //     query.exec(function(err, result) {
+        //     var query = Employee.find({});
+        //     query.exec(function (err, result) {
         //         if (err) {
         //             console.log('[MONGOOSE] Error: ' + err);
         //         } else {
-        //             FB.setAccessToken(result[0].token);
-        //             var body = "This is a test post";
-        //             FB.api('/me/feed', 'post', { message: body }, function (res) {
-        //                 if (!res || res.error) {
-        //                     console.log(!res ? 'error occurred' : res.error);
-        //                     return;
-        //                 }
+        //             var activeEmployees = [];
         //
-        //                 console.log("Post ID: " + res.id);
+        //             for(var i = 0; i < result.length; i++) {
+        //                 var employee = result[i];
+        //
+        //                 if(!employee.exitDate || employee.exitDate == null) {
+        //                     var employeeDay = employee.birthDate.getDate();
+        //                     var employeeMonth = employee.birthDate.getMonth();
+        //                     if(employeeMonth == month) {
+        //                         activeEmployees.push(employee);
+        //                     }
+        //                 }
+        //             }
+        //
+        //             activeEmployees.sort(function(a, b){
+        //                 return (a.birthDate.getDate() - b.birthDate.getDate());
+        //             });
+        //
+        //             var query = FacebookTemplate.find({'active':true});
+        //             query.exec(function (err, result) {
+        //                 if (err) {
+        //                     console.log('[MONGOOSE] Error ' + err);
+        //                 } else {
+        //                     var body = getFacebookBodyMessage(result[0].text, activeEmployees);
+        //
+        //                     var query = Facebook.find({}, 'token');
+        //                     query.exec(function(err, result) {
+        //                         if (err) {
+        //                             console.log('[MONGOOSE] Error: ' + err);
+        //                         } else {
+        //                             FB.setAccessToken(result[0].token);
+        //                             FB.api('/me/feed', 'post', { message: body }, function (res) {
+        //                                 if (!res || res.error) {
+        //                                     console.log(!res ? 'error occurred' : res.error);
+        //                                 } else {
+        //                                     console.log("Successful post on facebook");
+        //                                 }
+        //                             });
+        //                         }
+        //                     });
+        //                 }
         //             });
         //         }
         //     });
         // }
 
     }, null, true, 'Europe/London');
+
+    function getFacebookBodyMessage(template, employees) {
+        var date = new Date();
+        var text = "";
+        text = text.concat(template, "\n\n");
+
+        for(var i = 0; i < employees.length; i++) {
+            var employee = employees[i];
+            date.setMonth(employee.birthDate.getMonth());
+            date.setDate(employee.birthDate.getDate());
+            text = text.concat(employee.name, " (", ConvertIndexToWeekDay(date.getDay()) + "dia " + date.getDate(), ")\n");
+        }
+
+        return text;
+    }
+
+    /**
+     * @return {string}
+     */
+    function ConvertIndexToWeekDay(day)
+    {
+        if(day == 0) {
+            return "domingo ";
+        }
+        if(day == 1) {
+            return "segunda-feira ";
+        }
+        if(day == 2) {
+            return "terça-feira ";
+        }
+        if(day == 3) {
+            return "quarta-feira ";
+        }
+        if(day == 4) {
+            return "quinta-feira ";
+        }
+        if(day == 5) {
+            return "sexta-feira ";
+        }
+        if(day == 6) {
+            return "sábado ";
+        }
+
+        return "";
+    }
 
     app.post('/post_facebook_info', function (req, res) {
         var query = Facebook.find({});
@@ -827,8 +914,9 @@ module.exports = function (express, app, mongoose, path, nodemailer, CronJob, fs
     });
 
     app.post('/update_facebook_template', function (req, res) {
+
         var query = FacebookTemplate.find({});
-        FacebookTemplate.update(query, {text: req.body.template}, function (err, result) {
+        FacebookTemplate.update(query, {text: req.body.text}, function (err, result) {
             if (err) {
                 console.log('[MONGOOSE] Error: ' + err);
                 res.status(500).json(err);

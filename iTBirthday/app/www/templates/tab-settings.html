@@ -15,16 +15,16 @@
         <div class="col col-25 col-offset-25" id="sms_template">
           <label class="title">Template SMS</label>
           <label class="item item-input item-stacked-label app-color ">
-            <span class="item-label">Mensagem</span>
-            <textarea rows="6" class="app-color" placeholder="Template SMS" ng-model="defaultMsg.sms"></textarea>
+            <span class="item-label">Mensagem (máx. 160 caracteres)</span>
+            <textarea rows="6" maxlength="160" class="app-color" placeholder="Template SMS" ng-model="defaultMsg.sms"></textarea>
           </label>
         </div>
 
         <div class="col col-25" id="fb_template">
           <label class="title">Template Facebook</label>
           <label class="item item-input item-stacked-label app-color ">
-            <span class="item-label">Mensagem</span>
-            <textarea rows="6" class="app-color" placeholder="Template Facebook" ng-model="defaultMsg.fb"></textarea>
+            <span class="item-label">Mensagem (máx. 240 caracteres)</span>
+            <textarea rows="6" maxlength="240" class="app-color" placeholder="Template Facebook" ng-model="defaultMsg.fb"></textarea>
           </label>
         </div>
       </div>

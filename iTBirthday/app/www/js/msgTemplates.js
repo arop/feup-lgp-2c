@@ -5,22 +5,22 @@ angular.module('itBirthday.settings', ['ngFileUpload'])
     $scope.defaultMsg = {};
 
     $scope.getDefaultMsg = function () {
-      console.log("entrou");
-      /*$scope.defaultMsg.email = "email";
-      $scope.defaultMsg.sms = "sms";*/
 
+      $scope.defaultMsg.email = "";
+      $scope.defaultMsg.sms = "";
+      $scope.defaultMsg.fb = "";
 
-      $scope.defaultMsg.email = "Parabéns!!!" +
-        "A iTGrow deseja-lhe um feliz aniversário! Esperamos poder festejar consigo este dia e aproveitar para" +
-        " agradecer o seu contributo na equipa da iTGrow. Que os próximos anos continuem a ser prósperos e felizes " +
-        "e que que possamos continuar a festejar consigo." +
-        "\nCom os melhores votos de felicidades,"+
-        "\niTGrow";
+      $http.get(serverUrl + '/email_template').success(function (response) {
+        $scope.defaultMsg.email = response[0].text;
+      });
 
-      $scope.defaultMsg.sms = "A iTGrow deseja-lhe um feliz aniversário! Esperamos que tenha um ótimo dia" +
-        " e que celebre muitos mais anos connosco.";
+      $http.get(serverUrl + '/sms_template').success(function (response) {
+        $scope.defaultMsg.sms = response[0].text;
+      });
 
-      $scope.defaultMsg.fb = "lhol";
+      $http.get(serverUrl + '/facebook_template').success(function (response) {
+        $scope.defaultMsg.fb = response[0].text;
+      });
     };
 
     $scope.saveChanges = function () {
@@ -28,10 +28,22 @@ angular.module('itBirthday.settings', ['ngFileUpload'])
       var smsTemplate = $scope.defaultMsg.sms.trim();
       var fbTemplate = $scope.defaultMsg.fb.trim();
 
-      $http.post(serverUrl + '/update_sms_template/', {
+      $http.post(serverUrl + '/update_email_template', {
+        text: emailTemplate
+      }).success(function () {
+        console.log("Updated email template");
+      });
+
+      $http.post(serverUrl + '/update_sms_template', {
         text: smsTemplate
       }).success(function () {
         console.log("Updated sms template");
+      });
+
+      $http.post(serverUrl + '/update_facebook_template', {
+        text: fbTemplate
+      }).success(function () {
+        console.log("Updated facebook template");
       });
     }
 
