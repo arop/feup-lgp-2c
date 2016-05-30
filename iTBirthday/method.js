@@ -4,7 +4,6 @@ module.exports = function (express, app, mongoose, path, nodemailer, CronJob, fs
     var leapYear = require('leap-year');
     var crypto = require('crypto');
     var FB = require('fb');
-    var FBPromise = require('promise-facebook');
 
     //Database
     //mongoose.connect('mongodb://localhost/iTBirthday'); // change name of database , local database at the moment
@@ -87,15 +86,18 @@ module.exports = function (express, app, mongoose, path, nodemailer, CronJob, fs
 
     var EmailTemplateSchema = new mongoose.Schema({
         text: {type: String, required: true, trim: true},
-        path: {type: String, required: true, trim: true}
+        path: {type: String, required: true, trim: true},
+        active: {type: Boolean, required: true}
     });
 
     var SMSTemplateSchema = new mongoose.Schema({
-        text: {type: String, required: true, trim: true}
+        text: {type: String, required: true, trim: true},
+        active: {type: Boolean, required: true}
     });
 
     var FacebookTemplateSchema = new mongoose.Schema({
-        text: {type: String, required: true, trim: true}
+        text: {type: String, required: true, trim: true},
+        active: {type: Boolean, required: true}
     });
 
     var FacebookSchema = new mongoose.Schema({
@@ -442,7 +444,7 @@ module.exports = function (express, app, mongoose, path, nodemailer, CronJob, fs
                         subject: "Happy Birthday", // TO be changed
                         text: "Happy Birthday", // TO be changed
                         html: '<b>' + template + '<b>' // TO be changed
-                    }
+                    };
                     //TODO uncomment to send email
                     /*
                      console.log(result[i].sendMail);
@@ -616,7 +618,7 @@ module.exports = function (express, app, mongoose, path, nodemailer, CronJob, fs
 
     app.post('/update_sms_template', function (req, res) {
         var query = SMSTemplate.find({});
-        SMSTemplate.update(query, {text: req.body.template}, function (err, result) {
+        SMSTemplate.update(query, {text: req.body.text}, function (err, result) {
             if (err) {
                 console.log('[MONGOOSE] Error: ' + err);
                 res.status(500).json(err);
@@ -813,6 +815,17 @@ module.exports = function (express, app, mongoose, path, nodemailer, CronJob, fs
         });
     });
 
+    app.get('/facebook_template', function (req, res) {
+        var query = FacebookTemplate.find({});
+        query.exec(function (err, result) {
+            if (err) {
+                console.log('[MONGOOSE] Error ' + err);
+            } else {
+                res.status(200).json(result);
+            }
+        });
+    });
+
     app.post('/update_facebook_template', function (req, res) {
         var query = FacebookTemplate.find({});
         FacebookTemplate.update(query, {text: req.body.template}, function (err, result) {
@@ -821,17 +834,6 @@ module.exports = function (express, app, mongoose, path, nodemailer, CronJob, fs
                 res.status(500).json(err);
             } else {
                 res.status(200).json();
-            }
-        });
-    });
-
-    app.get('/facebook_template', function (req, res) {
-        var query = FacebookTemplate.find({});
-        query.exec(function (err, result) {
-            if (err) {
-                console.log('[MONGOOSE] Error ' + err);
-            } else {
-                res.status(200).json(result);
             }
         });
     });
@@ -995,4 +997,13 @@ module.exports = function (express, app, mongoose, path, nodemailer, CronJob, fs
 
     /*var facebookstuff = new Outlook({'token':'asdasdasdasdasdasdasd'});
      facebookstuff.save(function(err){if(err) console.log(err);});*/
-}
+
+    /*var templateMail = new EmailTemplate({'text':'Uma coisa qualquer','path':'itgrow-logo.png','active':true});
+    templateMail.save(function(err){if(err) console.log(err);});*/
+
+    /*var templateSMS = new SMSTemplate({'text':'Uma coisa qualquer','active':true});
+    templateSMS.save(function(err){if(err) console.log(err);});*/
+
+    /*var templateFacebook = new FacebookTemplate({'text':'Uma coisa qualquer','active':true});
+    templateFacebook.save(function(err){if(err) console.log(err);});*/
+};
