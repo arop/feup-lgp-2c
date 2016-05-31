@@ -31,6 +31,12 @@ a {
   font-size: 12px;
 }
 
+@media screen and (max-width: 500px) {
+  .tabs-top.tabs-striped .tab-item span {
+    display: none;
+  }
+}
+
 .tabs-top.tabs-striped .tab-item > i {
   margin-bottom: 4px;
   color: #FFD17B !important;
