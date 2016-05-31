@@ -1,7 +1,7 @@
 // Ionic Starter App
 
-var serverUrl = "https://897e01a9.ngrok.io";
-//var serverUrl = "http://localhost:8080";
+//var serverUrl = "https://897e01a9.ngrok.io";
+var serverUrl = "http://localhost:8080";
 //var defaultPath = '/app/www/';
 var defaultPath = '';
 
@@ -9,13 +9,13 @@ var defaultPath = '';
 // 'itBirthday' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
 angular.module('itBirthday', ['ionic', 'ngFileUpload', 'ngPageTitle',
-    'itBirthday.login', 'itBirthday.profile', 'itBirthday.statistics', 'itBirthday.settings'])
+  'itBirthday.login', 'itBirthday.profile', 'itBirthday.statistics', 'itBirthday.settings', 'itBirthday.facebook'])
 
-  .run(function($ionicPlatform, $rootScope) {
+  .run(function ($ionicPlatform, $rootScope) {
     $rootScope.defaultPath = defaultPath;
 
-    $ionicPlatform.ready(function() {
-      if(window.cordova && window.cordova.plugins.Keyboard) {
+    $ionicPlatform.ready(function () {
+      if (window.cordova && window.cordova.plugins.Keyboard) {
         // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
         // for form inputs)
         cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
@@ -25,13 +25,13 @@ angular.module('itBirthday', ['ionic', 'ngFileUpload', 'ngPageTitle',
         // a much nicer keyboard experience.
         cordova.plugins.Keyboard.disableScroll(true);
       }
-      if(window.StatusBar) {
+      if (window.StatusBar) {
         StatusBar.styleDefault();
       }
     });
   })
 
-  .config(function($stateProvider, $urlRouterProvider,$ionicConfigProvider) {
+  .config(function ($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
 
     $ionicConfigProvider.tabs.position('top'); //bottom - comment to put default
 
@@ -82,7 +82,7 @@ angular.module('itBirthday', ['ionic', 'ngFileUpload', 'ngPageTitle',
           }
         }
       })
-      
+
       .state('tabs.profile.new', {
         url: '/new',
         views: {
@@ -144,12 +144,25 @@ angular.module('itBirthday', ['ionic', 'ngFileUpload', 'ngPageTitle',
           }
         },
         data: {
-          pageTitle: 'Opções'
+          pageTitle: 'Templates'
+        }
+      })
+
+      .state('tabs.facebook', {
+        url: '/facebook',
+        views: {
+          'tab-facebook': {
+            templateUrl: defaultPath + 'templates/facebook.html',
+            controller: 'FacebookCtrl'
+          }
+        },
+        data: {
+          pageTitle: 'Facebook'
         }
       });
 
     // if none of the above states are matched, use this as the fallback
 
     $urlRouterProvider.otherwise('/login');
-  })
+  });
 
