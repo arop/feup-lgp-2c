@@ -12,6 +12,32 @@
       </div>
 
       <div class="row responsive-sm responsive-md">
+        <div class="col col-50 col-offset-25" id="banners">
+          <label class="title">Banner</label>
+          <label class="item item-input item-stacked-label  app-color">
+            <span class="item-label">Banners</span>
+
+            <div ng-repeat="ban in banners">
+              <img ng-src="{{serverUrl}}/images/banners/{{ban.path}}" >
+              {{serverUrl}}/images/banners/{{ban.path}}
+            </div>
+          </label>
+        </div>
+      </div>
+
+      <div class="row responsive-sm responsive-md">
+        <div class="col col-50 col-offset-25" id="banner">
+          <label class="title">Novo Banner</label>
+          <label class="item item-input item-stacked-label  app-color">
+            <div>
+              <input id="file_upload" type="file" file-upload>
+            </div>
+          </label>
+        </div>
+      </div>
+
+
+      <div class="row responsive-sm responsive-md">
         <div class="col col-25 col-offset-25" id="sms_template">
           <label class="title">Template SMS</label>
           <label class="item item-input item-stacked-label app-color ">

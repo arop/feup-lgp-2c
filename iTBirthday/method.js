@@ -85,8 +85,13 @@ module.exports = function (express, app, mongoose, path, nodemailer, CronJob, fs
 
     var EmailTemplateSchema = new mongoose.Schema({
         text: {type: String, required: true, trim: true},
-        path: {type: String, required: true, trim: true},
+        path: {type: String, required: false, trim: true},
         active: {type: Boolean, required: true}
+    });
+
+    var BannerSchema = new mongoose.Schema({
+        path : {type: String, required: true, trim:true},
+        active : {type: Boolean, required: true}
     });
 
     var SMSTemplateSchema = new mongoose.Schema({
@@ -120,7 +125,7 @@ module.exports = function (express, app, mongoose, path, nodemailer, CronJob, fs
     var EmailTemplate = mongoose.model('EmailTemplate', EmailTemplateSchema);
     var SMSTemplate = mongoose.model('SMSTemplate', SMSTemplateSchema);
     var FacebookTemplate = mongoose.model('FacebookTemplate', FacebookTemplateSchema);
-
+    var Banner = mongoose.model('Banner', BannerSchema);
     /******************** LOGIN AND SESSION ***************/
 
     app.post('/check_login', function (req, res) {
@@ -669,11 +674,100 @@ module.exports = function (express, app, mongoose, path, nodemailer, CronJob, fs
 
     });
 
-    /******************** EMAIL TEMPLATE *************************/
+
+
+    /******************** BANNER  *********************************/
+
+    //get active banner
+    app.get('/banner_template', function(req, res){
+        var query = Banner.find({active: true});
+        query.exec(function(err, result){
+            if (err) {
+                console.log('[MONGOOSE] Error ' + err);
+            } else {
+                console.log(result);
+                res.status(200).json(result);
+            }
+        });
+    });
+
+    //gets all banners
+    app.get('/all_banners', function(req,res){
+        var query = Banner.find();
+
+        query.exec(function(err, result){
+            if (err) {
+                console.log('[MONGOOSE] Error ' + err);
+            } else {
+                console.log(result);
+                res.status(200).json(result);
+            }
+        });
+    });
+
+    app.post('/update_banner', function(req,res){
+        //
+        Banner.findOneAndUpdate({active: true}, {active: false}, function(err, emp){
+        });
+        //
+        Banner.findOneAndUpdate({_id : req.body.id},  {active: true}, function(err, emp){
+        });
+    });
+
+    app.post('/post_banner_template', function(req, res){
+
+        var temp_banner = new Banner({
+            active: true,
+            path: "null"
+        });
+
+        //deactivates the older template
+        Banner.findOneAndUpdate({active:true},{active:false});
+
+        temp_banner.save(function (err, emp) {
+            if (err) {
+                console.error(err);
+                res.status(500).json('[MONGOOSE] Error inserting new Banner');
+            }
+            else {
+                console.log("Banner inserted correctly");
+                var id = emp._id;
+
+                var fstream;
+                //checks if a folder named 'images' exists in directory
+                //if it does not exist, the folder is created
+                if (!fs.existsSync(__dirname + '/images/')) {
+                    fs.mkdirSync(__dirname + '/images/');
+                }
+                //checks if a folder named 'employees' inside the folder 'images' exists in directory
+                //if it does not exist, the folder is created
+                if (!fs.existsSync(__dirname + '/images/banners/')) {
+                    fs.mkdirSync(__dirname + '/images/banners/');
+                }
+
+                req.pipe(req.busboy);
+                req.busboy.on('file', function (fieldname, file, filename) {
+
+                    //Path where image will be uploaded
+                    var ext = filename.substr(filename.indexOf('.'), filename.lenght);
+                    fstream = fs.createWriteStream(__dirname + '/images/banners/' + id + ext);
+                    file.pipe(fstream);
+                    fstream.on('close', function () {
+                        var path = {path: id + ext};
+                        //changes the value of the photoPath of the employee
+                        Banner.findOneAndUpdate({_id: id}, path, function (err, emp) {
+                        });
+                        console.log("Upload Finished of " + id + ext);
+                    });
+                });
+                res.status(200).json(emp._id);
+            }
+        });
+
+    });
 
     /******************** EMAIL TEMPLATE *************************/
-
-        //gets the current active template
+    //gets the current active template
     app.get('/email_template', function (req, res) {
         var query = EmailTemplate.find({active : true});
         query.exec(function (err, result) {
@@ -715,7 +809,6 @@ module.exports = function (express, app, mongoose, path, nodemailer, CronJob, fs
         var temp_email = new EmailTemplate({
             text: req.body.text,
             active: true,
-            path: "null"
         });
 
         //deactivates the older template
@@ -728,46 +821,11 @@ module.exports = function (express, app, mongoose, path, nodemailer, CronJob, fs
             }
             else {
                 console.log("Email Template inserted correctly");
-                //TODO uncomment to save banner
-               // saveBanner(req,emp._id);
                 res.status(200).json(emp._id);
             }
         });
 
     });
-
-    //function to save the banner to a folder
-    function saveBanner(req,id){
-        var fstream;
-        //checks if a folder named 'images' exists in directory
-        //if it does not exist, the folder is created
-        if (!fs.existsSync(__dirname + '/images/')) {
-            fs.mkdirSync(__dirname + '/images/');
-        }
-        //checks if a folder named 'employees' inside the folder 'images' exists in directory
-        //if it does not exist, the folder is created
-        if (!fs.existsSync(__dirname + '/images/banners/')) {
-            fs.mkdirSync(__dirname + '/images/banners/');
-        }
-
-        req.pipe(req.busboy);
-        req.busboy.on('file', function (fieldname, file, filename) {
-
-            //Path where image will be uploaded
-            var ext = filename.substr(filename.indexOf('.'), filename.lenght);
-            fstream = fs.createWriteStream(__dirname + '/images/banners/' + id + ext);
-            file.pipe(fstream);
-            fstream.on('close', function () {
-                var path = {path: id + ext};
-                //changes the value of the photoPath of the employee
-                EmailTemplate.findOneAndUpdate({_id: req.params.id}, path, function (err, emp) {
-                });
-                console.log("Upload Finished of " + id + ext);
-                res.redirect('back');           //where to go next
-            });
-        });
-
-    }
 
     /************************** FACEBOOK **************************/
     /****************** CRON ************************

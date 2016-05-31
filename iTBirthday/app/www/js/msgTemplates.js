@@ -1,15 +1,27 @@
 angular.module('itBirthday.settings', ['ngFileUpload'])
 
-  .controller('MsgTemplatesCtrl', function ($scope, $http) {
+  .controller('MsgTemplatesCtrl', function ($scope, $http, Upload) {
 
     $scope.defaultMsg = {};
+
+    //listen for the file selected event
+    $("input[type=file]").on("change", function() {
+      $scope.banner = this.files[0];
+    });
 
     $scope.getDefaultMsg = function () {
 
       $scope.defaultMsg.email = "";
       $scope.defaultMsg.sms = "";
       $scope.defaultMsg.fb = "";
+      $scope.banners = [];
+
       $scope.defaultMsgEmail_exists = false;
+
+      $http.get(serverUrl + '/all_banners').success(function(response){
+        console.log(response);
+        $scope.banners = response;
+      })
 
       $http.get(serverUrl + '/email_template').success(function (response) {
         if ( response != "") {
@@ -43,6 +55,15 @@ angular.module('itBirthday.settings', ['ngFileUpload'])
           text: emailTemplate
         }).success(function () {
           console.log("Updated email template");
+        });
+
+      if ( $scope.banner != undefined )
+        Upload.upload({
+          url: serverUrl + '/post_banner_template/',
+          file: $scope.banner,
+          progress: function(e) {}
+        }).then(function(data, status, headers, config) {
+          // file is uploaded successfully
         });
 
       $http.post(serverUrl + '/update_sms_template', {
