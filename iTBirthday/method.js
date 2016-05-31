@@ -963,7 +963,7 @@ module.exports = function (express, app, mongoose, path, nodemailer, CronJob, fs
                 res.status(500).json(err);
             } else {
                 FB.setAccessToken(result[0].token);
-                FB.api('/me', function(response) {
+                FB.api('/me?fields=id,name,email', function(response) {
                     res.status(200).json(response);
                 });
             }

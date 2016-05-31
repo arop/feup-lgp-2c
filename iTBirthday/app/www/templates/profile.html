@@ -8,22 +8,32 @@
         <div class="row responsive-sm" id="profile_row">
           <div class="col-50">
             <div class="list">
-              <label class="item item-image">
-                <img ng-src="img/icons/novo_membro.png" title="Avatar" alt="Error displaying avatar"
-                     ng-if="isNewProfile">
-                <img ng-src="{{serverUrl}}/images/employees/{{profile.photoPath}}" title="Avatar"
-                     alt="Error displaying avatar" ng-if="!isNewProfile">
+              <label class="item item-image" ng-if="isNewProfile">
+                <img ng-src="{{defaultImageURL}}" title="Avatar" alt="Avatar Image">
               </label>
-              <div class="center" ng-if="!isNewProfile">
-                <p>{{profile.name}}</p>
-                <p ng-if="profile.birthdaysInCompany==1">{{profile.birthdaysInCompany}} aniversário na iTGROW</p>
-                <p ng-if="profile.birthdaysInCompany!=1">{{profile.birthdaysInCompany}} aniversários na iTGROW</p>
-                <p>{{profile.daysInCompany}} dias na iTGROW</p>
-                <p>{{profile.age}} anos</p>
-              </div>
+              <label class="item item-image" ng-if="!isNewProfile">
+                <img ng-src="{{imageURL}}" err-src="{{defaultImageURL}}" title="Avatar" alt="Avatar Image">
+              </label>
               <label class="item item-file" ng-hide="isView || hasExited">
                 <input id="file_upload" type="file" file-upload>
               </label>
+              <div ng-if="!isNewProfile && isView">
+                <label class="item item-input item-stacked-label not-editable">
+                  <span class="input-label">Idade</span>
+                  <input type="text" placeholder="idade" ng-model="profile.age"
+                         ng-readonly="isView"/>
+                </label>
+                <label class="item item-input item-stacked-label not-editable">
+                  <span class="input-label">Aniversários na iTGROW</span>
+                  <input type="text" placeholder="Aniversários" ng-model="profile.birthdaysInCompany"
+                         ng-readonly="isView"/>
+                </label>
+                <label class="item item-input item-stacked-label not-editable">
+                  <span class="input-label">Dias na empresa</span>
+                  <input type="text" placeholder="Dias na Empresa" ng-model="profile.daysInCompany"
+                         ng-readonly="isView"/>
+                </label>
+              </div>
             </div>
             <div class="list" id="profile-dread-options" ng-if="!isNewProfile">
               <div class="separator" ng-if="hasExited || !isView"></div>

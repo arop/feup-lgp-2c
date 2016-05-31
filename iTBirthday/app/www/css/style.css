@@ -36,19 +36,3 @@ a {
     display: none;
   }
 }
-
-.tabs-top.tabs-striped .tab-item > i {
-  margin-bottom: 4px;
-  color: #FFD17B !important;
-}
-
-.tabs-top.tabs-striped .tab-item.tab-item-active,
-.tabs-top.tabs-striped .tab-item.activated {
-  margin-top: 0;
-  border-width: 0 0 2px 0 !important;
-  border-color: #FFD17B !important;
-}
-
-.tab-nav.tabs {
-  border-bottom: solid 1px #FFD17B !important;
-}

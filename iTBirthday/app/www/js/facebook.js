@@ -67,6 +67,7 @@ angular.module('itBirthday.facebook', [])
 
     $scope.loggedIn = false;
     $scope.fbName = "";
+    $scope.fbMail = "";
     $scope.expirationDate = "";
     $scope.updating = false;
 
@@ -82,6 +83,7 @@ angular.module('itBirthday.facebook', [])
         } else {
           $scope.loggedIn = true;
           $scope.fbName = data.name;
+          $scope.fbMail = data.email;
           $scope.updateExpirationDate();
           console.log("Updated fb info");
         }

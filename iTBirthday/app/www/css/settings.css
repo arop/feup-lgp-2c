@@ -11,7 +11,7 @@
 #default_messages_div .row label.item.item-input > textarea {
   margin-top: 5px;
   padding: 5px;
-  border: solid 1px black;
+  border: solid 2px #e1e1e2;
   max-width: 100%;
   min-width: 100%;
   min-height: 8em;

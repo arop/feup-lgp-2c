@@ -11,7 +11,7 @@
       </div>
     </div>
 
-    <div class="row responsive-sm responsive-md" ng-if="!updating">
+    <div class="row responsive-sm responsive-md" ng-if="loggedIn && !updating">
       <div class="col col-50 col-offset-25">
         <a class="icon-refresh" ng-click="loginFacebook()">Atualizar</a>
       </div>
@@ -26,8 +26,8 @@
     <div class="row responsive-sm responsive-md" ng-if="!loggedIn && !updating">
       <div class="col-50 col-offset-25">
         <div class="card app-color">
-          <div class="item item-text-wrap title">
-            <p>A aplicação <b>não</b> está autenticada!</p>
+          <div class="item item-text-wrap title">A aplicação <b>não</b> está autenticada!</div>
+          <div class="item item-text-wrap">
             <p>Para autenticar, clique no botão <b>Log in</b>.</p>
           </div>
         </div>
@@ -40,6 +40,7 @@
           <div class="item item-text-wrap title">A aplicação está autenticada.</div>
           <div class="item item-text-wrap">
             <p>Utilizador: <b>{{fbName}}</b></p>
+            <p>Email: <b>{{fbMail}}</b></p>
             <p>Validade do Token: <b>{{expirationDate}}</b></p>
           </div>
           <div class="item item-text-wrap">
