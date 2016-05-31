@@ -5,7 +5,7 @@
 #*node_modules/
 .idea/
 .io-config.json
-*/app/platform/
+*/app/platforms/
 */app/resources/
 
 #################
