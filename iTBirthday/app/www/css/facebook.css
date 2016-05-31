@@ -12,6 +12,13 @@
   background-size: 20px !important;
 }
 
+#fb_content .icon-facebook {
+  padding-right: 25px;
+  background: transparent url("../img/icons/reload.png") no-repeat right center !important;
+  background-size: 20px !important;
+}
+
+
 #fb_content .card {
   margin-top: 0;
   margin-bottom: 0;
