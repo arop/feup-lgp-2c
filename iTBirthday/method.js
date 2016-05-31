@@ -2,7 +2,6 @@ module.exports = function (express, app, mongoose, path, nodemailer, CronJob, fs
     var Finder = require('fs-finder');
     var CryptoJS = require("crypto-js");
     var leapYear = require('leap-year');
-    var crypto = require('crypto');
     var FB = require('fb');
 
     //Database
@@ -231,7 +230,6 @@ module.exports = function (express, app, mongoose, path, nodemailer, CronJob, fs
         req.pipe(req.busboy);
         req.busboy.on('file', function (fieldname, file, filename) {
             console.log("Uploading: " + filename);
-            var new_name = crypto.createHash('md5').update(req.params.id).digest("hex");
             Employee.findOne({_id: req.params.id}, function (err, emp) {
                 console.log(emp);
                 if (!err) {
@@ -247,14 +245,14 @@ module.exports = function (express, app, mongoose, path, nodemailer, CronJob, fs
             });
             //Path where image will be uploaded
             var ext = filename.substr(filename.indexOf('.'), filename.lenght);
-            fstream = fs.createWriteStream(__dirname + '/images/employees/' + new_name + ext);
+            fstream = fs.createWriteStream(__dirname + '/images/employees/' + req.params.id + ext);
             file.pipe(fstream);
             fstream.on('close', function () {
-                var photo = {photoPath: new_name + ext};
+                var photo = {photoPath: req.params.id + ext};
                 //changes the value of the photoPath of the employee
                 Employee.findOneAndUpdate({_id: req.params.id}, photo, function (err, emp) {
                 });
-                console.log("Upload Finished of " + new_name + ext);
+                console.log("Upload Finished of " + req.params.id + ext);
                 res.redirect('back');           //where to go next
             });
         });
@@ -361,7 +359,7 @@ module.exports = function (express, app, mongoose, path, nodemailer, CronJob, fs
      +-------------- Seconds           (range: 0-59)
      /********************CRON ***********************/
 
-    new CronJob('1 * * * * *', function () {
+    new CronJob('00 * * * * *', function () {
         var month = new Date().getMonth();
         var day = new Date().getDate();
         var year = new Date().getFullYear();
@@ -383,7 +381,8 @@ module.exports = function (express, app, mongoose, path, nodemailer, CronJob, fs
                         sendPersonalizedMail: '$sendPersonalizedMail',
                         sendSMS: '$sendSMS',
                         smsText: '$smsText',
-                        sendPersonalizedSMS: '$sendPersonalizedSMS'
+                        sendPersonalizedSMS: '$sendPersonalizedSMS',
+                        phoneNumber: '$phoneNumber'
                     }
                 },
                 {
@@ -412,7 +411,8 @@ module.exports = function (express, app, mongoose, path, nodemailer, CronJob, fs
                         sendPersonalizedMail: '$sendPersonalizedMail',
                         sendSMS: '$sendSMS',
                         smsText: '$smsText',
-                        sendPersonalizedSMS: '$sendPersonalizedSMS'
+                        sendPersonalizedSMS: '$sendPersonalizedSMS',
+                        phoneNumber: '$phoneNumber'
                     }
                 },
                 {
@@ -425,46 +425,69 @@ module.exports = function (express, app, mongoose, path, nodemailer, CronJob, fs
             ]);
         }
 
-        query.exec(function (err, result) {
-            if (err) {
-                console.log(err);
-                return;
-            } else {
-                for (var i = 0; i < result.length; i++) {
-                    var template = "Happy Birthday"; // add template  text
-                    if (result[i].sendPersonalizedMail) { //if employee has different template
-                        template = result[i].mailText;
-                    } else {
-
-                    }
-
-                    var mailOptions = {
-                        from: 'lgp2.teamc@gmail.com', // <-- change this
-                        to: result[i].email,
-                        subject: "Happy Birthday", // TO be changed
-                        text: "Happy Birthday", // TO be changed
-                        html: '<b>' + template + '<b>' // TO be changed
-                    };
-                    //TODO uncomment to send email
-                    /*
-                     console.log(result[i].sendMail);
-                     if ( result[i].sendMail) {
-                     console.log("MAILING");
-                     transporter.sendMail(mailOptions, function (error, info) {
-                     if (error) {
-                     return console.log(error);
-                     }
-                     console.log('Message sent: ' + info.response);
-                     });
-                     }*/
-                    if (result[i].sendSMS) {
-                        //TODO: get the default or personalized message
-                        // SendSMSService("Happy Birthday", "+351" + result[i].phoneNumber);
-                    }
-                }
-            }
-        });
+        // query.exec(function (err, employees) {
+        //     if (!err) {
+        //         var query = EmailTemplate.find({});
+        //         query.exec(function(err, emailTemplates){
+        //             if(err){
+        //                 console.log(err);
+        //                 return;
+        //             } else {
+        //                 var query = SMSTemplate.find({});
+        //                 query.exec(function(err, smsTemplates){
+        //                     if(err){
+        //                         console.log(err);
+        //                         return;
+        //                     } else {
+        //                         sendEmailAndSMS(employees, emailTemplates, smsTemplates);
+        //                     }
+        //                 });
+        //             }
+        //         });
+        //     } else {
+        //         console.log(err);
+        //         return;
+        //     }
+        // });
     }, null, true, 'Europe/London');
+
+    function sendEmailAndSMS(employees, emailTemplates, smsTemplates) {
+
+        var defaultEmailTemplate = emailTemplates[0].text;
+        var defaultSMSTemplate = smsTemplates[0].text;
+
+        for (var i = 0; i < employees.length; i++) {
+            var person = employees[i];
+            var EmailTemplateToSend = "";
+            var SMSTemplateToSend = "";
+
+            EmailTemplateToSend = person.sendPersonalizedMail ? person.mailText : defaultEmailTemplate;
+
+            SMSTemplateToSend = person.sendPersonalizedSMS ? person.smsText : defaultSMSTemplate;
+
+            var mailOptions = {
+                from: 'lgp2.teamc@gmail.com',
+                to: person.email,
+                subject: "Feliz Aniversário da iTGrow",
+                text: EmailTemplateToSend,
+                html: '<b>' + EmailTemplateToSend + '<b>'
+            };
+
+            if (person.sendMail) {
+                transporter.sendMail(mailOptions, function (error, info) {
+                    if (error) {
+                        return console.log(error);
+                    }
+                console.log('Message sent: ' + info.response);
+                });
+                //console.log("Sending mail to " + person.name + " | " + person.email + " : " + EmailTemplateToSend);
+            }
+            if (person.sendSMS) {
+                // SendSMSService(SMSTemplateToSend, "+351" + person.phoneNumber);
+                // console.log("Sending sms to " + person.name + " | " + person.phoneNumber + " : " + SMSTemplateToSend);
+            }
+        }
+    }
 
     function SendSMSService(message, destination) {
         click.sendmsg(message, [destination], function (res) {
@@ -647,7 +670,24 @@ module.exports = function (express, app, mongoose, path, nodemailer, CronJob, fs
     });
 
     /******************** EMAIL TEMPLATE *************************/
+
+    /******************** EMAIL TEMPLATE *************************/
+
+        //gets the current active template
     app.get('/email_template', function (req, res) {
+        var query = EmailTemplate.find({active : true});
+        query.exec(function (err, result) {
+            if (err) {
+                console.log('[MONGOOSE] Error ' + err);
+            } else {
+                console.log(result);
+                res.status(200).json(result);
+            }
+        });
+    });
+
+    //gets all email templates
+    app.get('/all_email_template', function (req, res) {
         var query = EmailTemplate.find({});
         query.exec(function (err, result) {
             if (err) {
@@ -657,6 +697,7 @@ module.exports = function (express, app, mongoose, path, nodemailer, CronJob, fs
             }
         });
     });
+
 
     app.post('/update_email_template', function (req, res) {
         var query = EmailTemplate.find({});
@@ -672,8 +713,13 @@ module.exports = function (express, app, mongoose, path, nodemailer, CronJob, fs
 
     app.post('/post_email_template', function (req, res) {
         var temp_email = new EmailTemplate({
-            text: req.body.text
+            text: req.body.text,
+            active: true,
+            path: "null"
         });
+
+        //deactivates the older template
+        EmailTemplate.findOneAndUpdate({active:true},{active:false});
 
         temp_email.save(function (err, emp) {
             if (err) {
@@ -682,11 +728,46 @@ module.exports = function (express, app, mongoose, path, nodemailer, CronJob, fs
             }
             else {
                 console.log("Email Template inserted correctly");
+                //TODO uncomment to save banner
+               // saveBanner(req,emp._id);
                 res.status(200).json(emp._id);
             }
         });
 
     });
+
+    //function to save the banner to a folder
+    function saveBanner(req,id){
+        var fstream;
+        //checks if a folder named 'images' exists in directory
+        //if it does not exist, the folder is created
+        if (!fs.existsSync(__dirname + '/images/')) {
+            fs.mkdirSync(__dirname + '/images/');
+        }
+        //checks if a folder named 'employees' inside the folder 'images' exists in directory
+        //if it does not exist, the folder is created
+        if (!fs.existsSync(__dirname + '/images/banners/')) {
+            fs.mkdirSync(__dirname + '/images/banners/');
+        }
+
+        req.pipe(req.busboy);
+        req.busboy.on('file', function (fieldname, file, filename) {
+
+            //Path where image will be uploaded
+            var ext = filename.substr(filename.indexOf('.'), filename.lenght);
+            fstream = fs.createWriteStream(__dirname + '/images/banners/' + id + ext);
+            file.pipe(fstream);
+            fstream.on('close', function () {
+                var path = {path: id + ext};
+                //changes the value of the photoPath of the employee
+                EmailTemplate.findOneAndUpdate({_id: req.params.id}, path, function (err, emp) {
+                });
+                console.log("Upload Finished of " + id + ext);
+                res.redirect('back');           //where to go next
+            });
+        });
+
+    }
 
     /************************** FACEBOOK **************************/
     /****************** CRON ************************

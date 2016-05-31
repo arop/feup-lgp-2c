@@ -9,9 +9,13 @@ angular.module('itBirthday.settings', ['ngFileUpload'])
       $scope.defaultMsg.email = "";
       $scope.defaultMsg.sms = "";
       $scope.defaultMsg.fb = "";
+      $scope.defaultMsgEmail_exists = false;
 
       $http.get(serverUrl + '/email_template').success(function (response) {
-        $scope.defaultMsg.email = response[0].text;
+        if ( response != "") {
+          $scope.defaultMsgEmail_exists = true;
+          $scope.defaultMsg.email = response[0].text;
+        }
       });
 
       $http.get(serverUrl + '/sms_template').success(function (response) {
@@ -28,11 +32,18 @@ angular.module('itBirthday.settings', ['ngFileUpload'])
       var smsTemplate = $scope.defaultMsg.sms.trim();
       var fbTemplate = $scope.defaultMsg.fb.trim();
 
-      $http.post(serverUrl + '/update_email_template', {
-        text: emailTemplate
-      }).success(function () {
-        console.log("Updated email template");
-      });
+      if ( $scope.defaultMsgEmail_exists == false ){
+        $http.post(serverUrl + '/post_email_template', {
+          text: emailTemplate
+        }).success(function () {
+          console.log("Updated email template");
+        });
+      }else
+        $http.post(serverUrl + '/update_email_template', {
+          text: emailTemplate
+        }).success(function () {
+          console.log("Updated email template");
+        });
 
       $http.post(serverUrl + '/update_sms_template', {
         text: smsTemplate
