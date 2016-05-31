@@ -361,7 +361,7 @@ module.exports = function (express, app, mongoose, path, nodemailer, CronJob, fs
      +-------------- Seconds           (range: 0-59)
      /********************CRON ***********************/
 
-    new CronJob('1 * * * * *', function () {
+    new CronJob('00 * * * * *', function () {
         var month = new Date().getMonth();
         var day = new Date().getDate();
         var year = new Date().getFullYear();
@@ -383,7 +383,8 @@ module.exports = function (express, app, mongoose, path, nodemailer, CronJob, fs
                         sendPersonalizedMail: '$sendPersonalizedMail',
                         sendSMS: '$sendSMS',
                         smsText: '$smsText',
-                        sendPersonalizedSMS: '$sendPersonalizedSMS'
+                        sendPersonalizedSMS: '$sendPersonalizedSMS',
+                        phoneNumber: '$phoneNumber'
                     }
                 },
                 {
@@ -412,7 +413,8 @@ module.exports = function (express, app, mongoose, path, nodemailer, CronJob, fs
                         sendPersonalizedMail: '$sendPersonalizedMail',
                         sendSMS: '$sendSMS',
                         smsText: '$smsText',
-                        sendPersonalizedSMS: '$sendPersonalizedSMS'
+                        sendPersonalizedSMS: '$sendPersonalizedSMS',
+                        phoneNumber: '$phoneNumber'
                     }
                 },
                 {
@@ -425,46 +427,69 @@ module.exports = function (express, app, mongoose, path, nodemailer, CronJob, fs
             ]);
         }
 
-        query.exec(function (err, result) {
-            if (err) {
-                console.log(err);
-                return;
-            } else {
-                for (var i = 0; i < result.length; i++) {
-                    var template = "Happy Birthday"; // add template  text
-                    if (result[i].sendPersonalizedMail) { //if employee has different template
-                        template = result[i].mailText;
-                    } else {
-
-                    }
-
-                    var mailOptions = {
-                        from: 'lgp2.teamc@gmail.com', // <-- change this
-                        to: result[i].email,
-                        subject: "Happy Birthday", // TO be changed
-                        text: "Happy Birthday", // TO be changed
-                        html: '<b>' + template + '<b>' // TO be changed
-                    };
-                    //TODO uncomment to send email
-                    /*
-                     console.log(result[i].sendMail);
-                     if ( result[i].sendMail) {
-                     console.log("MAILING");
-                     transporter.sendMail(mailOptions, function (error, info) {
-                     if (error) {
-                     return console.log(error);
-                     }
-                     console.log('Message sent: ' + info.response);
-                     });
-                     }*/
-                    if (result[i].sendSMS) {
-                        //TODO: get the default or personalized message
-                        // SendSMSService("Happy Birthday", "+351" + result[i].phoneNumber);
-                    }
-                }
-            }
-        });
+        // query.exec(function (err, employees) {
+        //     if (!err) {
+        //         var query = EmailTemplate.find({});
+        //         query.exec(function(err, emailTemplates){
+        //             if(err){
+        //                 console.log(err);
+        //                 return;
+        //             } else {
+        //                 var query = SMSTemplate.find({});
+        //                 query.exec(function(err, smsTemplates){
+        //                     if(err){
+        //                         console.log(err);
+        //                         return;
+        //                     } else {
+        //                         sendEmailAndSMS(employees, emailTemplates, smsTemplates);
+        //                     }
+        //                 });
+        //             }
+        //         });
+        //     } else {
+        //         console.log(err);
+        //         return;
+        //     }
+        // });
     }, null, true, 'Europe/London');
+
+    function sendEmailAndSMS(employees, emailTemplates, smsTemplates) {
+
+        var defaultEmailTemplate = emailTemplates[0].text;
+        var defaultSMSTemplate = smsTemplates[0].text;
+
+        for (var i = 0; i < employees.length; i++) {
+            var person = employees[i];
+            var EmailTemplateToSend = "";
+            var SMSTemplateToSend = "";
+
+            EmailTemplateToSend = person.sendPersonalizedMail ? person.mailText : defaultEmailTemplate;
+
+            SMSTemplateToSend = person.sendPersonalizedSMS ? person.smsText : defaultSMSTemplate;
+
+            var mailOptions = {
+                from: 'lgp2.teamc@gmail.com',
+                to: person.email,
+                subject: "Feliz Aniversário da iTGrow",
+                text: EmailTemplateToSend,
+                html: '<b>' + EmailTemplateToSend + '<b>'
+            };
+
+            if (person.sendMail) {
+                transporter.sendMail(mailOptions, function (error, info) {
+                    if (error) {
+                        return console.log(error);
+                    }
+                console.log('Message sent: ' + info.response);
+                });
+                //console.log("Sending mail to " + person.name + " | " + person.email + " : " + EmailTemplateToSend);
+            }
+            if (person.sendSMS) {
+                // SendSMSService(SMSTemplateToSend, "+351" + person.phoneNumber);
+                // console.log("Sending sms to " + person.name + " | " + person.phoneNumber + " : " + SMSTemplateToSend);
+            }
+        }
+    }
 
     function SendSMSService(message, destination) {
         click.sendmsg(message, [destination], function (res) {
