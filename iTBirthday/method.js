@@ -964,9 +964,8 @@ module.exports = function (express, app, mongoose, path, nodemailer, CronJob, fs
             } else {
                 FB.setAccessToken(result[0].token);
                 FB.api('/me', function(response) {
-                    console.log(JSON.stringify(response));
+                    res.status(200).json(response);
                 });
-                res.status(200).json();
             }
         });
     });

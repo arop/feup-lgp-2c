@@ -22,21 +22,7 @@ window.fbAsyncInit = function () {
 var appModule = angular.module('itBirthday');
 appModule.service('FBAuth', function ($q, $http, $ionicLoading) {
 
-  this.getLoginStatus = function () {
-    var defer = $q.defer();
-
-    if(FB == undefined) {
-      return false;
-    }
-
-    FB.getLoginStatus(function (response) {
-      return (response.status === "connected");
-    });
-
-    return defer.promise;
-  };
-
-  this.loginFacebook = function () {
+  this.loginFacebook = function (callback) {
     var defer = $q.defer();
 
     FB.login(function (response) {
@@ -49,10 +35,10 @@ appModule.service('FBAuth', function ($q, $http, $ionicLoading) {
           userID: userID,
           token: token
         }).success(function () {
-          console.log("FB: success logging in");
+          callback();
         });
       } else {
-        console.error("FB: error logging in");
+        callback();
       }
     }, {
       scope: 'public_profile, email, publish_actions, publish_pages',
@@ -62,92 +48,68 @@ appModule.service('FBAuth', function ($q, $http, $ionicLoading) {
     return defer.promise;
   };
 
-  this.logoutFacebook = function () {
+  this.getLoginStatus = function () {
     var defer = $q.defer();
 
-    FB.logout(function (response) {
-      console.log('FB: logged out');
-    });
-
-    return defer.promise;
-  };
-
-  this.postOnFacebook = function () {
-    var defer = $q.defer();
-
-    FB.api('/me/feed', 'post',
-      {
-        message: "This month's birthdays! (Don't forget to congratulate your co-workers)\n" +
-        "John Silver (Wednesday 24th)\n" +
-        "Anne Marie (Thursday 32nd)\n\n" +
-        "Let them know you care :)"
-      }, function(response) {
-      if (!response || response.error) {
-        alert('Error occured');
-      } else {
-        alert('Post ID: ' + response.id);
-      }
-    });
+    $http.get(serverUrl + '/get_facebook_login_status').then(
+      function (success) {
+        defer.resolve(success.data);
+      }, function (err) {
+        defer.resolve(undefined);
+      });
 
     return defer.promise;
   };
 });
 
 angular.module('itBirthday.facebook', [])
-
   .controller('FacebookCtrl', function ($scope, $http, FBAuth, $ionicLoading) {
 
-    $scope.loggedIn = {};
-    $scope.expirationDate = {};
+    $scope.loggedIn = false;
+    $scope.fbName = "";
+    $scope.expirationDate = "";
+    $scope.updating = false;
 
-    $scope.getFacebookInfo = function() {
-      //$scope.loggedIn = ($scope.checkLoginStatus() == true);
+    $scope.updateFacebookInfo = function () {
+      $scope.updating = true;
+      var state = getLoginUserStatus();
 
-      // $scope.loggedIn = true;
-      //
-      // if($scope.loggedIn) {
-      //   $scope.getExpirationDate();
-      // }
-    };
+      state.then(function (data) {
+        $scope.updating = false;
 
-    $scope.getExpirationDate = function() {
-      $http.get(serverUrl + '/get_facebook_expiration_date').success(function (response) {
-        $scope.expirationDate = new Date(response).toLocaleString();
+        if (data == undefined) {
+          $scope.loggedIn = false;
+        } else {
+          $scope.loggedIn = true;
+          $scope.fbName = data.name;
+          $scope.updateExpirationDate();
+          console.log("Updated fb info");
+        }
       });
     };
 
-    $scope.checkLoginStatus = function () {
-      return getLoginUserStatus();
+    $scope.updateExpirationDate = function () {
+      $http.get(serverUrl + '/get_facebook_expiration_date').then(
+        function (success) {
+          $scope.expirationDate = new Date(success.data).toLocaleString();
+        }, function (err) {
+          $scope.expirationDate = "";
+        });
     };
 
-    $scope.loginFacebook = function (userData) {
+    $scope.loginFacebook = function () {
       loginFacebookUser();
     };
 
-    $scope.logoutFacebook = function () {
-      logoutFacebookUser();
-    };
-
-    $scope.postFacebook = function () {
-      postOnFacebook();
-    };
-
     function loginFacebookUser() {
-      return FBAuth.loginFacebook();
-    }
-
-    function logoutFacebookUser() {
-      return FBAuth.logoutFacebook();
+      return FBAuth.loginFacebook($scope.updateFacebookInfo);
     }
 
     function getLoginUserStatus() {
-
-      console.log("WOT");
-
       return FBAuth.getLoginStatus();
     }
 
-    function postOnFacebook() {
-      return FBAuth.postOnFacebook();
-    }
+    angular.element(document).ready(function () {
+      $scope.updateFacebookInfo();
+    });
   });

@@ -5,7 +5,7 @@ a {
 }
 
 .app-color {
-	background: #f0f0f0 !important;
+	background: #f1f1f2 !important;
 }
 
 .tabs-background-app-color > .tabs {
@@ -29,6 +29,12 @@ a {
   margin-top: 0;
   border-width: 0 0 2px 0 !important;
   font-size: 12px;
+}
+
+@media screen and (max-width: 500px) {
+  .tabs-top.tabs-striped .tab-item span {
+    display: none;
+  }
 }
 
 .tabs-top.tabs-striped .tab-item > i {
