@@ -12,44 +12,46 @@
       <div class="app-color">
         <div class="row responsive-sm">
           <div class="col">Janeiro - {{statistics.BirthsByMonthRatio.Jan}}</div>
-          <div class="col">Maio - {{statistics.BirthsByMonthRatio.May}}</div>
-          <div class="col">Setembro - {{statistics.BirthsByMonthRatio.Sep}}</div>
-        </div>
-        <div class="row responsive-sm">
           <div class="col">Fevereiro - {{statistics.BirthsByMonthRatio.Feb}}</div>
-          <div class="col">Junho - {{statistics.BirthsByMonthRatio.Jun}}</div>
-          <div class="col">Outubro - {{statistics.BirthsByMonthRatio.Oct}}</div>
-        </div>
-        <div class="row responsive-sm">
           <div class="col">Março - {{statistics.BirthsByMonthRatio.Mar}}</div>
-          <div class="col">Julho - {{statistics.BirthsByMonthRatio.Jul}}</div>
-          <div class="col">Novembro - {{statistics.BirthsByMonthRatio.Nov}}</div>
         </div>
         <div class="row responsive-sm">
           <div class="col">Abril - {{statistics.BirthsByMonthRatio.Apr}}</div>
+          <div class="col">Maio - {{statistics.BirthsByMonthRatio.May}}</div>
+          <div class="col">Junho - {{statistics.BirthsByMonthRatio.Jun}}</div>
+        </div>
+        <div class="row responsive-sm">
+          <div class="col">Julho - {{statistics.BirthsByMonthRatio.Jul}}</div>
           <div class="col">Agosto - {{statistics.BirthsByMonthRatio.Aug}}</div>
+          <div class="col">Setembro - {{statistics.BirthsByMonthRatio.Sep}}</div>
+        </div>
+        <div class="row responsive-sm">
+          <div class="col">Outubro - {{statistics.BirthsByMonthRatio.Oct}}</div>
+          <div class="col">Novembro - {{statistics.BirthsByMonthRatio.Nov}}</div>
           <div class="col">Dezembro - {{statistics.BirthsByMonthRatio.Dec}}</div>
         </div>
       </div>
     </div>
-
     <div id="ratio_and_years">
       <div class="row">
-        <div class="col col-33"><h3>Distribuição do rácio de mulheres/homens</h3></div>
-        <div class="col col-66"><h3>Distribuição das faixas etárias (quantidade por anos)</h3></div>
+        <div class="col col-50"><h3>Distribuição do rácio de mulheres/homens</h3></div>
+        <div class="col col-50"><h3>Distribuição das faixas etárias (quantidade por anos)</h3></div>
       </div>
       <div class="row app-color">
-        <div class="col col-33">
-          <p><img src="../img/icons/mulher_pagina_6.png" style="position:inherit;"> Mulheres: {{statistics.MFRatio.Female}}</p>
-          <p><img src="../img/icons/homem_pagina_6.png" style="position:inherit;"> Homens: {{statistics.MFRatio.Male}}</p>
+        <div class="col col-50">
+        
+          <p>
+          <canvas id="doughnut" class="chart chart-doughnut" chart-data="data" chart-labels="labels" chart-colours="backgroundColor"></canvas> 
+          <img src="../img/icons/homem_pagina_6.png" style="position:inherit;"> 
+          <img src="../img/icons/mulher_pagina_6.png" style="position:inherit;"> 
+          </p>
+          <p>Homens: {{statistics.MFRatio.Male}} Mulheres: {{statistics.MFRatio.Female}} </p>
         </div>
-        <div class="col col-66">
-          <p>18to21 : {{statistics.AgeGroups['18to21']}}</p>
-          <p>21to25 : {{statistics.AgeGroups['21to25']}}</p>
-          <p>25to30 : {{statistics.AgeGroups['25to30']}}</p>
-          <p>30to40 : {{statistics.AgeGroups['30to40']}}</p>
-          <p>40+ : {{statistics.AgeGroups['40+']}}</p>
+        <div class="col col-50">
+          <canvas id="line" class="chart chart-line" chart-data="lineData" chart-labels="lineLabels"></canvas> 
+          <p>18-21 : {{statistics.AgeGroups['18to21']}}  21-25 : {{statistics.AgeGroups['21to25']}}</p>  25-30 : {{statistics.AgeGroups['25to30']}}  30-40 : {{statistics.AgeGroups['30to40']}}  40+ : {{statistics.AgeGroups['40+']}}</p>
         </div>
+        
       </div>
     </div>
 

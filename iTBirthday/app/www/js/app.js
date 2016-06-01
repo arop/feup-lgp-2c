@@ -9,7 +9,7 @@ var defaultPath = '';
 // 'itBirthday' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
 angular.module('itBirthday', ['ionic', 'ngFileUpload', 'ngPageTitle',
-    'itBirthday.login', 'itBirthday.profile', 'itBirthday.statistics', 'itBirthday.settings'])
+    'itBirthday.login', 'itBirthday.profile', 'itBirthday.statistics', 'itBirthday.settings', 'chart.js'])
 
   .run(function($ionicPlatform, $rootScope) {
     $rootScope.defaultPath = defaultPath;
