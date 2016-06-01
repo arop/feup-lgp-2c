@@ -443,7 +443,15 @@ module.exports = function (express, app, mongoose, path, nodemailer, CronJob, fs
         //                         console.log(err);
         //                         return;
         //                     } else {
-        //                         sendEmailAndSMS(employees, emailTemplates, smsTemplates);
+        //                         var query = Banner.find({active:true});
+        //                         query.exec(function(err, emailBanner){
+        //                             if(err){
+        //                                 console.log(err);
+        //                                 return;
+        //                             } else {
+        //                                 sendEmailAndSMS(employees, emailTemplates, smsTemplates, emailBanner);
+        //                             }
+        //                         });
         //                     }
         //                 });
         //             }
@@ -455,10 +463,11 @@ module.exports = function (express, app, mongoose, path, nodemailer, CronJob, fs
         // });
     }, null, true, 'Europe/London');
 
-    function sendEmailAndSMS(employees, emailTemplates, smsTemplates) {
+    function sendEmailAndSMS(employees, emailTemplates, smsTemplates, emailBanner) {
 
         var defaultEmailTemplate = emailTemplates[0].text;
         var defaultSMSTemplate = smsTemplates[0].text;
+        var bannerPath = __dirname + '/images/banners/'+ emailBanner[0].path;
 
         for (var i = 0; i < employees.length; i++) {
             var person = employees[i];
@@ -466,7 +475,6 @@ module.exports = function (express, app, mongoose, path, nodemailer, CronJob, fs
             var SMSTemplateToSend = "";
 
             EmailTemplateToSend = person.sendPersonalizedMail ? person.mailText : defaultEmailTemplate;
-
             SMSTemplateToSend = person.sendPersonalizedSMS ? person.smsText : defaultSMSTemplate;
 
             var mailOptions = {
@@ -474,7 +482,11 @@ module.exports = function (express, app, mongoose, path, nodemailer, CronJob, fs
                 to: person.email,
                 subject: "Feliz Aniversário da iTGrow",
                 text: "Feliz Aniversário da iTGrow",
-                html: '<b>' + EmailTemplateToSend + '<b>'
+                html: '<p>' + EmailTemplateToSend + '</p>' +
+                         '<p><img src="cid:image1"/></p>',
+                attachments:[
+                    {filePath: bannerPath, cid: "image1"}
+                ],
             };
 
             if (person.sendMail) {
