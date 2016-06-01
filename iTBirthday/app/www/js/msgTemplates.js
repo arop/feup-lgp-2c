@@ -57,9 +57,7 @@ angular.module('itBirthday.settings', ['ngFileUpload'])
       var emailTemplate = $scope.defaultMsg.email.trim();
       var smsTemplate = $scope.defaultMsg.sms.trim();
       var fbTemplate = $scope.defaultMsg.fb.trim();
-
-
-      alert($scope.slideIndex);
+      
       var count = 0;
       $http.get(serverUrl + '/all_banners').success(function(response){
         angular.forEach(response, function(value, key) {

@@ -703,9 +703,10 @@ module.exports = function (express, app, mongoose, path, nodemailer, CronJob, fs
 
     //gets all banners
     app.get('/all_banners', function(req,res){
-        var query = Banner.find();
-
+        var query = Banner.find({}).sort({active : -1});
         query.exec(function(err, result){
+            console.log("*************************");
+            console.log(result);
             if (err) {
                 console.log('[MONGOOSE] Error ' + err);
             } else {
@@ -716,8 +717,6 @@ module.exports = function (express, app, mongoose, path, nodemailer, CronJob, fs
     });
 
     app.post('/update_banner', function(req,res){
-        console.log("***********************************************************")
-        console.log("UPDATE");
         //
         Banner.findOneAndUpdate({active: true}, {active: false}, function(err, emp){
         });
