@@ -32,7 +32,7 @@
           <ion-item class="item-avatar col-50" ng-repeat="p in profiles | filter: filterResults"
                     ui-sref="tabs.profile.show({id: p._id})">
             <div class="item-content">
-              <img src="http://tutorialsplane.com/runtest/ionic/img/profile.jpg">
+              <img ng-src="{{p.imageURL}}" err-src="{{defaultImageURL}}" title="Avatar" alt="Avatar Image">
               <h2>{{p.name}}</h2>
               <p>{{p.email}}</p>
             </div>

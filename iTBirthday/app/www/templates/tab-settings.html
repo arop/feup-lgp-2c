@@ -12,6 +12,31 @@
       </div>
 
       <div class="row responsive-sm responsive-md">
+        <div class="col col-50 col-offset-25" id="banners">
+          <label class="title">Banners</label>
+          </label>
+          <ion-slide-box on-slide-changed="slideHasChanged($index)">
+            <ion-slide ng-repeat="ban in banners">
+              <img ng-src="{{ban}}" height="326" width="1216">
+            </ion-slide>
+
+          </ion-slide-box>
+        </div>
+      </div>
+
+      <div class="row responsive-sm responsive-md">
+        <div class="col col-50 col-offset-25" id="banner">
+          <label class="title">Novo Banner</label>
+          <label class="item item-input item-stacked-label  app-color">
+            <div>
+              <input id="file_upload" type="file" file-upload>
+            </div>
+          </label>
+        </div>
+      </div>
+
+
+      <div class="row responsive-sm responsive-md">
         <div class="col col-25 col-offset-25" id="sms_template">
           <label class="title">Template SMS</label>
           <label class="item item-input item-stacked-label app-color ">

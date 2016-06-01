@@ -1,25 +1,31 @@
 <ion-view>
-    <ion-content>
-        <div class="row responsive-sm">
-            <div class="col-33 col-offset-33" id="login-logo">
-                <img ng-src="{{defaultPath}}img/itgrow-logo.png" class="img-responsive" width="695" height="240" />
-            </div>
+  <ion-content padding="true" overflow-scroll="true" id="login_page">
+    <div class="row responsive-sm responsive-md">
+      <div class="col col-33 col-offset-33" id="login-logo">
+        <img ng-src="{{defaultPath}}img/itgrow-logo.png" class="img-responsive" width="695" height="240"/>
+      </div>
+    </div>
+    <div class="row responsive-sm responsive-md">
+      <div class="col col-33 col-offset-33" ng-if="errorMessage">
+        <div class="app-color" id="errorMessage">
+          <strong>Info:</strong> {{errorMessage}}
         </div>
-        <div ng-if="errorMessage">
-            <div class="col-33 col-offset-33 app-color" id="errorMessage">
-                <strong>Info:</strong> {{errorMessage}}
-            </div>
-        </div>
-        <div class="row responsive-sm">
-            <div class="col-33 col-offset-33" id="login-input-div">
-                <label class="item item-input">
-                    <input type="text" placeholder="Utilizador" ng-model="user.username">
-                </label>
-                <label class="item item-input">
-                    <input type="password" placeholder="Password" ng-model="user.password">
-                </label>
-                <button class="button button-block app-color" ng-click="login(user)">Login</button>
-            </div>
-        </div>
-    </ion-content>
+      </div>
+    </div>
+    <div class="row responsive  -sm responsive-md">
+      <div class="col col-33 col-offset-33" id="login-input-div">
+        <label class="item item-input app-color">
+          <input type="text" placeholder="Utilizador" ng-model="user.username">
+        </label>
+        <label class="item item-input app-color">
+          <input type="password" placeholder="Password" ng-model="user.password">
+        </label>
+      </div>
+    </div>
+    <div class="row responsive-sm responsive-md" id="login_btn">
+      <div class="col col-33 col-offset-33">
+        <a ng-click="login(user)"><span>Login</span></a>
+      </div>
+    </div>
+  </ion-content>
 </ion-view>
