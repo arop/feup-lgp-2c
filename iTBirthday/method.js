@@ -716,6 +716,8 @@ module.exports = function (express, app, mongoose, path, nodemailer, CronJob, fs
     });
 
     app.post('/update_banner', function(req,res){
+        console.log("***********************************************************")
+        console.log("UPDATE");
         //
         Banner.findOneAndUpdate({active: true}, {active: false}, function(err, emp){
         });
@@ -732,7 +734,9 @@ module.exports = function (express, app, mongoose, path, nodemailer, CronJob, fs
         });
 
         //deactivates the older template
-        Banner.findOneAndUpdate({active:true},{active:false});
+        Banner.findOneAndUpdate({active:true},{active:false}, function(err,emp){
+
+        });
 
         temp_banner.save(function (err, emp) {
             if (err) {

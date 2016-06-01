@@ -13,15 +13,14 @@
 
       <div class="row responsive-sm responsive-md">
         <div class="col col-50 col-offset-25" id="banners">
-          <label class="title">Banner</label>
-          <label class="item item-input item-stacked-label  app-color">
-            <span class="item-label">Banners</span>
-
-            <div ng-repeat="ban in banners">
-              <img ng-src="{{serverUrl}}/images/banners/{{ban.path}}" >
-              {{serverUrl}}/images/banners/{{ban.path}}
-            </div>
+          <label class="title">Banners</label>
           </label>
+          <ion-slide-box on-slide-changed="slideHasChanged($index)">
+            <ion-slide ng-repeat="ban in banners">
+              <img ng-src="{{ban}}" height="326" width="1216">
+            </ion-slide>
+
+          </ion-slide-box>
         </div>
       </div>
 

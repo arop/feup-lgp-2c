@@ -1,6 +1,19 @@
 angular.module('itBirthday.settings', ['ngFileUpload'])
 
   .controller('MsgTemplatesCtrl', function ($scope, $http, Upload) {
+    $scope.slideIndex = 0;
+
+    $scope.next = function() {
+      $ionicSlideBoxDelegate.next();
+    };
+    $scope.previous = function() {
+      $ionicSlideBoxDelegate.previous();
+    };
+
+    // Called each time the slide changes
+    $scope.slideHasChanged = function(index) {
+      $scope.slideIndex = index;
+    };
 
     $scope.defaultMsg = {};
 
@@ -19,9 +32,10 @@ angular.module('itBirthday.settings', ['ngFileUpload'])
       $scope.defaultMsgEmail_exists = false;
 
       $http.get(serverUrl + '/all_banners').success(function(response){
-        console.log(response);
-        $scope.banners = response;
-      })
+        angular.forEach(response, function(value, key) {
+          this.push( serverUrl + '/images/banners/' +  value.path);
+        }, $scope.banners);
+      });
 
       $http.get(serverUrl + '/email_template').success(function (response) {
         if ( response != "") {
@@ -43,6 +57,22 @@ angular.module('itBirthday.settings', ['ngFileUpload'])
       var emailTemplate = $scope.defaultMsg.email.trim();
       var smsTemplate = $scope.defaultMsg.sms.trim();
       var fbTemplate = $scope.defaultMsg.fb.trim();
+
+
+      alert($scope.slideIndex);
+      var count = 0;
+      $http.get(serverUrl + '/all_banners').success(function(response){
+        angular.forEach(response, function(value, key) {
+          if( count  === $scope.slideIndex){
+            $http.post(serverUrl + '/update_banner', {
+              id: value._id
+            }).success(function () {
+              console.log("Updated Banner template");
+            });
+          }
+          count++;
+        }, $scope.banners);
+      });
 
       if ( $scope.defaultMsgEmail_exists == false ){
         $http.post(serverUrl + '/post_email_template', {
