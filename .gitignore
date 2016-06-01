@@ -7,6 +7,9 @@
 .io-config.json
 */app/platforms/
 */app/resources/
+*/app/ionic.project
+*/app/.io-config.json
+*/.io-config.json
 
 #################
 ## Eclipse
@@ -225,7 +228,3 @@ pip-log.txt
 #Mr Developer
 .mr.developer.cfg
 
-iTBirthday/app/ionic.project
-iTBirthday/images/
-iTBirthday/app/.io-config.json
-iTBirthday/.io-config.json
