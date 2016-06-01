@@ -276,7 +276,6 @@ module.exports = function (express, app, mongoose, path, nodemailer, CronJob, fs
             req.body.sendPersonalizedSMS = false;
         }
         Employee.findOneAndUpdate({_id: req.params.id}, req.body, function (err, emp) {
-            console.log("UPDATEIND");
             if (err) {
                 console.error('[MONGOOSE] Error in updated employee: ' + err);
                 res.status(500).json('[MONGOOSE] Error in updated employee: ' + err);
@@ -288,7 +287,7 @@ module.exports = function (express, app, mongoose, path, nodemailer, CronJob, fs
     });
 
     app.get('/list_employees', function (req, res) {
-        var query = Employee.find({}/*, 'name email exitDate photoPath'*/);
+        var query = Employee.find({}, 'name email exitDate photoPath');
         query.exec(function (err, result) {
             if (!err) {
                 if (result.length > 0) {
@@ -474,7 +473,7 @@ module.exports = function (express, app, mongoose, path, nodemailer, CronJob, fs
                 from: 'lgp2.teamc@gmail.com',
                 to: person.email,
                 subject: "Feliz Aniversário da iTGrow",
-                text: EmailTemplateToSend,
+                text: "Feliz Aniversário da iTGrow",
                 html: '<b>' + EmailTemplateToSend + '<b>'
             };
 
@@ -591,6 +590,7 @@ module.exports = function (express, app, mongoose, path, nodemailer, CronJob, fs
                 else if (age >= 40) ageGroup[4]++;
             }
         }
+
         MFratio[0] = ((MFtotal[0] / activeEmployees) * 100).toFixed(1) + "%";
         MFratio[1] = ((MFtotal[1] / activeEmployees) * 100).toFixed(1) + "%";
 
@@ -602,7 +602,7 @@ module.exports = function (express, app, mongoose, path, nodemailer, CronJob, fs
         statistics[1] = MFtotal;
         statistics[2] = birthByMonthRatio;
         statistics[3] = birthByMonthTotal;
-        statistics[4] = Math.ceil(averageTime / totalEmployees);
+        statistics[4] = Math.floor(averageTime / totalEmployees);
         statistics[5] = ageGroup;
         statistics[6] = activeEmployees;
         return statistics;
@@ -673,8 +673,6 @@ module.exports = function (express, app, mongoose, path, nodemailer, CronJob, fs
         });
 
     });
-
-
 
     /******************** BANNER  *********************************/
 
@@ -774,7 +772,6 @@ module.exports = function (express, app, mongoose, path, nodemailer, CronJob, fs
             if (err) {
                 console.log('[MONGOOSE] Error ' + err);
             } else {
-                console.log(result);
                 res.status(200).json(result);
             }
         });

@@ -166,7 +166,7 @@ angular.module('itBirthday.profile', ['ngFileUpload'])
           exitDate.setHours(12); // default hour 1 a.m so the same problem
 
           $scope.profile.exitDate = exitDate.toISOString().slice(0, 10);
-          $scope.profile.daysInCompany = Math.ceil(Math.abs(exitDate - entryDate) / (1000 * 3600 * 24));
+          $scope.profile.daysInCompany = Math.floor(Math.abs(exitDate - entryDate) / (1000 * 3600 * 24));
 
           var ageInExit = new Date(exitDate - birthDate);
           $scope.profile.birthdaysInCompany = Math.abs(ageInExit.getUTCFullYear() - 1970) - Math.abs(ageInEntry.getUTCFullYear() - 1970);
@@ -174,7 +174,7 @@ angular.module('itBirthday.profile', ['ngFileUpload'])
           $scope.hasExited = true;
 
         } else {
-          $scope.profile.daysInCompany = Math.ceil(Math.abs(dateNow - entryDate) / (1000 * 3600 * 24));
+          $scope.profile.daysInCompany = Math.floor(Math.abs(dateNow - entryDate) / (1000 * 3600 * 24));
           $scope.profile.birthdaysInCompany = $scope.profile.age - Math.abs(ageInEntry.getUTCFullYear() - 1970);
         }
       });
