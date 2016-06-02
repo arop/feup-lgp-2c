@@ -1,7 +1,6 @@
 angular.module('itBirthday.settings', ['ngFileUpload'])
 
   .controller('MsgTemplatesCtrl', function ($scope, $http, Upload,$ionicSlideBoxDelegate) {
-
     $scope.index = 0;
 
     $scope.next = function() {

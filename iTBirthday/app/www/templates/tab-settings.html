@@ -8,37 +8,31 @@
             <span class="item-label">Mensagem</span>
             <textarea rows="6" class="app-color" placeholder="Template Email" ng-model="defaultMsg.email"></textarea>
           </label>
-        </div>
-      </div>
 
-      <div class="row responsive-sm responsive-md">
-        <div class="col col-50 col-offset-25" id="banners">
-          <label class="title">Banners</label>
-
-          <button ng-click="previous()" ng-show="index>0"> < </button>
-          <ion-slide-box on-slide-changed="slideHasChanged($index)">
+          <div class="banner-buttons">
+            <a class="icon-arrow-left {{(index == 0 || banners.length == 0) ? 'disable-click' : ''}}"
+               ng-click="previous()">Banner anterior</a>
+            <a>{{index + 1}}/{{banners.length}}</a>
+            <a class="icon-arrow-right {{(index == banners.length-1 || banners.length == 0) ? 'disable-click' : ''}}"
+               ng-click="next()" >Banner seguinte</a>
+          </div>
+          <ion-slide-box on-slide-changed="slideHasChanged($index)" id="banners">
             <ion-slide ng-repeat="ban in banners">
               <img ng-src="{{ban}}" width="100%" height="75%">
             </ion-slide>
           </ion-slide-box>
-          <button ng-click="next()" ng-show="index<banners.length-1"> > </button>
-        </div>
-      </div>
 
-      <div class="row responsive-sm responsive-md">
-        <div class="col col-50 col-offset-25" id="banner">
-          <label class="title">Novo Banner</label>
-          <label class="item item-input item-stacked-label  app-color">
+          <label class="item item-input item-stacked-label app-color">
+            <label class="item-label">Adicionar Banner: </label>
             <input id="file_upload" type="file" file-upload>
           </label>
         </div>
       </div>
 
-
       <div class="row responsive-sm responsive-md">
         <div class="col col-25 col-offset-25" id="sms_template">
           <label class="title">Template SMS</label>
-          <label class="item item-input item-stacked-label app-color ">
+          <label class="item item-input item-stacked-label app-color">
             <span class="item-label">Mensagem (máx. 160 caracteres)</span>
             <textarea rows="6" maxlength="160" class="app-color" placeholder="Template SMS"
                       ng-model="defaultMsg.sms"></textarea>
