@@ -9,55 +9,98 @@
       </div>
     </div>
 
-    <div class="row responsive-sm responsive-md" id="births_dy_month">
-      <div class="col-80 col-offset-10">
-        <div class="title">Aniversários por mês</div>
-        <div class="info app-color">
-          <div class="row responsive-sm">
-            <div class="col">Janeiro - {{statistics.BirthsByMonthRatio.Jan}}</div>
-            <div class="col">Maio - {{statistics.BirthsByMonthRatio.May}}</div>
-            <div class="col">Setembro - {{statistics.BirthsByMonthRatio.Sep}}</div>
+    <div id="births_dy_month">
+      <h2>Distribuição dos aniversários por mês</h2>
+      <div class="app-color">
+        <div class="row responsive-sm">
+          <div class="col">
+              Janeiro 
+              <div class="w3-progress-container">
+                <div id="myBar" class="w3-progressbar" style="width:{{statistics.BirthsByMonthRatio.Jan}}">
+                </div>
+              </div> 
+              {{statistics.BirthsByMonthTotal.Jan}}
           </div>
-          <div class="row responsive-sm">
-            <div class="col">Fevereiro - {{statistics.BirthsByMonthRatio.Feb}}</div>
-            <div class="col">Junho - {{statistics.BirthsByMonthRatio.Jun}}</div>
-            <div class="col">Outubro - {{statistics.BirthsByMonthRatio.Oct}}</div>
-          </div>
-          <div class="row responsive-sm">
-            <div class="col">Março - {{statistics.BirthsByMonthRatio.Mar}}</div>
-            <div class="col">Julho - {{statistics.BirthsByMonthRatio.Jul}}</div>
-            <div class="col">Novembro - {{statistics.BirthsByMonthRatio.Nov}}</div>
-          </div>
-          <div class="row responsive-sm">
-            <div class="col">Abril - {{statistics.BirthsByMonthRatio.Apr}}</div>
-            <div class="col">Agosto - {{statistics.BirthsByMonthRatio.Aug}}</div>
-            <div class="col">Dezembro - {{statistics.BirthsByMonthRatio.Dec}}</div>
-          </div>
+          <div class="col">Fevereiro <div class="w3-progress-container">
+                <div id="myBar" class="w3-progressbar" style="width:{{statistics.BirthsByMonthRatio.Feb}}">
+                </div>
+              </div> {{statistics.BirthsByMonthTotal.Feb}}</div>
+          <div class="col">Março <div class="w3-progress-container">
+                <div id="myBar" class="w3-progressbar" style="width:{{statistics.BirthsByMonthRatio.Mar}}">
+                </div>
+                </div>{{statistics.BirthsByMonthTotal.Mar}}</div>
+        </div>
+        <div class="row responsive-sm">
+          <div class="col">Abril  <div class="w3-progress-container">
+                <div id="myBar" class="w3-progressbar" style="width:{{statistics.BirthsByMonthRatio.Apr}}">
+                </div>
+                </div>{{statistics.BirthsByMonthTotal.Apr}}</div>
+          <div class="col">Maio  <div class="w3-progress-container">
+                <div id="myBar" class="w3-progressbar" style="width:{{statistics.BirthsByMonthRatio.May}}">
+                </div>
+                </div>{{statistics.BirthsByMonthTotal.May}}</div>
+          <div class="col">Junho <div class="w3-progress-container">
+                <div id="myBar" class="w3-progressbar" style="width:{{statistics.BirthsByMonthRatio.Jun}}">
+                </div>
+                </div>{{statistics.BirthsByMonthTotal.Jun}}</div>
+        </div>
+        <div class="row responsive-sm">
+          <div class="col">Julho  <div class="w3-progress-container">
+                <div id="myBar" class="w3-progressbar" style="width:{{statistics.BirthsByMonthRatio.Jul}}">
+                </div>
+                </div>{{statistics.BirthsByMonthTotal.Jul}}</div>
+          <div class="col">Agosto  <div class="w3-progress-container">
+                <div id="myBar" class="w3-progressbar" style="width:{{statistics.BirthsByMonthRatio.Aug}}">
+                </div>
+                </div> {{statistics.BirthsByMonthTotal.Aug}}</div>
+          <div class="col">Setembro <div class="w3-progress-container">
+                <div id="myBar" class="w3-progressbar" style="width:{{statistics.BirthsByMonthRatio.Sep}}">
+                </div>
+                </div>{{statistics.BirthsByMonthTotal.Sep}}</div>
+        </div>
+        <div class="row responsive-sm">
+          <div class="col">Outubro  <div class="w3-progress-container">
+                <div id="myBar" class="w3-progressbar" style="width:{{statistics.BirthsByMonthRatio.Oct}}">
+                </div>
+                </div> {{statistics.BirthsByMonthTotal.Oct}}</div>
+          <div class="col">Novembro  <div class="w3-progress-container">
+                <div id="myBar" class="w3-progressbar" style="width:{{statistics.BirthsByMonthRatio.Nov}}">
+                </div>
+                </div>{{statistics.BirthsByMonthTotal.Nov}}</div>
+          <div class="col">Dezembro <div class="w3-progress-container">
+                <div id="myBar" class="w3-progressbar" style="width:{{statistics.BirthsByMonthRatio.Dec}}">
+                </div>
+                </div>{{statistics.BirthsByMonthTotal.Dec}}</div>
         </div>
       </div>
     </div>
-
-    <div class="row responsive-sm responsive-md" id="ratio_and_years">
-      <div class="col-80 col-offset-10">
-        <div class="row responsive-sm responsive-md">
-          <div class="col col-33">
-            <div class="title">Rácio mulheres/homens</div>
-            <div class="info app-color">
-              <p>Mulheres: {{statistics.MFRatio.Female}}</p>
-              <p>Homens: {{statistics.MFRatio.Male}}</p>
-            </div>
-          </div>
-          <div class="col col-66">
-            <div class="title">Distribuição por faixas etárias</div>
-            <div class="info app-color">
-              <p>18to21 : {{statistics.AgeGroups['18to21']}}</p>
-              <p>21to25 : {{statistics.AgeGroups['21to25']}}</p>
-              <p>25to30 : {{statistics.AgeGroups['25to30']}}</p>
-              <p>30to40 : {{statistics.AgeGroups['30to40']}}</p>
-              <p>40+ : {{statistics.AgeGroups['40+']}}</p>
-            </div>
-          </div>
+    <div id="ratio_and_years">
+      <div class="row">
+        <div class="col col-50"><h3>Distribuição do rácio de mulheres/homens</h3></div>
+        <div class="col col-50"><h3>Distribuição das faixas etárias (quantidade por anos)</h3></div>
+      </div>
+      <div class="row app-color">
+        <div class="col col-50">
+        
+          <p>
+            <canvas id="doughnut" class="chart chart-doughnut" chart-data="data" chart-labels="labels" chart-colours="backgroundColor"></canvas> 
+            <img src="../img/icons/homem_pagina_6.png" style="position:inherit;"> 
+            <img src="../img/icons/mulher_pagina_6.png" style="position:inherit;"> 
+          </p>
+          <p>Homens: {{statistics.MFRatio.Male}} Mulheres: {{statistics.MFRatio.Female}} </p>
         </div>
+        <div class="col col-50">
+          <canvas id="line" class="chart chart-line" chart-data="lineData" chart-labels="lineLabels" chart-legend="false"  chart-colours="lineBackgroundColor">
+          </canvas> 
+          <p> 
+            18-21 : {{statistics.AgeGroups['18to21']}}  
+            21-25 : {{statistics.AgeGroups['21to25']}}  
+            25-30 : {{statistics.AgeGroups['25to30']}}  
+            30-40 : {{statistics.AgeGroups['30to40']}}  
+            40+ : {{statistics.AgeGroups['40+']}}
+          </p>
+        </div>
+        
       </div>
     </div>
 
