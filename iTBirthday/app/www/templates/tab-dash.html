@@ -1,9 +1,11 @@
 <ion-view data-ng-init="getStatistics()">
-  <ion-content class="padding">
-    <div id="anniversaries_this_month">
-      <h2>Aniversários este mês</h2>
-      <div class="item-avatar">
-        <img src="http://tutorialsplane.com/runtest/ionic/img/profile.jpg" style="position:inherit;">
+  <ion-content padding="true" overflow-scroll="true" id="dashboard">
+    <div class="row responsive-sm responsive-md" id="anniversaries_this_month">
+      <div class="col-80 col-offset-10">
+        <div class="title">Aniversários este mês</div>
+        <div class="item-avatar">
+          <img src="http://tutorialsplane.com/runtest/ionic/img/profile.jpg" style="position:inherit;">
+        </div>
       </div>
     </div>
 
@@ -102,9 +104,13 @@
       </div>
     </div>
 
-    <div id="average_time">
-      <h2>Tempo médio de permanência (em dias)</h2>
-      <p>{{statistics.AverageTime}}</p>
+    <div class="row responsive-sm responsive-md" id="average_time">
+      <div class="col-80 col-offset-10">
+        <div class="title">Tempo médio de permanência (em dias)</div>
+        <div class="info app-color">
+          <p>{{statistics.AverageTime}}</p>
+        </div>
+      </div>
     </div>
   </ion-content>
 </ion-view>

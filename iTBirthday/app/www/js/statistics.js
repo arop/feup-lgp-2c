@@ -1,10 +1,10 @@
 angular.module('itBirthday.statistics', [])
 
-  .controller('StatisticsCtrl', function($scope, $http) {
+  .controller('StatisticsCtrl', function ($scope, $http) {
     $scope.statistics = {};
 
     $scope.getStatistics = function () {
-      $http.get(serverUrl + '/statistics').success( function(response) {
+      $http.get(serverUrl + '/statistics').success(function (response) {
         $scope.statistics = response;
         $scope.labels = ["Female", "Male"];
     	$scope.data = [$scope.statistics.MFTotal.Female,$scope.statistics.MFTotal.Male];

@@ -1,0 +1,42 @@
+#fb_content a {
+  float: right;
+  padding: 5px 15px 5px 10px;
+  margin: auto 5px auto auto;
+  background: transparent url("../img/icons/right_arrow.png") no-repeat right center !important;
+  background-size: 10px !important;
+}
+
+#fb_content .icon-refresh {
+  padding-right: 25px;
+  background: transparent url("../img/icons/reload.png") no-repeat right center !important;
+  background-size: 20px !important;
+}
+
+#fb_content .icon-facebook {
+  padding-right: 25px;
+  background: transparent url("../img/icons/reload.png") no-repeat right center !important;
+  background-size: 20px !important;
+}
+
+#fb_content .card {
+  margin-top: 0;
+  margin-bottom: 0;
+  box-shadow: none;
+}
+
+#fb_content .card .item {
+  background-color: transparent;
+}
+
+#fb_content .card .item.title {
+  text-align: center;
+}
+
+#fb_content .row .col {
+  margin-bottom: 0;
+}
+
+#fb_content #fb_page_info  {
+  text-align: center;
+}
+

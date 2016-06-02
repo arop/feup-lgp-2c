@@ -1,0 +1,61 @@
+<ion-view data-ng-init="getStatistics()">
+  <ion-content class="padding">
+    <div id="anniversaries_this_month">
+      <h2>Aniversários este mês</h2>
+      <div class="item-avatar">
+        <img src="http://tutorialsplane.com/runtest/ionic/img/profile.jpg" style="position:inherit;">
+      </div>
+    </div>
+
+    <div id="births_dy_month">
+      <h2>Distribuição dos aniversários por mês</h2>
+      <div class="app-color">
+        <div class="row responsive-sm">
+          <div class="col">Janeiro - {{statistics.BirthsByMonthRatio.Jan}}</div>
+          <div class="col">Maio - {{statistics.BirthsByMonthRatio.May}}</div>
+          <div class="col">Setembro - {{statistics.BirthsByMonthRatio.Sep}}</div>
+        </div>
+        <div class="row responsive-sm">
+          <div class="col">Fevereiro - {{statistics.BirthsByMonthRatio.Feb}}</div>
+          <div class="col">Junho - {{statistics.BirthsByMonthRatio.Jun}}</div>
+          <div class="col">Outubro - {{statistics.BirthsByMonthRatio.Oct}}</div>
+        </div>
+        <div class="row responsive-sm">
+          <div class="col">Março - {{statistics.BirthsByMonthRatio.Mar}}</div>
+          <div class="col">Julho - {{statistics.BirthsByMonthRatio.Jul}}</div>
+          <div class="col">Novembro - {{statistics.BirthsByMonthRatio.Nov}}</div>
+        </div>
+        <div class="row responsive-sm">
+          <div class="col">Abril - {{statistics.BirthsByMonthRatio.Apr}}</div>
+          <div class="col">Agosto - {{statistics.BirthsByMonthRatio.Aug}}</div>
+          <div class="col">Dezembro - {{statistics.BirthsByMonthRatio.Dec}}</div>
+        </div>
+      </div>
+    </div>
+
+    <div id="ratio_and_years">
+      <div class="row">
+        <div class="col col-33"><h3>Distribuição do rácio de mulheres/homens</h3></div>
+        <div class="col col-66"><h3>Distribuição das faixas etárias (quantidade por anos)</h3></div>
+      </div>
+      <div class="row app-color">
+        <div class="col col-33">
+          <p>Mulheres: {{statistics.MFRatio.Female}}</p>
+          <p>Homens: {{statistics.MFRatio.Male}}</p>
+        </div>
+        <div class="col col-66">
+          <p>18to24 : {{statistics.AgeGroups['18to24']}}</p>
+          <p>25to34 : {{statistics.AgeGroups['25to34']}}</p>
+          <p>35to44 : {{statistics.AgeGroups['35to44']}}</p>
+          <p>45to54 : {{statistics.AgeGroups['45to54']}}</p>
+          <p>55+ : {{statistics.AgeGroups['55+']}}</p>
+        </div>
+      </div>
+    </div>
+
+    <div id="average_time">
+      <h2>Tempo médio de permanência (em dias)</h2>
+      <p>{{statistics.AverageTime}}</p>
+    </div>
+  </ion-content>
+</ion-view>

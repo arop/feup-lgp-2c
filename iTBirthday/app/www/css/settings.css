@@ -1,5 +1,37 @@
-#default_messages_div {
-  text-align: center;
-  width: 70%;
-  margin: auto;
+#default_messages_div .row .title {
+  font-size: 20px;
+  font-weight: 600;
+}
+
+#default_messages_div .row label.item.item-input {
+  margin-top: 10px;
+  padding: 10px;
+}
+
+#default_messages_div .row label.item.item-input > textarea {
+  margin-top: 5px;
+  padding: 5px;
+  border: solid 2px #e1e1e2;
+  max-width: 100%;
+  min-width: 100%;
+  min-height: 8em;
+  max-height: 20em;
+  height: 8em;
+}
+
+#default_messages_div .row label.item.item-input > #file_upload {
+  background-color: transparent;
+  height: auto;
+}
+
+#default_messages_div .slider-pager span.slider-pager-page {
+  cursor: pointer;
+}
+
+#default_messages_div #templates_save_changes a {
+  float: right;
+  padding: 5px 20px 5px 10px;
+  margin: auto 5px auto auto;
+  background: transparent url("../img/icons/confirm.png") no-repeat right center !important;
+  background-size: 16px !important;
 }
