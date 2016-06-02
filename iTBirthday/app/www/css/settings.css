@@ -19,7 +19,16 @@
   height: 8em;
 }
 
-#templates_save_changes a {
+#default_messages_div .row label.item.item-input > #file_upload {
+  background-color: transparent;
+  height: auto;
+}
+
+#default_messages_div .slider-pager span.slider-pager-page {
+  cursor: pointer;
+}
+
+#default_messages_div #templates_save_changes a {
   float: right;
   padding: 5px 20px 5px 10px;
   margin: auto 5px auto auto;
