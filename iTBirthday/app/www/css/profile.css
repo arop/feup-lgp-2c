@@ -513,6 +513,6 @@
 }
 
 #remove-profile-btn > a {
-  background: transparent url("../img/svg icons/trash_bin_red.svg") no-repeat left center !important;
+  background: transparent url("../img/svg icons/trash_bin.svg") no-repeat left center !important;
   background-size: 20px !important;
 }

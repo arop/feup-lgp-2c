@@ -31,6 +31,14 @@ appModule.service('FBAuth', function ($q, $http, $ionicLoading) {
         var userID = response["authResponse"]["userID"];
         var token = response["authResponse"]["accessToken"];
 
+        FB.api("/" + userID, { fields: "name" }, function (response) {
+          if(response && !response.error) {
+            console.log(response);
+          } else {
+            console.error(response);
+          }
+        });
+
         $http.post(serverUrl + '/post_facebook_info/', {
           userID: userID,
           token: token
@@ -43,6 +51,16 @@ appModule.service('FBAuth', function ($q, $http, $ionicLoading) {
     }, {
       scope: 'public_profile, email, publish_actions, publish_pages',
       return_scopes: true
+    });
+
+    return defer.promise;
+  };
+
+  this.logoutFacebook = function () {
+    var defer = $q.defer();
+
+    FB.logout(function(response) {
+      console.log(response);
     });
 
     return defer.promise;
@@ -103,8 +121,16 @@ angular.module('itBirthday.facebook', [])
       loginFacebookUser();
     };
 
+    $scope.logoutFacebook = function () {
+      logoutFacebookUser();
+    };
+
     function loginFacebookUser() {
       return FBAuth.loginFacebook($scope.updateFacebookInfo);
+    }
+
+    function logoutFacebookUser() {
+      return FBAuth.logoutFacebook();
     }
 
     function getLoginUserStatus() {
