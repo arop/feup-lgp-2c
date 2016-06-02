@@ -65,7 +65,7 @@ module.exports = function (express, app, mongoose, path, nodemailer, CronJob, fs
         smsText: {type: String, required: false, trim: true},
         sendPersonalizedSMS: {type: Boolean, required: false, default: false},
         facebookPost: {type: Boolean, required: true, default: false},
-        photoPath: {type: String, required: false, trim: true},
+        photoPath: {type: String, required: false, trim: true, default: 'default.png'},
         gender: {type: String, enum: employeeGender, required: true, trim: true}
     });
 
@@ -310,7 +310,7 @@ module.exports = function (express, app, mongoose, path, nodemailer, CronJob, fs
                 //removes previous image if it exists
                 var f = __dirname + '/images/employees/';
 
-                if (emp.photoPath != undefined) {
+                if (emp.photoPath != undefined && emp.photoPath != 'default.png') {
                     var files = Finder.from(f).findFiles(emp.photoPath);
                     if (files.length > 0)
                         fs.unlinkSync(files[0])
@@ -559,7 +559,9 @@ module.exports = function (express, app, mongoose, path, nodemailer, CronJob, fs
                             '30to40': stats[5][3],
                             '40+': stats[5][4]
                         },
-                        'TotalEmployees': stats[6]
+                        'TotalEmployees': stats[6],
+                        'ActiveEmployees': stats[7],
+                        'Employees': stats[8]
                     });
                 } else {
                     console.log('[MONGOOSE] No employees to find');
@@ -581,20 +583,27 @@ module.exports = function (express, app, mongoose, path, nodemailer, CronJob, fs
         var ageGroup = [0, 0, 0, 0, 0]; //18-24, 25-34, 35-44, 45-54, 55+
         var totalEmployees = employees.length;
         var activeEmployees = 0;
+        var people = [];
         for (var i = 0; i < totalEmployees; i++) {
-            var person = employees[i];
+            var employee = employees[i];
 
-            averageTime += person.daysSpent;
+            averageTime += employee.daysSpent;
 
-            if (!person.exitDate) {
+            if (!employee.exitDate) {
                 activeEmployees++;
 
-                if (person.gender == "Male") MFtotal[0]++;
+                var person = [];
+                person[0] = employee.photoPath;
+                person[1] = employee.birthDate;
+
+                people[people.length] = person;
+
+                if (employee.gender == "Male") MFtotal[0]++;
                 else MFtotal[1]++;
 
-                birthByMonthTotal[person.birthDate.getMonth()]++;
+                birthByMonthTotal[employee.birthDate.getMonth()]++;
 
-                var age = person.age;
+                var age = employee.age;
                 if (age >= 18 && age < 21) ageGroup[0]++;
                 else if (age >= 21 && age < 25) ageGroup[1]++;
                 else if (age >= 25 && age < 30) ageGroup[2]++;
@@ -616,7 +625,9 @@ module.exports = function (express, app, mongoose, path, nodemailer, CronJob, fs
         statistics[3] = birthByMonthTotal;
         statistics[4] = Math.floor(averageTime / totalEmployees);
         statistics[5] = ageGroup;
-        statistics[6] = activeEmployees;
+        statistics[6] = totalEmployees;
+        statistics[7] = activeEmployees;
+        statistics[8] = people;
         return statistics;
     }
 
