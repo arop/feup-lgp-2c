@@ -14,13 +14,14 @@
       <div class="row responsive-sm responsive-md">
         <div class="col col-50 col-offset-25" id="banners">
           <label class="title">Banners</label>
-          </label>
+
+          <button ng-click="previous()" ng-show="index>0"> < </button>
           <ion-slide-box on-slide-changed="slideHasChanged($index)">
             <ion-slide ng-repeat="ban in banners">
-              <img ng-src="{{ban}}" width="100%" height="100%">
+              <img ng-src="{{ban}}" width="100%" height="75%">
             </ion-slide>
-
           </ion-slide-box>
+          <button ng-click="next()" ng-show="index<banners.length-1"> > </button>
         </div>
       </div>
 

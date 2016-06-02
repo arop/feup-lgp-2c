@@ -1,18 +1,21 @@
 angular.module('itBirthday.settings', ['ngFileUpload'])
 
-  .controller('MsgTemplatesCtrl', function ($scope, $http, Upload) {
-    $scope.slideIndex = 0;
+  .controller('MsgTemplatesCtrl', function ($scope, $http, Upload,$ionicSlideBoxDelegate) {
+
+    $scope.index = 0;
 
     $scope.next = function() {
       $ionicSlideBoxDelegate.next();
+      $scope.index = $ionicSlideBoxDelegate.currentIndex();
     };
     $scope.previous = function() {
       $ionicSlideBoxDelegate.previous();
+      $scope.index = $ionicSlideBoxDelegate.currentIndex();
     };
 
     // Called each time the slide changes
     $scope.slideHasChanged = function(index) {
-      $scope.slideIndex = index;
+      $scope.index = index;
     };
 
     $scope.defaultMsg = {};
@@ -21,7 +24,6 @@ angular.module('itBirthday.settings', ['ngFileUpload'])
     $("input[type=file]").on("change", function() {
       $scope.banner = this.files[0];
     });
-
     $scope.getDefaultMsg = function () {
 
       $scope.defaultMsg.email = "";
@@ -35,6 +37,7 @@ angular.module('itBirthday.settings', ['ngFileUpload'])
         angular.forEach(response, function(value, key) {
           this.push( serverUrl + '/images/banners/' +  value.path);
         }, $scope.banners);
+        $ionicSlideBoxDelegate.update();
       });
 
       $http.get(serverUrl + '/email_template').success(function (response) {
@@ -45,11 +48,15 @@ angular.module('itBirthday.settings', ['ngFileUpload'])
       });
 
       $http.get(serverUrl + '/sms_template').success(function (response) {
-        $scope.defaultMsg.sms = response[0].text;
+        if ( response != "") {
+          $scope.defaultMsg.sms = response[0].text;
+        }
       });
 
       $http.get(serverUrl + '/facebook_template').success(function (response) {
-        $scope.defaultMsg.fb = response[0].text;
+        if ( response != "") {
+          $scope.defaultMsg.fb = response[0].text;
+        }
       });
     };
 
@@ -57,11 +64,11 @@ angular.module('itBirthday.settings', ['ngFileUpload'])
       var emailTemplate = $scope.defaultMsg.email.trim();
       var smsTemplate = $scope.defaultMsg.sms.trim();
       var fbTemplate = $scope.defaultMsg.fb.trim();
-      
+
       var count = 0;
       $http.get(serverUrl + '/all_banners').success(function(response){
         angular.forEach(response, function(value, key) {
-          if( count  === $scope.slideIndex){
+          if( count  === $scope.index){
             $http.post(serverUrl + '/update_banner', {
               id: value._id
             }).success(function () {
