@@ -103,6 +103,8 @@ angular.module('itBirthday.settings', ['ngFileUpload'])
       var fbTemplate = $scope.defaultMsg.fb.trim();
       var fieldEmpty = false;
 
+      var successCount = 0;
+
       var count = 0;
       $http.get(serverUrl + '/all_banners').success(function(response) {
         angular.forEach(response, function(value, key) {
@@ -115,6 +117,11 @@ angular.module('itBirthday.settings', ['ngFileUpload'])
           }
           count++;
         }, $scope.banners);
+
+        successCount++;
+
+        if(successCount > 4)
+          ionicLoadingService.hideLoading();
       });
 
       if (emailTemplate != '') {
@@ -124,11 +131,20 @@ angular.module('itBirthday.settings', ['ngFileUpload'])
           }).success(function() {
             console.log("Updated email template");
           });
+          successCount++;
+
+          if(successCount > 4)
+            ionicLoadingService.hideLoading();
+
         } else
           $http.post(serverUrl + '/update_email_template', {
             text: emailTemplate
           }).success(function() {
             console.log("Updated email template");
+            successCount++;
+
+            if(successCount > 4)
+              ionicLoadingService.hideLoading();
           });
       } else {
         $scope.wrongFields += "<br>- Template Email;"
@@ -144,13 +160,27 @@ angular.module('itBirthday.settings', ['ngFileUpload'])
           progress: function(e) {}
         }).then(function(data, status, headers, config) {
           // file is uploaded successfully
+          successCount++;
+
+          if(successCount > 4)
+            ionicLoadingService.hideLoading();
         });
+      else {
+        successCount++;
+
+        if(successCount > 4)
+          ionicLoadingService.hideLoading();
+      }
 
       if (smsTemplate != '') {
         $http.post(serverUrl + '/update_sms_template', {
           text: smsTemplate
         }).success(function() {
           console.log("Updated sms template");
+          successCount++;
+
+          if(successCount > 4)
+            ionicLoadingService.hideLoading();
         });
       } else {
         $scope.wrongFields += "<br>- Template SMS;"
@@ -164,6 +194,10 @@ angular.module('itBirthday.settings', ['ngFileUpload'])
           text: fbTemplate
         }).success(function() {
           console.log("Updated facebook template");
+          successCount++;
+
+          if(successCount > 4)
+            ionicLoadingService.hideLoading();
         });
       } else {
         $scope.wrongFields += "<br>- Template Facebook;"
@@ -176,7 +210,8 @@ angular.module('itBirthday.settings', ['ngFileUpload'])
         ionicLoadingService.hideLoading();
         $scope.showAlertProfile();
       } else {
-        ionicLoadingService.hideLoading();
+        if(successCount > 4)
+          ionicLoadingService.hideLoading();
       }
 
     }
