@@ -4,16 +4,17 @@
 }
 
 #default_messages_div .row label.item.item-input {
-  margin: 10px 0 0 0;
+  margin: 10px 0 15px 0;
   padding: 10px;
   border: none;
+  background-color: #f1f1f2;
 }
 
 #default_messages_div .row label.item.item-input > textarea {
   box-sizing: border-box;
   margin-top: 5px;
   padding: 5px;
-  border: solid 2px #e1e1e2;
+  border: none;
   display: block;
   width: 100%;
   max-width: 100%;
@@ -24,21 +25,13 @@
 }
 
 #default_messages_div .row label.item.item-input > #file_upload {
-  background-color: transparent;
-  height: auto;
-}
-
-#default_messages_div #email_template #banners .slider {
-  background-color: #f1f1f2 !important;
-}
-
-#default_messages_div .separator-container {
   display: block;
-  overflow: auto;
-}
-
-#default_messages_div #email_template {
-  background-color: #f1f1f2 !important;
+  width: 100%;
+  background-color: transparent;
+  max-height: 32px;
+  height: auto;
+  line-height: 16px;
+  padding: 5px;
 }
 
 #default_messages_div #email_template .banner-buttons {
@@ -56,7 +49,6 @@
 
 #default_messages_div #email_template a {
   background-color: transparent;
-  border-radius: 2px;
 
   -webkit-transition: background-color .2s;
   -moz-transition: background-color .2s;
@@ -69,7 +61,7 @@
 }
 
 #default_messages_div #email_template a:hover {
-  background-color: rgba(237, 160, 75, 1) !important;
+  background-color: rgba(237, 160, 75, 0.8) !important;
 }
 
 #default_messages_div #email_template a.banner-default-button.default {

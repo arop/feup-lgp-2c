@@ -4,15 +4,13 @@
       <div class="row responsive-sm responsive-md">
         <div class="col col-50 col-offset-25" id="email_template">
           <label class="title">Template Email</label>
-          <label class="item item-input item-stacked-label  app-color">
-            <span class="item-label">Mensagem</span>
+          <label class="item item-input item-stacked-label">
+            <!--<span class="item-label">Mensagem</span>-->
             <textarea id="emailMsg" rows="6" class="app-color" placeholder="Template Email"
                       ng-model="defaultMsg.email"></textarea>
           </label>
 
-          <div class="separator-container app-color"><div class="separator"></div></div>
-
-          <div class="banner-buttons app-color">
+          <div class="banner-buttons">
             <a class="icon-arrow-left {{(index == 0 || banners.length == 0) ? 'disable-click' : ''}}"
                ng-click="previous()">Banner anterior</a>
             <a class="banner-default-button" ng-click="makeDefault()" ng-show="index != index_default_banner">
@@ -28,25 +26,28 @@
             </ion-slide>
           </ion-slide-box>
 
-          <div class="separator-container app-color"><div class="separator"></div></div>
-
-          <label class="item item-input item-stacked-label app-color" id="add_banner">
+          <label class="item item-input item-stacked-label" id="add_banner">
             <span class="item-label">Adicionar Banner</span>
             <input id="file_upload" type="file" file-upload>
           </label>
 
+          <div class="separator"></div>
         </div>
       </div>
       <div class="row responsive-sm responsive-md">
-        <div class="col col-25 col-offset-25" id="sms_template">
+        <div class="col col-50 col-offset-25" id="sms_template">
           <label class="title">Template SMS</label>
           <label class="item item-input item-stacked-label app-color">
             <span class="item-label">Mensagem (máx. 160 caracteres)</span>
             <textarea id="smsMsg" rows="6" maxlength="160" class="app-color" placeholder="Template SMS"
                       ng-model="defaultMsg.sms"></textarea>
           </label>
+
+          <div class="separator"></div>
         </div>
-        <div class="col col-25" id="fb_template">
+      </div>
+      <div class="row responsive-sm responsive-md">
+        <div class="col col-50 col-offset-25" id="fb_template">
           <label class="title">Template Facebook</label>
           <label class="item item-input item-stacked-label app-color ">
             <span class="item-label">Mensagem (máx. 240 caracteres)</span>

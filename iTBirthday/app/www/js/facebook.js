@@ -20,7 +20,16 @@ window.fbAsyncInit = function () {
 
 // Below we create the service for OAuth authentication
 var appModule = angular.module('itBirthday');
-appModule.service('FBAuth', function ($q, $http, $ionicLoading) {
+appModule.service('FBAuth', function ($q, $http, $ionicLoading, $ionicPopup) {
+
+  var postNewFacebookInfo = function(userID, token, callback) {
+    $http.post(serverUrl + '/post_facebook_info/', {
+      userID: userID,
+      token: token
+    }).success(function () {
+      callback();
+    });
+  };
 
   this.loginFacebook = function (callback) {
     var defer = $q.defer();
@@ -31,22 +40,46 @@ appModule.service('FBAuth', function ($q, $http, $ionicLoading) {
         var userID = response["authResponse"]["userID"];
         var token = response["authResponse"]["accessToken"];
 
-        FB.api("/" + userID, { fields: "name" }, function (response) {
-          if(response && !response.error) {
-            console.log(response);
-          } else {
-            console.error(response);
+        FB.api("/" + userID, {fields: "name"}, function (response) {
+          if (response && !response.error) { // Success
+            var newLoginName = response.name;
+            $http.get(serverUrl + '/get_facebook_login_status').then(
+              function (success) {
+                var dbData = success.data;
+                if(dbData == undefined || dbData.id == userID) {
+                  postNewFacebookInfo(userID, token, callback);
+                } else if(dbData.id != userID) {
+                  var confirmPopup = $ionicPopup.confirm({
+                    title: 'Atenção!',
+                    cssClass: 'facebook-confirm-popup',
+                    template: 'Está prestes a fazer login nesta aplicação como <b>' + newLoginName + '</b>,' +
+                    'mas os dados do login anterior estão marcados como pertencendo a <b>' + dbData.name + '</b>.' +
+                    '<br>Tem a certeza que pretende continuar?<br>(Nota: Para fazer login com outro utilizador que ' +
+                    'não <b>' + newLoginName + '</b> deverá efetuar nesta máquina o login nessa conta, e só depois ' +
+                    'clicar no botão <b>Atualizar</b>).',
+                    cancelText: 'Não',
+                    cancelType: 'button-dark',
+                    okText: 'Sim',
+                    okType: 'button-assertive'
+                  });
+
+                  confirmPopup.then(function(res) {
+                    if(res) { // affirmative response
+                      postNewFacebookInfo(userID, token, callback);
+                    } else {
+                      return defer.promise;
+                    }
+                  });
+                }
+              }, function (err) {
+                // Can still post new information,
+                // even if cannot retrieve old.
+                postNewFacebookInfo(userID, token, callback);
+              });
+          } else { // Error
+            return defer.promise;
           }
         });
-
-        $http.post(serverUrl + '/post_facebook_info/', {
-          userID: userID,
-          token: token
-        }).success(function () {
-          callback();
-        });
-      } else {
-        callback();
       }
     }, {
       scope: 'public_profile, email, publish_actions, publish_pages',
@@ -59,7 +92,7 @@ appModule.service('FBAuth', function ($q, $http, $ionicLoading) {
   this.logoutFacebook = function () {
     var defer = $q.defer();
 
-    FB.logout(function(response) {
+    FB.logout(function (response) {
       console.log(response);
     });
 
@@ -81,20 +114,22 @@ appModule.service('FBAuth', function ($q, $http, $ionicLoading) {
 });
 
 angular.module('itBirthday.facebook', [])
-  .controller('FacebookCtrl', function ($scope, $http, FBAuth, $ionicLoading) {
+  .controller('FacebookCtrl', function ($scope, $http, FBAuth, ionicLoadingService) {
 
     $scope.loggedIn = false;
     $scope.fbName = "";
     $scope.fbMail = "";
     $scope.expirationDate = "";
-    $scope.updating = false;
+    $scope.updating = true;
 
     $scope.updateFacebookInfo = function () {
+      ionicLoadingService.showLoading();
       $scope.updating = true;
       var state = getLoginUserStatus();
 
       state.then(function (data) {
         $scope.updating = false;
+        ionicLoadingService.hideLoading();
 
         if (data == undefined) {
           $scope.loggedIn = false;

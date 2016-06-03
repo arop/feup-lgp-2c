@@ -46,3 +46,12 @@ a {
   }
 }
 
+.loading-container .loading {
+  background-color: rgba(0, 0, 0, 0.6) !important;
+}
+
+.loading-container .loading svg g {
+  stroke: #eda04b;
+  stroke-width: 6;
+}
+
