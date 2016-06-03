@@ -1,115 +1,182 @@
-<ion-view data-ng-init="getStatistics()">
+<ion-view>
   <ion-content padding="true" overflow-scroll="true" id="dashboard">
     <div class="row responsive-sm responsive-md" id="anniversaries_this_month">
-      <div class="col-80 col-offset-10">
+      <div class="col col-70 col-offset-15">
         <div class="title">Aniversários este mês</div>
         <div class="item-avatar">
           <img src="http://tutorialsplane.com/runtest/ionic/img/profile.jpg" style="position:inherit;">
         </div>
+
+        <div class="separator"></div>
       </div>
     </div>
 
-    <div id="births_dy_month">
-      <h2>Distribuição dos aniversários por mês</h2>
-      <div class="app-color">
+    <div class="row responsive-sm responsive-md" id="births_dy_month">
+      <div class="col col-70 col-offset-15">
+        <div class="title">Distribuição dos aniversários por mês</div>
+        <div class="row responsive-sm">
+          <div class="col col-33">
+            <span class="month" title="Janeiro">Janeiro</span>
+            <div class="w3-progress-container dashboard-progress-bar-container">
+              <div class="w3-progressbar dashboard-progress-bar" style="width:{{data.BirthsByMonthRatio.Jan}}">
+              </div>
+            </div>
+            <span class="value">{{data.BirthsByMonthTotal.Jan > 0 ? data.BirthsByMonthTotal.Jan : '-'}}</span>
+          </div>
+          <div class="col col-33">
+            <span class="month" title="Fevereiro">Fevereiro</span>
+            <div class="w3-progress-container dashboard-progress-bar-container">
+              <div class="w3-progressbar dashboard-progress-bar" style="width:{{data.BirthsByMonthRatio.Feb}}">
+              </div>
+            </div>
+            <span class="value">{{data.BirthsByMonthTotal.Feb > 0 ? data.BirthsByMonthTotal.Feb : '-'}}</span>
+          </div>
+          <div class="col col-33">
+            <span class="month" title="Março">Março</span>
+            <div class="w3-progress-container dashboard-progress-bar-container">
+              <div class="w3-progressbar dashboard-progress-bar" style="width:{{data.BirthsByMonthRatio.Mar}}">
+              </div>
+            </div>
+            <span class="value">{{data.BirthsByMonthTotal.Mar > 0 ? data.BirthsByMonthTotal.Mar : '-'}}</span>
+          </div>
+        </div>
+
         <div class="row responsive-sm">
           <div class="col">
-              Janeiro 
-              <div class="w3-progress-container">
-                <div id="myBar" class="w3-progressbar" style="width:{{statistics.BirthsByMonthRatio.Jan}}">
-                </div>
-              </div> 
-              {{statistics.BirthsByMonthTotal.Jan}}
+            <span class="month" title="Abril">Abril</span>
+            <div class="w3-progress-container dashboard-progress-bar-container">
+              <div class="w3-progressbar dashboard-progress-bar" style="width:{{data.BirthsByMonthRatio.Apr}}">
+              </div>
+            </div>
+            <span class="value">{{data.BirthsByMonthTotal.Apr > 0 ? data.BirthsByMonthTotal.Apr : '-'}}</span>
           </div>
-          <div class="col">Fevereiro <div class="w3-progress-container">
-                <div id="myBar" class="w3-progressbar" style="width:{{statistics.BirthsByMonthRatio.Feb}}">
-                </div>
-              </div> {{statistics.BirthsByMonthTotal.Feb}}</div>
-          <div class="col">Março <div class="w3-progress-container">
-                <div id="myBar" class="w3-progressbar" style="width:{{statistics.BirthsByMonthRatio.Mar}}">
-                </div>
-                </div>{{statistics.BirthsByMonthTotal.Mar}}</div>
+          <div class="col">
+            <span class="month" title="Maio">Maio</span>
+            <div class="w3-progress-container dashboard-progress-bar-container">
+              <div class="w3-progressbar dashboard-progress-bar" style="width:{{data.BirthsByMonthRatio.May}}">
+              </div>
+            </div>
+            <span class="value">{{data.BirthsByMonthTotal.May > 0 ? data.BirthsByMonthTotal.May : '-'}}</span>
+          </div>
+          <div class="col">
+            <span class="month" title="Junho">Junho</span>
+            <div class="w3-progress-container dashboard-progress-bar-container">
+              <div class="w3-progressbar dashboard-progress-bar" style="width:{{data.BirthsByMonthRatio.Jun}}">
+              </div>
+            </div>
+            <span class="value">{{data.BirthsByMonthTotal.Jun > 0 ? data.BirthsByMonthTotal.Jun : '-'}}</span>
+          </div>
         </div>
+
         <div class="row responsive-sm">
-          <div class="col">Abril  <div class="w3-progress-container">
-                <div id="myBar" class="w3-progressbar" style="width:{{statistics.BirthsByMonthRatio.Apr}}">
-                </div>
-                </div>{{statistics.BirthsByMonthTotal.Apr}}</div>
-          <div class="col">Maio  <div class="w3-progress-container">
-                <div id="myBar" class="w3-progressbar" style="width:{{statistics.BirthsByMonthRatio.May}}">
-                </div>
-                </div>{{statistics.BirthsByMonthTotal.May}}</div>
-          <div class="col">Junho <div class="w3-progress-container">
-                <div id="myBar" class="w3-progressbar" style="width:{{statistics.BirthsByMonthRatio.Jun}}">
-                </div>
-                </div>{{statistics.BirthsByMonthTotal.Jun}}</div>
+          <div class="col">
+            <span class="month" title="Julho">Julho</span>
+            <div class="w3-progress-container dashboard-progress-bar-container">
+              <div class="w3-progressbar dashboard-progress-bar" style="width:{{data.BirthsByMonthRatio.Jul}}">
+              </div>
+            </div>
+            <span class="value">{{data.BirthsByMonthTotal.Jul > 0 ? data.BirthsByMonthTotal.Jul : '-'}}</span>
+          </div>
+          <div class="col">
+            <span class="month" title="Agosto">Agosto</span>
+            <div class="w3-progress-container dashboard-progress-bar-container">
+              <div class="w3-progressbar dashboard-progress-bar" style="width:{{data.BirthsByMonthRatio.Aug}}">
+              </div>
+            </div>
+            <span class="value">{{data.BirthsByMonthTotal.Aug > 0 ? data.BirthsByMonthTotal.Aug : '-'}}</span>
+          </div>
+          <div class="col">
+            <span class="month" title="Setembro">Setembro</span>
+            <div class="w3-progress-container dashboard-progress-bar-container">
+              <div class="w3-progressbar dashboard-progress-bar" style="width:{{data.BirthsByMonthRatio.Sep}}">
+              </div>
+            </div>
+            <span class="value">{{data.BirthsByMonthTotal.Sep > 0 ? data.BirthsByMonthTotal.Sep : '-'}}</span>
+          </div>
         </div>
+
         <div class="row responsive-sm">
-          <div class="col">Julho  <div class="w3-progress-container">
-                <div id="myBar" class="w3-progressbar" style="width:{{statistics.BirthsByMonthRatio.Jul}}">
-                </div>
-                </div>{{statistics.BirthsByMonthTotal.Jul}}</div>
-          <div class="col">Agosto  <div class="w3-progress-container">
-                <div id="myBar" class="w3-progressbar" style="width:{{statistics.BirthsByMonthRatio.Aug}}">
-                </div>
-                </div> {{statistics.BirthsByMonthTotal.Aug}}</div>
-          <div class="col">Setembro <div class="w3-progress-container">
-                <div id="myBar" class="w3-progressbar" style="width:{{statistics.BirthsByMonthRatio.Sep}}">
-                </div>
-                </div>{{statistics.BirthsByMonthTotal.Sep}}</div>
+          <div class="col">
+            <span class="month" title="Outubro">Outubro</span>
+            <div class="w3-progress-container dashboard-progress-bar-container">
+              <div class="w3-progressbar dashboard-progress-bar" style="width:{{data.BirthsByMonthRatio.Oct}}">
+              </div>
+            </div>
+            <span class="value">{{data.BirthsByMonthTotal.Oct > 0 ? data.BirthsByMonthTotal.Oct : '-'}}</span>
+          </div>
+          <div class="col">
+            <span class="month" title="Novembro">Novembro</span>
+            <div class="w3-progress-container dashboard-progress-bar-container">
+              <div class="w3-progressbar dashboard-progress-bar" style="width:{{data.BirthsByMonthRatio.Nov}}">
+              </div>
+            </div>
+            <span class="value">{{data.BirthsByMonthTotal.Nov > 0 ? data.BirthsByMonthTotal.Nov : '-'}}</span>
+          </div>
+          <div class="col">
+            <span class="month" title="Dezembro">Dezembro</span>
+            <div class="w3-progress-container dashboard-progress-bar-container">
+              <div class="w3-progressbar dashboard-progress-bar" style="width:{{data.BirthsByMonthRatio.Dec}}">
+              </div>
+            </div>
+            <span class="value">{{data.BirthsByMonthTotal.Dec > 0 ? data.BirthsByMonthTotal.Dec : '-'}}</span>
+          </div>
         </div>
-        <div class="row responsive-sm">
-          <div class="col">Outubro  <div class="w3-progress-container">
-                <div id="myBar" class="w3-progressbar" style="width:{{statistics.BirthsByMonthRatio.Oct}}">
-                </div>
-                </div> {{statistics.BirthsByMonthTotal.Oct}}</div>
-          <div class="col">Novembro  <div class="w3-progress-container">
-                <div id="myBar" class="w3-progressbar" style="width:{{statistics.BirthsByMonthRatio.Nov}}">
-                </div>
-                </div>{{statistics.BirthsByMonthTotal.Nov}}</div>
-          <div class="col">Dezembro <div class="w3-progress-container">
-                <div id="myBar" class="w3-progressbar" style="width:{{statistics.BirthsByMonthRatio.Dec}}">
-                </div>
-                </div>{{statistics.BirthsByMonthTotal.Dec}}</div>
-        </div>
+
+        <div class="separator"></div>
       </div>
     </div>
-    <div id="ratio_and_years">
-      <div class="row">
-        <div class="col col-50"><h3>Distribuição do rácio de mulheres/homens</h3></div>
-        <div class="col col-50"><h3>Distribuição das faixas etárias (quantidade por anos)</h3></div>
-      </div>
-      <div class="row app-color">
-        <div class="col col-50">
-        
-          <p>
-            <canvas id="doughnut" class="chart chart-doughnut" chart-data="data" chart-labels="labels" chart-colours="backgroundColor"></canvas> 
-            <img src="../img/icons/homem_pagina_6.png" style="position:inherit;"> 
-            <img src="../img/icons/mulher_pagina_6.png" style="position:inherit;"> 
-          </p>
-          <p>Homens: {{statistics.MFRatio.Male}} Mulheres: {{statistics.MFRatio.Female}} </p>
+
+    <div class="row responsive-sm responsive-md" id="ratio_and_years">
+      <div class="col col-70 col-offset-15">
+        <div class="row responsive-sm responsive-md">
+          <div class="col col-50" id="mf_chart">
+            <div class="title">Distribuição do rácio de mulheres/homens</div>
+            <div>
+              <canvas id="doughnut" class="chart chart-doughnut"
+                      chart-data="data.MFData"
+                      chart-labels="data.MFLabels"
+                      chart-colours="data.MFBackgroundColors">
+              </canvas>
+            </div>
+            <div class="mf-chart-legend">
+              <p>Homens: <b>{{data.MFData[1]}}</b> ({{data.MFRatio.Male}})</p>
+              <p>Mulheres: <b>{{data.MFData[0]}}</b> ({{data.MFRatio.Female}})</p>
+            </div>
+
+            <div class="separator show-when-small"></div>
+          </div>
+
+          <div class="col col-50" id="age_chart">
+            <div class="title">Distribuição por faixas etárias</div>
+            <div>
+              <canvas id="line" width="400" height="200" class="chart chart-line"
+                      chart-data="data.AgeGroups"
+                      chart-labels="data.AgeLabels"
+                      chart-legend="false"
+                      chart-colours="data.AgeColors">
+              </canvas>
+            </div>
+            <div class="row">
+              <div class="col col-50">
+                <p>18-21: <b>{{data.AgeGroups[0][0]}}</b></p>
+                <p>21-25: <b>{{data.AgeGroups[0][1]}}</b></p>
+                <p>25-30: <b>{{data.AgeGroups[0][2]}}</b></p>
+              </div>
+              <div class="col col-50">
+                <p>30-40: <b>{{data.AgeGroups[0][3]}}</b></p>
+                <p>40+: <b>{{data.AgeGroups[0][4]}}</b></p>
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="col col-50">
-          <canvas id="line" class="chart chart-line" chart-data="lineData" chart-labels="lineLabels" chart-legend="false"  chart-colours="lineBackgroundColor">
-          </canvas> 
-          <p> 
-            18-21 : {{statistics.AgeGroups['18to21']}}  
-            21-25 : {{statistics.AgeGroups['21to25']}}  
-            25-30 : {{statistics.AgeGroups['25to30']}}  
-            30-40 : {{statistics.AgeGroups['30to40']}}  
-            40+ : {{statistics.AgeGroups['40+']}}
-          </p>
-        </div>
-        
+
+        <div class="separator"></div>
       </div>
     </div>
 
     <div class="row responsive-sm responsive-md" id="average_time">
-      <div class="col-80 col-offset-10">
-        <div class="title">Tempo médio de permanência (em dias)</div>
-        <div class="info app-color">
-          <p>{{statistics.AverageTime}}</p>
-        </div>
+      <div class="col col-70 col-offset-15">
+        <div class="title">Tempo médio de permanência: <b>{{data.AverageTime}}</b> dias</div>
       </div>
     </div>
   </ion-content>

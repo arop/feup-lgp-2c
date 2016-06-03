@@ -10,7 +10,7 @@ var defaultPath = '';
 // the 2nd parameter is an array of 'requires'
 
 angular.module('itBirthday', ['ionic', 'ngFileUpload', 'ngPageTitle',
-  'itBirthday.login', 'itBirthday.profile', 'itBirthday.statistics', 'itBirthday.settings', 'itBirthday.facebook', 'chart.js'])
+  'itBirthday.login', 'itBirthday.profile', 'itBirthday.statistics', 'itBirthday.settings', 'itBirthday.facebook'])
 
 
   .run(function ($ionicPlatform, $rootScope) {
