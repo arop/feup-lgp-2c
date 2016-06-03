@@ -1,3 +1,39 @@
+#dashboard .col.col-70 {
+  -webkit-box-flex: 0;
+  -webkit-flex: 0 0 70%;
+  -moz-box-flex: 0;
+  -ms-flex: 0 0 70%;
+  flex: 0 0 70%;
+  max-width: 70%;
+}
+
+#dashboard .col.col-offset-15 {
+  margin-left: 15%;
+}
+
+#dashboard #mf_chart canvas,
+#dashboard #age_chart canvas {
+  display: block;
+  max-width: 500px !important;
+  max-height: 250px !important;
+  text-align: center;
+  margin: auto;
+}
+
+@media screen and (max-width: 767px){
+  #dashboard .col.col-70 {
+    -webkit-box-flex: 1;
+    -webkit-flex: 1;
+    -moz-box-flex: 1;
+    -ms-flex: 1;
+    flex: 1;
+    margin-bottom: 15px;
+    margin-left: 0;
+    max-width: 100%;
+    width: 100%;
+  }
+}
+
 #dashboard div.title {
   display: block;
   text-align: center;
@@ -24,6 +60,46 @@
   padding-right: 0;
 }
 
-#myBar{
-	background-color: #ECA04B;
+#dashboard #births_dy_month .row .col {
+  overflow: auto;
+}
+
+#dashboard #births_dy_month .row .col > span.month {
+  float: left;
+  width: 30%;
+  white-space: nowrap;
+  overflow: hidden !important;
+  text-overflow: ellipsis;
+}
+
+#dashboard #births_dy_month .row .col > .dashboard-progress-bar-container {
+  float: left;
+  width: 60%;
+  background-color: transparent !important;
+}
+
+#dashboard #births_dy_month .row .col > span.value {
+  float: left;
+  width: 10%;
+  text-align: center;
+}
+
+#dashboard #births_dy_month .dashboard-progress-bar-container > .dashboard-progress-bar {
+  width: 0;
+	background-color: #eda04b !important;
+
+  -webkit-transition: all .5s;
+  -moz-transition: all .5s;
+  -o-transition: all .5s;
+  transition: all .5s;
+}
+
+#dashboard .separator.show-when-small {
+  display: none;
+}
+
+@media screen and (max-width: 767px) {
+  #dashboard .separator.show-when-small {
+    display: block;
+  }
 }
