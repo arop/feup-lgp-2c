@@ -143,7 +143,7 @@ angular.module('itBirthday.profile', ['ngFileUpload'])
     $scope.showAlertProfile = function() {
         var alertPopup = $ionicPopup.alert({
             title: 'Perfil não editado!',
-            template: 'Tem um ou mais erros no formulário de edição.'
+            template: 'Tem os seguintes erros no formulário de edição:' + wrongFields
         });
     };
 
@@ -231,6 +231,9 @@ angular.module('itBirthday.profile', ['ngFileUpload'])
 
     $scope.update_profile = function(profileData) {
         $("input").css("border", "none");
+        $("label").css("border", "none");
+        $("textarea").css("border", "none");
+        wrongFields = "";
         if (!VerifyProfileData(profileData)) {
             $scope.showAlertProfile();
             console.error("Profile data is wrong. Returning...");
@@ -264,13 +267,17 @@ angular.module('itBirthday.profile', ['ngFileUpload'])
     $scope.showAlertProfile = function() {
         var alertPopup = $ionicPopup.alert({
             title: 'Perfil não criado!',
-            template: 'Tem um ou mais erros no formulário de criação.'
+            template: 'Tem os seguintes erros no formulário de criação:' + wrongFields
         });
     };
 
     $scope.newProfile = function(profileData) {
         $("input").css("border", "none");
+        $("label").css("border", "none");
+        $("textarea").css("border", "none");
+        wrongFields = "";
         if (!VerifyProfileData(profileData)) {
+            console.log(wrongFields);
             $scope.showAlertProfile();
             console.error("Profile data is wrong. Returning...");
             return false;
@@ -345,67 +352,85 @@ angular.module('itBirthday.profile', ['ngFileUpload'])
     }
 });
 
+var wrongFields = "";
+
 /**
  * @return {boolean}
  */
 var VerifyProfileData = function(profileData) {
+    var allOk = true;
+
     if (profileData == undefined) {
+        $("#checkedFields input").css("border", "1px solid #FF9A9A");
+        $("label#gender").css("border", "1px solid #FF9A9A");
+        wrongFields = "all";
         console.error('Profile Data is not valid.');
         return false;
     }
 
     if (profileData.name == undefined || profileData.name.length == 0) {
         $("input#name").css("border", "1px solid #FF9A9A");
+        wrongFields += "<br>- Nome;";
         console.error('Profile name is not valid.');
-        return false;
+        allOk = false;
     }
 
     if (profileData.gender == undefined) {
+        $("label#gender").css("border", "1px solid #FF9A9A");
+        wrongFields += "<br>- Sexo";
         console.error('Gender is not defined.');
-        return false;
+        allOk = false;
     }
 
     if (profileData.phoneNumber == undefined || !IsProperPhoneNumber(profileData.phoneNumber)) {
         $("input#phoneNumber").css("border", "1px solid #FF9A9A");
+        wrongFields += "<br>- Telefone/Telemóvel;";
         console.error('Profile phone number is not valid.');
-        return false;
+        allOk = false;
     } else {
         profileData.phoneNumber = GetFormattedPhoneNumber(profileData.phoneNumber);
     }
 
     if (profileData.email == undefined || profileData.email.length == 0) {
         $("input#email").css("border", "1px solid #FF9A9A");
+        wrongFields += "<br>- Endereço de Email;";
         console.error('Profile email is not valid.');
-        return false;
+        allOk = false;
     }
 
     if (profileData.birthDate == undefined || profileData.birthDate.length == 0) {
         $("input#birthDate").css("border", "1px solid #FF9A9A");
+        wrongFields += "<br>- Data de nascimento;";
         console.error('Profile birth date is not valid.');
-        return false;
+        allOk = false;
     }
     if (profileData.entryDate == undefined || profileData.entryDate.length == 0) {
         $("input#entryDate").css("border", "1px solid #FF9A9A");
+        wrongFields += "<br>- Data de admissão;";
         console.error('Profile entry date is not valid.');
-        return false;
+        allOk = false;
     }
 
     if (profileData.sendMail == undefined) {
         console.error('Send mail is not defined.');
-        return false;
+        allOk = false;
     } else if (profileData.sendMail == true) {
         if (profileData.sendPersonalizedMail == undefined) {
             console.error('Send personalized mail is not defined.');
-            return false;
+            allOk = false;
         } else if (profileData.sendPersonalizedMail == true) {
             if (profileData.mailText == undefined) {
+                wrongFields += "<br>- Mensagem de Email personalizada;";
+                $("textarea#emailCustom").css("border", "1px solid #FF9A9A");
                 console.error('Send personalized mail is set to true, but the text is not.');
-                return false;
+                allOk = false;
             } else {
                 var mailTextTrimmed = profileData.mailText.trim();
                 if (mailTextTrimmed.length == 0) {
+                    wrongFields += "<br>- Mensagem de Email personalizada;";
+                    $("textarea#emailCustom").css("border", "1px solid #FF9A9A");
                     console.error('Personalized Email text is empty. Discarding...');
-                    return false;
+                    allOk = false;
                 } else {
                     profileData.mailText = mailTextTrimmed;
                 }
@@ -420,20 +445,24 @@ var VerifyProfileData = function(profileData) {
 
     if (profileData.sendSMS == undefined) {
         console.error('Send SMS is not defined.');
-        return false;
+        allOk = false;
     } else if (profileData.sendSMS == true) {
         if (profileData.sendPersonalizedSMS == undefined) {
             console.error('Send personalized SMS is not defined.');
-            return false;
+            allOk = false;
         } else if (profileData.sendPersonalizedSMS == true) {
             if (profileData.smsText == undefined) {
+                wrongFields += "<br>- SMS personalizada;";
+                $("textarea#smsCustom").css("border", "1px solid #FF9A9A");
                 console.error('Send personalized SMS is set to true, but the text is not.');
-                return false;
+                allOk = false;
             } else {
                 var smsTextTrimmed = profileData.smsText.trim();
                 if (smsTextTrimmed.length == 0) {
+                    wrongFields += "<br>- SMS personalizada;";
+                    $("textarea#smsCustom").css("border", "1px solid #FF9A9A");
                     console.error('Personalized SMS text is empty. Discarding...');
-                    return false;
+                    allOk = false;
                 } else {
                     profileData.smsText = smsTextTrimmed;
                 }
@@ -448,10 +477,10 @@ var VerifyProfileData = function(profileData) {
 
     if (profileData.facebookPost == undefined) {
         console.error('Facebook post is not defined.');
-        return false;
+        allOk = false;
     }
 
-    return true;
+    return allOk;
 };
 
 /**

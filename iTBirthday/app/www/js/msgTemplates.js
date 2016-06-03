@@ -1,116 +1,152 @@
 angular.module('itBirthday.settings', ['ngFileUpload'])
 
-  .controller('MsgTemplatesCtrl', function ($scope, $http, Upload,$ionicSlideBoxDelegate) {
+.controller('MsgTemplatesCtrl', function($scope, $http, Upload, $ionicPopup, $ionicSlideBoxDelegate) {
     $scope.index = 0;
 
+    $scope.wrongFields = "";
+
     $scope.next = function() {
-      $ionicSlideBoxDelegate.next();
-      $scope.index = $ionicSlideBoxDelegate.currentIndex();
+        $ionicSlideBoxDelegate.next();
+        $scope.index = $ionicSlideBoxDelegate.currentIndex();
     };
     $scope.previous = function() {
-      $ionicSlideBoxDelegate.previous();
-      $scope.index = $ionicSlideBoxDelegate.currentIndex();
+        $ionicSlideBoxDelegate.previous();
+        $scope.index = $ionicSlideBoxDelegate.currentIndex();
     };
 
     // Called each time the slide changes
     $scope.slideHasChanged = function(index) {
-      $scope.index = index;
+        $scope.index = index;
+    };
+
+    $scope.showAlertProfile = function() {
+        var alertPopup = $ionicPopup.alert({
+            title: 'Template não alterado!',
+            template: 'Os seguintes templates estão vazios:' + $scope.wrongFields
+        });
     };
 
     $scope.defaultMsg = {};
 
     //listen for the file selected event
     $("input[type=file]").on("change", function() {
-      $scope.banner = this.files[0];
+        $scope.banner = this.files[0];
     });
-    $scope.getDefaultMsg = function () {
+    $scope.getDefaultMsg = function() {
 
-      $scope.defaultMsg.email = "";
-      $scope.defaultMsg.sms = "";
-      $scope.defaultMsg.fb = "";
-      $scope.banners = [];
+        $scope.defaultMsg.email = "";
+        $scope.defaultMsg.sms = "";
+        $scope.defaultMsg.fb = "";
+        $scope.banners = [];
 
-      $scope.defaultMsgEmail_exists = false;
+        $scope.defaultMsgEmail_exists = false;
 
-      $http.get(serverUrl + '/all_banners').success(function(response){
-        angular.forEach(response, function(value, key) {
-          this.push( serverUrl + '/images/banners/' +  value.path);
-        }, $scope.banners);
-        $ionicSlideBoxDelegate.update();
-      });
+        $http.get(serverUrl + '/all_banners').success(function(response) {
+            angular.forEach(response, function(value, key) {
+                this.push(serverUrl + '/images/banners/' + value.path);
+            }, $scope.banners);
+            $ionicSlideBoxDelegate.update();
+        });
 
-      $http.get(serverUrl + '/email_template').success(function (response) {
-        if ( response != "") {
-          $scope.defaultMsgEmail_exists = true;
-          $scope.defaultMsg.email = response[0].text;
-        }
-      });
+        $http.get(serverUrl + '/email_template').success(function(response) {
+            if (response != "") {
+                $scope.defaultMsgEmail_exists = true;
+                $scope.defaultMsg.email = response[0].text;
+            }
+        });
 
-      $http.get(serverUrl + '/sms_template').success(function (response) {
-        if ( response != "") {
-          $scope.defaultMsg.sms = response[0].text;
-        }
-      });
+        $http.get(serverUrl + '/sms_template').success(function(response) {
+            if (response != "") {
+                $scope.defaultMsg.sms = response[0].text;
+            }
+        });
 
-      $http.get(serverUrl + '/facebook_template').success(function (response) {
-        if ( response != "") {
-          $scope.defaultMsg.fb = response[0].text;
-        }
-      });
+        $http.get(serverUrl + '/facebook_template').success(function(response) {
+            if (response != "") {
+                $scope.defaultMsg.fb = response[0].text;
+            }
+        });
     };
 
-    $scope.saveChanges = function () {
-      var emailTemplate = $scope.defaultMsg.email.trim();
-      var smsTemplate = $scope.defaultMsg.sms.trim();
-      var fbTemplate = $scope.defaultMsg.fb.trim();
+    $scope.saveChanges = function() {
+        $scope.wrongFields = '';
+        $("textarea").css("border", "none");
+        var emailTemplate = $scope.defaultMsg.email.trim();
+        var smsTemplate = $scope.defaultMsg.sms.trim();
+        var fbTemplate = $scope.defaultMsg.fb.trim();
+        var fieldEmpty = false;
 
-      var count = 0;
-      $http.get(serverUrl + '/all_banners').success(function(response){
-        angular.forEach(response, function(value, key) {
-          if( count  === $scope.index){
-            $http.post(serverUrl + '/update_banner', {
-              id: value._id
-            }).success(function () {
-              console.log("Updated Banner template");
+        var count = 0;
+        $http.get(serverUrl + '/all_banners').success(function(response) {
+            angular.forEach(response, function(value, key) {
+                if (count === $scope.index) {
+                    $http.post(serverUrl + '/update_banner', {
+                        id: value._id
+                    }).success(function() {
+                        console.log("Updated Banner template");
+                    });
+                }
+                count++;
+            }, $scope.banners);
+        });
+
+        if (emailTemplate != '') {
+            if ($scope.defaultMsgEmail_exists == false) {
+                $http.post(serverUrl + '/post_email_template', {
+                    text: emailTemplate
+                }).success(function() {
+                    console.log("Updated email template");
+                });
+            } else
+                $http.post(serverUrl + '/update_email_template', {
+                    text: emailTemplate
+                }).success(function() {
+                    console.log("Updated email template");
+                });
+        } else {
+            $scope.wrongFields += "<br>- Template Email;"
+            fieldEmpty = true;
+            $("textarea#emailMsg").css("border", "1px solid #FF9A9A");
+            console.log("email template can't be empty");
+        }
+
+        if ($scope.banner != undefined)
+            Upload.upload({
+                url: serverUrl + '/post_banner_template/',
+                file: $scope.banner,
+                progress: function(e) {}
+            }).then(function(data, status, headers, config) {
+                // file is uploaded successfully
             });
-          }
-          count++;
-        }, $scope.banners);
-      });
 
-      if ( $scope.defaultMsgEmail_exists == false ){
-        $http.post(serverUrl + '/post_email_template', {
-          text: emailTemplate
-        }).success(function () {
-          console.log("Updated email template");
-        });
-      }else
-        $http.post(serverUrl + '/update_email_template', {
-          text: emailTemplate
-        }).success(function () {
-          console.log("Updated email template");
-        });
+        if (smsTemplate != '') {
+            $http.post(serverUrl + '/update_sms_template', {
+                text: smsTemplate
+            }).success(function() {
+                console.log("Updated sms template");
+            });
+        } else {
+            $scope.wrongFields += "<br>- Template SMS;"
+            fieldEmpty = true;
+            $("textarea#smsMsg").css("border", "1px solid #FF9A9A");
+            console.log("sms template can't be empty");
+        }
 
-      if ( $scope.banner != undefined )
-        Upload.upload({
-          url: serverUrl + '/post_banner_template/',
-          file: $scope.banner,
-          progress: function(e) {}
-        }).then(function(data, status, headers, config) {
-          // file is uploaded successfully
-        });
+        if (fbTemplate != '') {
+            $http.post(serverUrl + '/update_facebook_template', {
+                text: fbTemplate
+            }).success(function() {
+                console.log("Updated facebook template");
+            });
+        } else {
+            $scope.wrongFields += "<br>- Template Facebook;"
+            fieldEmpty = true;
+            $("textarea#fbMsg").css("border", "1px solid #FF9A9A");
+            console.log("fb template can't be empty");
+        }
 
-      $http.post(serverUrl + '/update_sms_template', {
-        text: smsTemplate
-      }).success(function () {
-        console.log("Updated sms template");
-      });
-
-      $http.post(serverUrl + '/update_facebook_template', {
-        text: fbTemplate
-      }).success(function () {
-        console.log("Updated facebook template");
-      });
+        if (fieldEmpty)
+            $scope.showAlertProfile();
     }
 
-  });
+});
