@@ -1,16 +1,20 @@
 angular.module('itBirthday.profile', ['ngFileUpload'])
 
-  .controller('SearchCtrl', ['$scope', '$http', function ($scope, $http) {
+  .controller('SearchCtrl', ['$scope', '$http', 'ionicLoadingService', function ($scope, $http, ionicLoadingService) {
     $scope.serverUrl = serverUrl;
     $scope.defaultImageURL = serverUrl + "/images/employees/default.png";
 
     $scope.getAllEmployees = function () {
+      ionicLoadingService.showLoading();
+
       $http.get(serverUrl + '/list_employees').success(function (response) {
         for (var i = 0; i < response.length; i++) {
           var pro = response[i];
           pro.imageURL = serverUrl + "/images/employees/" + pro.photoPath;
         }
         $scope.profiles = response;
+
+        ionicLoadingService.hideLoading();
       });
     };
 
@@ -64,7 +68,7 @@ angular.module('itBirthday.profile', ['ngFileUpload'])
     }
   }])
 
-  .controller('UpdateUserCtrl', function ($scope, $http, $state, $stateParams, $filter, $ionicPopup, Upload) {
+  .controller('UpdateUserCtrl', function ($scope, $http, $state, $stateParams, $filter, $ionicPopup, Upload, ionicLoadingService) {
     $scope.profile = {};
     $scope.isView = null;
     $scope.notCreating = null;
@@ -92,7 +96,6 @@ angular.module('itBirthday.profile', ['ngFileUpload'])
 
       confirmPopup.then(function (res) {
         if (res) {
-          console.log($scope.profile.email);
           $http.post(serverUrl + '/delete_employee', {
             email: $scope.profile.email
           }).success(function (data, status) {
@@ -149,6 +152,8 @@ angular.module('itBirthday.profile', ['ngFileUpload'])
     };
 
     $scope.getEmployee = function () {
+      ionicLoadingService.showLoading();
+
       $scope.isView = true;
       $scope.notCreating = true;
       $http.get(serverUrl + '/employee_profile/' + $stateParams.id).success(function (response) {
@@ -184,6 +189,8 @@ angular.module('itBirthday.profile', ['ngFileUpload'])
           $scope.profile.daysInCompany = Math.floor(Math.abs(dateNow - entryDate) / (1000 * 3600 * 24));
           $scope.profile.birthdaysInCompany = $scope.profile.age - Math.abs(ageInEntry.getUTCFullYear() - 1970);
         }
+
+        ionicLoadingService.hideLoading();
       });
     };
 
@@ -195,6 +202,7 @@ angular.module('itBirthday.profile', ['ngFileUpload'])
 
     //post request to the server to update profile
     $scope.update_profile_http_request = function () {
+      ionicLoadingService.showLoading();
       var date = ($scope.profile.exitDate == undefined) ? undefined : new Date($scope.profile.exitDate);
 
       $http.post(serverUrl + '/update_employee/' + $stateParams.id, {
@@ -226,6 +234,7 @@ angular.module('itBirthday.profile', ['ngFileUpload'])
             console.error("Image upload: Error: " + err);
           });
         }
+        ionicLoadingService.hideLoading();
 
         $state.go($state.current, {}, {reload: true});
       });
@@ -251,7 +260,8 @@ angular.module('itBirthday.profile', ['ngFileUpload'])
     };
   })
 
-  .controller('NewUserCtrl', ['$scope', '$state', '$http', '$ionicPopup', 'Upload', function ($scope, $state, $http, $ionicPopup, Upload) {
+  .controller('NewUserCtrl', ['$scope', '$state', '$http', '$ionicPopup', 'Upload', 'ionicLoadingService',
+    function ($scope, $state, $http, $ionicPopup, Upload, ionicLoadingService ) {
     $scope.profile = {};
     $scope.serverUrl = serverUrl;
     $scope.defaultImageURL = serverUrl + "/images/employees/default.png";
@@ -259,6 +269,8 @@ angular.module('itBirthday.profile', ['ngFileUpload'])
     $scope.getEmployee = function () {
       $scope.isView = false;
       $scope.isNewProfile = true;
+      $scope.profile.birthDate = new Date().toISOString().slice(0, 10);
+      $scope.profile.entryDate = new Date().toISOString().slice(0, 10);
     };
 
     //listen for the file selected event
@@ -285,6 +297,8 @@ angular.module('itBirthday.profile', ['ngFileUpload'])
         return false;
       }
 
+      ionicLoadingService.showLoading();
+
       $http.post(serverUrl + '/post_employee', {
         name: profileData.name,
         birthDate: new Date(profileData.birthDate),
@@ -310,10 +324,12 @@ angular.module('itBirthday.profile', ['ngFileUpload'])
             // file is uploaded successfully
           });
         }
+        ionicLoadingService.hideLoading();
 
         $state.go('tabs.dash');
         return true;
       }).error(function (err) {
+        ionicLoadingService.hideLoading();
         console.log('Error while creating new user: ' + err);
         return false;
       });
