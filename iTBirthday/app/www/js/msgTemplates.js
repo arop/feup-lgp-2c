@@ -47,12 +47,17 @@ angular.module('itBirthday.settings', ['ngFileUpload'])
       $scope.banners = [];
 
       $scope.defaultMsgEmail_exists = false;
+      var successCount = 0;
 
       $http.get(serverUrl + '/all_banners').success(function(response) {
         angular.forEach(response, function(value, key) {
           this.push(serverUrl + '/images/banners/' + value.path);
         }, $scope.banners);
         $ionicSlideBoxDelegate.update();
+        successCount++;
+
+        if(successCount > 3)
+          ionicLoadingService.hideLoading();
       });
 
       $http.get(serverUrl + '/email_template').success(function(response) {
@@ -60,20 +65,31 @@ angular.module('itBirthday.settings', ['ngFileUpload'])
           $scope.defaultMsgEmail_exists = true;
           $scope.defaultMsg.email = response[0].text;
         }
+        successCount++;
+
+        if(successCount > 3)
+          ionicLoadingService.hideLoading();
       });
 
       $http.get(serverUrl + '/sms_template').success(function(response) {
         if (response != "") {
           $scope.defaultMsg.sms = response[0].text;
         }
+        successCount++;
+
+        if(successCount > 3)
+          ionicLoadingService.hideLoading();
       });
 
       $http.get(serverUrl + '/facebook_template').success(function(response) {
         if (response != "") {
           $scope.defaultMsg.fb = response[0].text;
         }
+        successCount++;
+
+        if(successCount > 3)
+          ionicLoadingService.hideLoading();
       });
-      ionicLoadingService.hideLoading();
     };
 
     $scope.saveChanges = function() {
