@@ -1,6 +1,6 @@
 angular.module('itBirthday.login', [])
 
-  .controller('LoginCtrl', function($scope,$state, $http) {
+  .controller('LoginCtrl', function($scope,$state, $http, ionicLoadingService) {
 
     $scope.user = {};
 
@@ -19,6 +19,8 @@ angular.module('itBirthday.login', [])
         $scope.errorMessage = 'Erro nos valores inseridos.';
         return false;
       }else {
+        ionicLoadingService.showLoading();
+
         $http.post(serverUrl + '/check_login', {
           username: user.username,
           password: CryptoJS.SHA256(user.password).toString()
@@ -29,13 +31,14 @@ angular.module('itBirthday.login', [])
           if ("session" in localStorage) localStorage.removeItem("session");
           localStorage.setItem("session", JSON.stringify(data));
 
+          ionicLoadingService.hideLoading();
           $state.go('tabs.dash');
           user.password = '';
-
         }).error(function (data) {
           $scope.errorMessage = 'Erro nos valores inseridos.';
           user.password = '';
           console.log('ERROR: ' + data);
+          ionicLoadingService.hideLoading();
           return false;
         });
       }

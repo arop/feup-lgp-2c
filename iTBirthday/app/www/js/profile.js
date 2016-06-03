@@ -262,79 +262,79 @@ angular.module('itBirthday.profile', ['ngFileUpload'])
 
   .controller('NewUserCtrl', ['$scope', '$state', '$http', '$ionicPopup', 'Upload', 'ionicLoadingService',
     function ($scope, $state, $http, $ionicPopup, Upload, ionicLoadingService ) {
-    $scope.profile = {};
-    $scope.serverUrl = serverUrl;
-    $scope.defaultImageURL = serverUrl + "/images/employees/default.png";
+      $scope.profile = {};
+      $scope.serverUrl = serverUrl;
+      $scope.defaultImageURL = serverUrl + "/images/employees/default.png";
 
-    $scope.getEmployee = function () {
-      $scope.isView = false;
-      $scope.isNewProfile = true;
-      $scope.profile.birthDate = new Date().toISOString().slice(0, 10);
-      $scope.profile.entryDate = new Date().toISOString().slice(0, 10);
-    };
+      $scope.getEmployee = function () {
+        $scope.isView = false;
+        $scope.isNewProfile = true;
+        $scope.profile.birthDate = new Date().toISOString().slice(0, 10);
+        $scope.profile.entryDate = new Date().toISOString().slice(0, 10);
+      };
 
-    //listen for the file selected event
-    $("input[type=file]").on("change", function () {
-      $scope.profile.photo = this.files[0];
-    });
-
-    $scope.showAlertProfile = function () {
-      var alertPopup = $ionicPopup.alert({
-        title: 'Perfil não criado!',
-        template: 'Tem os seguintes erros no formulário de criação:' + wrongFields
+      //listen for the file selected event
+      $("input[type=file]").on("change", function () {
+        $scope.profile.photo = this.files[0];
       });
-    };
 
-    $scope.newProfile = function (profileData) {
-      $("input").css("border", "none");
-      $("label").css("border", "none");
-      $("textarea").css("border", "none");
-      wrongFields = "";
-      if (!VerifyProfileData(profileData)) {
-        console.log(wrongFields);
-        $scope.showAlertProfile();
-        console.error("Profile data is wrong. Returning...");
-        return false;
-      }
+      $scope.showAlertProfile = function () {
+        var alertPopup = $ionicPopup.alert({
+          title: 'Perfil não criado!',
+          template: 'Tem os seguintes erros no formulário de criação:' + wrongFields
+        });
+      };
 
-      ionicLoadingService.showLoading();
-
-      $http.post(serverUrl + '/post_employee', {
-        name: profileData.name,
-        birthDate: new Date(profileData.birthDate),
-        phoneNumber: profileData.phoneNumber,
-        email: profileData.email,
-        entryDate: new Date(profileData.entryDate),
-        sendMail: profileData.sendMail,
-        sendPersonalizedMail: profileData.sendPersonalizedMail,
-        mailText: profileData.mailText,
-        sendSMS: profileData.sendSMS,
-        sendPersonalizedSMS: profileData.sendPersonalizedSMS,
-        smsText: profileData.smsText,
-        facebookPost: profileData.facebookPost,
-        gender: profileData.gender
-      }).success(function (data) {
-        if (profileData != undefined) {
-          Upload.upload({
-            url: serverUrl + '/save_image_employee/' + data,
-            file: profileData.photo,
-            progress: function (e) {
-            }
-          }).then(function (data, status, headers, config) {
-            // file is uploaded successfully
-          });
+      $scope.newProfile = function (profileData) {
+        $("input").css("border", "none");
+        $("label").css("border", "none");
+        $("textarea").css("border", "none");
+        wrongFields = "";
+        if (!VerifyProfileData(profileData)) {
+          console.log(wrongFields);
+          $scope.showAlertProfile();
+          console.error("Profile data is wrong. Returning...");
+          return false;
         }
-        ionicLoadingService.hideLoading();
 
-        $state.go('tabs.dash');
-        return true;
-      }).error(function (err) {
-        ionicLoadingService.hideLoading();
-        console.log('Error while creating new user: ' + err);
-        return false;
-      });
-    }
-  }])
+        ionicLoadingService.showLoading();
+
+        $http.post(serverUrl + '/post_employee', {
+          name: profileData.name,
+          birthDate: new Date(profileData.birthDate),
+          phoneNumber: profileData.phoneNumber,
+          email: profileData.email,
+          entryDate: new Date(profileData.entryDate),
+          sendMail: profileData.sendMail,
+          sendPersonalizedMail: profileData.sendPersonalizedMail,
+          mailText: profileData.mailText,
+          sendSMS: profileData.sendSMS,
+          sendPersonalizedSMS: profileData.sendPersonalizedSMS,
+          smsText: profileData.smsText,
+          facebookPost: profileData.facebookPost,
+          gender: profileData.gender
+        }).success(function (data) {
+          if (profileData != undefined) {
+            Upload.upload({
+              url: serverUrl + '/save_image_employee/' + data,
+              file: profileData.photo,
+              progress: function (e) {
+              }
+            }).then(function (data, status, headers, config) {
+              // file is uploaded successfully
+            });
+          }
+          ionicLoadingService.hideLoading();
+
+          $state.go('tabs.dash');
+          return true;
+        }).error(function (err) {
+          ionicLoadingService.hideLoading();
+          console.log('Error while creating new user: ' + err);
+          return false;
+        });
+      }
+    }])
 
   /**
    * jquery date picker directive
