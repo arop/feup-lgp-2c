@@ -71,7 +71,7 @@ appModule.service('FBAuth', function ($q, $http, $ionicLoading, $ionicPopup) {
                     }
                   });
                 }
-              }, function (err) {
+              }, function () {
                 // Can still post new information,
                 // even if cannot retrieve old.
                 postNewFacebookInfo(userID, token, callback);
@@ -89,23 +89,13 @@ appModule.service('FBAuth', function ($q, $http, $ionicLoading, $ionicPopup) {
     return defer.promise;
   };
 
-  this.logoutFacebook = function () {
-    var defer = $q.defer();
-
-    FB.logout(function (response) {
-      console.log(response);
-    });
-
-    return defer.promise;
-  };
-
   this.getLoginStatus = function () {
     var defer = $q.defer();
 
     $http.get(serverUrl + '/get_facebook_login_status').then(
       function (success) {
         defer.resolve(success.data);
-      }, function (err) {
+      }, function () {
         defer.resolve(undefined);
       });
 
@@ -138,7 +128,6 @@ angular.module('itBirthday.facebook', [])
           $scope.fbName = data.name;
           $scope.fbMail = data.email;
           $scope.updateExpirationDate();
-          console.log("Updated fb info");
         }
       });
     };
@@ -147,7 +136,7 @@ angular.module('itBirthday.facebook', [])
       $http.get(serverUrl + '/get_facebook_expiration_date').then(
         function (success) {
           $scope.expirationDate = new Date(success.data).toLocaleString();
-        }, function (err) {
+        }, function () {
           $scope.expirationDate = "";
         });
     };
@@ -156,16 +145,8 @@ angular.module('itBirthday.facebook', [])
       loginFacebookUser();
     };
 
-    $scope.logoutFacebook = function () {
-      logoutFacebookUser();
-    };
-
     function loginFacebookUser() {
       return FBAuth.loginFacebook($scope.updateFacebookInfo);
-    }
-
-    function logoutFacebookUser() {
-      return FBAuth.logoutFacebook();
     }
 
     function getLoginUserStatus() {
