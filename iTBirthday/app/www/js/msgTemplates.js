@@ -4,6 +4,11 @@ angular.module('itBirthday.settings', ['ngFileUpload'])
     $scope.index = 0;
 
     $scope.wrongFields = "";
+    $scope.index_default_banner = 0;
+
+    $scope.makeDefault = function(){
+      $scope.index_default_banner = $scope.index;
+    };
 
     $scope.next = function() {
         $ionicSlideBoxDelegate.next();
@@ -79,7 +84,7 @@ angular.module('itBirthday.settings', ['ngFileUpload'])
         var count = 0;
         $http.get(serverUrl + '/all_banners').success(function(response) {
             angular.forEach(response, function(value, key) {
-                if (count === $scope.index) {
+                if (count === $scope.index_default_banner ) {
                     $http.post(serverUrl + '/update_banner', {
                         id: value._id
                     }).success(function() {

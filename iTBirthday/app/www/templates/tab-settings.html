@@ -18,10 +18,18 @@
                             <img ng-src="{{ban}}" width="100%" height="75%">
                         </ion-slide>
                     </ion-slide-box>
+                  <div ng-show="index != index_default_banner">
+                    <a class="ion-android-checkbox-outline-blank" ng-click="makeDefault()"> Selecionar</a>
+                  </div>
+                  <div ng-show="index == index_default_banner">
+                    <a class="ion-checkmark-round "> Selecionado </a>
+                  </div>
+
                     <label class="item item-input item-stacked-label app-color">
                         <label class="item-label">Adicionar Banner: </label>
                         <input id="file_upload" type="file" file-upload>
                     </label>
+
                 </div>
             </div>
             <div class="row responsive-sm responsive-md">
