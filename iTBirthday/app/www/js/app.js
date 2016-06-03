@@ -10,7 +10,7 @@ var defaultPath = '';
 // the 2nd parameter is an array of 'requires'
 
 angular.module('itBirthday', ['ionic', 'ngFileUpload', 'ngPageTitle',
-    'itBirthday.login', 'itBirthday.profile', 'itBirthday.statistics', 'itBirthday.settings', 'itBirthday.facebook', 'chart.js'])
+  'itBirthday.login', 'itBirthday.profile', 'itBirthday.statistics', 'itBirthday.settings', 'itBirthday.facebook', 'chart.js'])
 
 
   .run(function ($ionicPlatform, $rootScope) {
@@ -166,5 +166,21 @@ angular.module('itBirthday', ['ionic', 'ngFileUpload', 'ngPageTitle',
     // if none of the above states are matched, use this as the fallback
 
     $urlRouterProvider.otherwise('/login');
-  });
+  })
+
+
+  .service('ionicLoadingService', function ($ionicLoading) {
+    var ionicLoadingService = this;
+    ionicLoadingService.showLoading = function() {
+      var customTemplate = '<ion-spinner class="spinner-energized"></ion-spinner>';
+      $ionicLoading.show({
+        template: customTemplate,
+        hideOnStateChange: true,
+        animation: 'fade-in'
+      });
+    };
+    ionicLoadingService.hideLoading = function(){
+      $ionicLoading.hide();
+    };
+  })
 
