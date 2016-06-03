@@ -106,17 +106,18 @@ angular.module('itBirthday.settings', ['ngFileUpload'])
       var successCount = 0;
 
       var count = 0;
-      $http.get(serverUrl + '/all_banners').success(function(response) {
-        angular.forEach(response, function(value, key) {
-          if (count === $scope.index_default_banner ) {
-            $http.post(serverUrl + '/update_banner', {
-              id: value._id
-            }).success(function() {
-              console.log("Updated Banner template");
-            });
-          }
-          count++;
-        }, $scope.banners);
+      if ( $scope.banners.size > 0)
+        $http.get(serverUrl + '/all_banners').success(function(response) {
+          angular.forEach(response, function(value, key) {
+            if (count === $scope.index_default_banner ) {
+              $http.post(serverUrl + '/update_banner', {
+                id: value._id
+              }).success(function() {
+                console.log("Updated Banner template");
+              });
+            }
+            count++;
+          }, $scope.banners);
 
         successCount++;
 

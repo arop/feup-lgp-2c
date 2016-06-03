@@ -163,6 +163,7 @@ module.exports = function (express, app, mongoose, path, nodemailer, CronJob, fs
         Admin.find({_id: id}, function (err, docs) {
             if (err == null) {
                 if (docs.length == 0) {
+                    res.json("");
                 }
                 else {
                     //returns the session
@@ -219,7 +220,6 @@ module.exports = function (express, app, mongoose, path, nodemailer, CronJob, fs
 
     app.use(busboy());
     app.post('/save_image_employee/:id', function (req, res) {
-        console.log("UPDATE");
         var fstream;
         //checks if a folder named 'images' exists in directory
         //if it does not exist, the folder is created
@@ -235,8 +235,12 @@ module.exports = function (express, app, mongoose, path, nodemailer, CronJob, fs
         req.pipe(req.busboy);
         req.busboy.on('file', function (fieldname, file, filename) {
             console.log("Uploading: " + filename);
+            var ran =  (new Date()).getMilliseconds();
+            //Path where image will be uploaded
+            var ext = filename.substr(filename.indexOf('.'), filename.length);
+            var photo = {photoPath: req.params.id + ran + ext};
+            //changes the value of the photoPath of the employee
             Employee.findOne({_id: req.params.id}, function (err, emp) {
-                console.log(emp);
                 if (!err) {
                     //removes previous image if it exists
                     var f = __dirname + '/images/employees/';
@@ -248,16 +252,15 @@ module.exports = function (express, app, mongoose, path, nodemailer, CronJob, fs
                     }
                 }
             });
-            //Path where image will be uploaded
-            var ext = filename.substr(filename.indexOf('.'), filename.lenght);
-            fstream = fs.createWriteStream(__dirname + '/images/employees/' + req.params.id + ext);
+
+            fstream = fs.createWriteStream(__dirname + '/images/employees/' + req.params.id + ran + ext);
             file.pipe(fstream);
+
             fstream.on('close', function () {
-                var photo = {photoPath: req.params.id + ext};
-                //changes the value of the photoPath of the employee
+
                 Employee.findOneAndUpdate({_id: req.params.id}, photo, function (err, emp) {
                 });
-                console.log("Upload Finished of " + req.params.id + ext);
+                console.log("Upload Finished of " + req.params.id + ran + ext);
                 res.redirect('back');           //where to go next
             });
         });
@@ -716,8 +719,6 @@ module.exports = function (express, app, mongoose, path, nodemailer, CronJob, fs
     app.get('/all_banners', function(req,res){
         var query = Banner.find({}).sort({active : -1});
         query.exec(function(err, result){
-            console.log("*************************");
-            console.log(result);
             if (err) {
                 console.log('[MONGOOSE] Error ' + err);
             } else {
@@ -737,17 +738,13 @@ module.exports = function (express, app, mongoose, path, nodemailer, CronJob, fs
     });
 
     app.post('/post_banner_template', function(req, res){
-
         var temp_banner = new Banner({
-            active: true,
+            active: false,
             path: "null"
         });
 
         //deactivates the older template
-        Banner.findOneAndUpdate({active:true},{active:false}, function(err,emp){
-
-        });
-
+        //Banner.findOneAndUpdate({active:true},{active:false}, function(err,emp){});
         temp_banner.save(function (err, emp) {
             if (err) {
                 console.error(err);
@@ -756,7 +753,6 @@ module.exports = function (express, app, mongoose, path, nodemailer, CronJob, fs
             else {
                 console.log("Banner inserted correctly");
                 var id = emp._id;
-
                 var fstream;
                 //checks if a folder named 'images' exists in directory
                 //if it does not exist, the folder is created
@@ -771,17 +767,17 @@ module.exports = function (express, app, mongoose, path, nodemailer, CronJob, fs
 
                 req.pipe(req.busboy);
                 req.busboy.on('file', function (fieldname, file, filename) {
-
+                    var ran = (new Date()).getMilliseconds();
                     //Path where image will be uploaded
                     var ext = filename.substr(filename.indexOf('.'), filename.lenght);
-                    fstream = fs.createWriteStream(__dirname + '/images/banners/' + id + ext);
+                    fstream = fs.createWriteStream(__dirname + '/images/banners/' + id + ran + ext);
                     file.pipe(fstream);
                     fstream.on('close', function () {
-                        var path = {path: id + ext};
-                        //changes the value of the photoPath of the employee
+                        var path = {path: id + ran + ext};
+                        //changes the value of the photoPath of the banner
                         Banner.findOneAndUpdate({_id: id}, path, function (err, emp) {
                         });
-                        console.log("Upload Finished of " + id + ext);
+                        console.log("Upload Finished of " + id + ran + ext);
                     });
                 });
                 res.status(200).json(emp._id);
