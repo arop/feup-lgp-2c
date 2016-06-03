@@ -4,7 +4,7 @@
 }
 
 *{
-	font-family: ApexNewLight !important;
+  font-family: ApexNewLight, Arial, serif !important;
 }
 
 a {
@@ -26,7 +26,7 @@ a {
 }
 
 .bar-header.has-tabs-top {
-  top: 0px;
+  top: 0;
 }
 
 .tabs-top > .tabs {

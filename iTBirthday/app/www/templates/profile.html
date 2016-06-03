@@ -95,10 +95,10 @@
                             <div ng-if="!hasExited">
                                 <div class="separator"></div>
                                 <!-- EMAIL -->
-                                <ion-checkbox ng-model="profile.sendMail" ng-init="profile.sendMail = true" ng-checked="profile.sendMail" ng-disabled="isView || hasExited">Email de Aniversário
+                                <ion-checkbox id="send_mail" ng-model="profile.sendMail" ng-init="profile.sendMail = true" ng-checked="profile.sendMail" ng-disabled="isView || hasExited">Email de Aniversário
                                 </ion-checkbox>
                                 <!-- PERSONALIZAR -->
-                                <ion-checkbox ng-model="profile.sendPersonalizedMail" ng-init="profile.sendPersonalizedMail = false" ng-show="!isView && profile.sendMail" ng-checked="profile.sendPersonalizedMail" ng-disabled="isView || hasExited">Personalizar
+                                <ion-checkbox id="send_personalized_mail" ng-model="profile.sendPersonalizedMail" ng-init="profile.sendPersonalizedMail = false" ng-show="!isView && profile.sendMail" ng-checked="profile.sendPersonalizedMail" ng-disabled="isView || hasExited">Personalizar
                                 </ion-checkbox>
                                 <!-- TEXTO PERSONALIZAVEL -->
                                 <label class="item item-input item-stacked-label {{(isView || hasExited) ? 'not-editable' : 'editable'}}" ng-show="profile.sendMail && profile.sendPersonalizedMail">
@@ -106,10 +106,10 @@
                                 </label>
                                 <!-- SMS -->
                                 <div class="separator"></div>
-                                <ion-checkbox ng-model="profile.sendSMS" ng-init="profile.sendSMS = true" ng-checked="profile.sendSMS" ng-disabled="isView || hasExited">SMS de Aniversário
+                                <ion-checkbox id="send_sms" ng-model="profile.sendSMS" ng-init="profile.sendSMS = true" ng-checked="profile.sendSMS" ng-disabled="isView || hasExited">SMS de Aniversário
                                 </ion-checkbox>
                                 <!-- PERSONALIZAR -->
-                                <ion-checkbox ng-model="profile.sendPersonalizedSMS" ng-init="profile.sendPersonalizedSMS = false" ng-show="!isView && profile.sendSMS" ng-checked="profile.sendPersonalizedSMS" ng-disabled="isView || hasExited">Personalizar
+                                <ion-checkbox id="send_personalized_sms" ng-model="profile.sendPersonalizedSMS" ng-init="profile.sendPersonalizedSMS = false" ng-show="!isView && profile.sendSMS" ng-checked="profile.sendPersonalizedSMS" ng-disabled="isView || hasExited">Personalizar
                                 </ion-checkbox>
                                 <!-- TEXTO PERSONALIZAVEL -->
                                 <label class="item item-input item-stacked-label {{(isView || hasExited) ? 'not-editable' : 'editable'}}" ng-show="profile.sendSMS && profile.sendPersonalizedSMS">
@@ -117,7 +117,7 @@
                                 </label>
                                 <div class="separator"></div>
                                 <!-- FACEBOOK -->
-                                <ion-checkbox ng-model="profile.facebookPost" ng-init="profile.facebookPost = false" ng-checked="profile.facebookPost" ng-disabled="isView || hasExited">Post do Facebook
+                                <ion-checkbox id="send_facebook" ng-model="profile.facebookPost" ng-init="profile.facebookPost = false" ng-checked="profile.facebookPost" ng-disabled="isView || hasExited">Post do Facebook
                                 </ion-checkbox>
                             </div>
                             </form>
