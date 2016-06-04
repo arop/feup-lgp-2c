@@ -434,13 +434,13 @@ module.exports = function (express, app, mongoose, path, nodemailer, CronJob, fs
 
         // query.exec(function (err, employees) {
         //     if (!err) {
-        //         var query = EmailTemplate.find({});
+        //         var query = EmailTemplate.find({active:true});
         //         query.exec(function(err, emailTemplates){
         //             if(err){
         //                 console.log(err);
         //                 return;
         //             } else {
-        //                 var query = SMSTemplate.find({});
+        //                 var query = SMSTemplate.find({active:true});
         //                 query.exec(function(err, smsTemplates){
         //                     if(err){
         //                         console.log(err);
