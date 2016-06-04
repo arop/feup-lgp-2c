@@ -163,7 +163,6 @@ module.exports = function (express, app, mongoose, path, nodemailer, CronJob, fs
         Admin.find({_id: id}, function (err, docs) {
             if (err == null) {
                 if (docs.length == 0) {
-                    res.json("");
                 }
                 else {
                     //returns the session

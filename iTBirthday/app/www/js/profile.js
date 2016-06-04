@@ -52,20 +52,6 @@ angular.module('itBirthday.profile', ['ngFileUpload'])
       return (emailWithoutHost.toLowerCase().indexOf(searchTerm) >= 0);
     };
 
-    var cookie = localStorage.getItem('session');
-
-    if (cookie != null) {
-      var cookie2 = cookie.replace('\"', '');
-
-      $http.get(serverUrl + '/Session/' + cookie2).success(function (data) {
-        if (data.length == 0) {
-          $scope.session = {username: undefined};
-        } else {
-          $scope.session = {username: "admin"};
-        }
-      }).error(function (data) {
-      });
-    }
   }])
 
   .controller('UpdateUserCtrl', function ($scope, $http, $state, $stateParams, $filter, $ionicPopup, Upload, ionicLoadingService) {

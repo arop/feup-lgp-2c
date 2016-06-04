@@ -12,28 +12,40 @@ var defaultPath = '';
 angular.module('itBirthday', ['ionic', 'ngFileUpload', 'ngPageTitle',
   'itBirthday.login', 'itBirthday.profile', 'itBirthday.statistics', 'itBirthday.settings', 'itBirthday.facebook'])
 
-
-  .run(function ($ionicPlatform, $rootScope) {
+  .run(function ($ionicPlatform, $rootScope, Auth, $state) {
     $rootScope.defaultPath = defaultPath;
 
-    $ionicPlatform.ready(function () {
-      if (window.cordova && window.cordova.plugins.Keyboard) {
-        // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
-        // for form inputs)
-        cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
-
-        // Don't remove this line unless you know what you are doing. It stops the viewport
-        // from snapping when text inputs are focused. Ionic handles this internally for
-        // a much nicer keyboard experience.
-        cordova.plugins.Keyboard.disableScroll(true);
-      }
-      if (window.StatusBar) {
-        StatusBar.styleDefault();
+    $rootScope.$on('$stateChangeStart', function (event, toState, toParams) {
+      if ( toState.url != '/login') {
+        var auth = Auth.getAuth();
+        auth.then(function (data) {
+        }, function (error) {
+          $state.go('login');
+        });
       }
     });
-  })
 
-  .config(function ($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
+
+
+      $ionicPlatform.ready(function () {
+        if (window.cordova && window.cordova.plugins.Keyboard) {
+          // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
+          // for form inputs)
+          cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
+
+          // Don't remove this line unless you know what you are doing. It stops the viewport
+          // from snapping when text inputs are focused. Ionic handles this internally for
+          // a much nicer keyboard experience.
+          cordova.plugins.Keyboard.disableScroll(true);
+        }
+        if (window.StatusBar) {
+          StatusBar.styleDefault();
+        }
+      });
+    })
+
+
+      .config(function ($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
 
     $ionicConfigProvider.tabs.position('top'); //bottom - comment to put default
 
@@ -183,4 +195,28 @@ angular.module('itBirthday', ['ionic', 'ngFileUpload', 'ngPageTitle',
       $ionicLoading.hide();
     };
   })
+  .factory('Auth', function($http, $q){
+    return {
+      getAuth: function(){
+        var defer = $q.defer();
+        var cookie = localStorage.getItem('session');
+
+        if (cookie != null) {
+          var cookie2 = cookie.replace('\"', '');
+        return $http.get(serverUrl + '/Session/' + cookie2, function(data){
+            defer.resolve(data);
+            return data;
+        }).error(function(error){
+            defer.reject(error);
+        });
+
+        }else{
+          defer.reject();
+        }
+
+
+        return defer.promise;
+      }
+    }
+  });
 
