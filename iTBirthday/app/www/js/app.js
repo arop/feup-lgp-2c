@@ -153,7 +153,7 @@ angular.module('itBirthday', ['ionic', 'ngFileUpload', 'ngPageTitle',
         url: '/settings',
         views: {
           'tab-settings': {
-            templateUrl: defaultPath + 'templates/tab-settings.html',
+            templateUrl: defaultPath + 'templates/tab-templates.html',
             controller: 'MsgTemplatesCtrl'
           }
         },
