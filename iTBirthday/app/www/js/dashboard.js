@@ -32,13 +32,9 @@ angular.module('itBirthday.statistics', ['chart.js'])
       Employees: [],
       MonthGroups: []
     };
-    $scope.currentMonthIndex = 0;
-    $scope.currentMonths = [months[$scope.currentMonthIndex], months[$scope.currentMonthIndex + 1]];
 
     $scope.getStatistics = function () {
       ionicLoadingService.showLoading();
-
-      $scope.currentMonthIndex = Math.min(new Date().getMonth(), 10);
 
       $scope.data.MonthGroups = [];
       for (var i = 0; i < months.length; i += 2) {
@@ -109,7 +105,7 @@ angular.module('itBirthday.statistics', ['chart.js'])
 
     $scope.filterMonthEmployees = function (month) {
       return function (item) {
-        var itemMonth = months[new Date(item[1]).getMonth()];
+        var itemMonth = months[new Date(item.birthDate).getMonth()];
         return (month == itemMonth);
       };
     };
@@ -120,6 +116,10 @@ angular.module('itBirthday.statistics', ['chart.js'])
       } else {
         return serverUrl + "/images/employees/" + imgPath;
       }
+    };
+
+    $scope.onMonthClicked = function(index) {
+
     };
 
     $scope.nextMonthGroup = function() {

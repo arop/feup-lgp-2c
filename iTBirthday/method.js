@@ -594,9 +594,14 @@ module.exports = function (express, app, mongoose, path, nodemailer, CronJob, fs
             if (!employee.exitDate) {
                 activeEmployees++;
 
-                var person = [];
-                person[0] = employee.photoPath;
-                person[1] = employee.birthDate;
+                var person = {
+                    photoPath: employee.photoPath,
+                    birthDate: employee.birthDate,
+                    name: employee.name
+                };
+                // person["photoPath"] = employee.photoPath;
+                // person["birthDate"] = employee.birthDate;
+                // person["name"] = employee.name;
 
                 people[people.length] = person;
 

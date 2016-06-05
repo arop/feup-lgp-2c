@@ -8,21 +8,21 @@
             <div class="row responsive-sm responsive-md month-group" style="width: 100%;">
               <a id="btn-previous" ng-click="previousMonthGroup()"></a>
               <a id="btn-next" ng-click="nextMonthGroup()"></a>
-              <div class="col col-50 month-left" id="{{group[0]}}">
+              <div class="col col-50 month-left" id="{{group[0]}}" ng-click="onMonthClicked($index)">
                 <div class="month-employees-container">
                   <div class="month-employee"
                        ng-repeat="employee in data.Employees | filter:filterMonthEmployees(group[0]) | limitTo : 10">
-                    <img src="{{getEmployeeImagePath(employee[0])}}" title="Employee photo" alt="Employee photo"
+                    <img src="{{getEmployeeImagePath(employee.photoPath)}}" title="{{employee.name}}" alt="{{employee.name}}"
                          width="50" height="50">
                   </div>
                 </div>
                 <div class="month-name"><span>{{getExtendedMonthName(group[0])}}</span></div>
               </div>
-              <div class="col col-50 month-right" id="{{group[1]}}">
+              <div class="col col-50 month-right" id="{{group[1]}}" ng-click="onMonthClicked($index)">
                 <div class="month-employees-container">
                   <div class="month-employee"
                        ng-repeat="employee in data.Employees | filter:filterMonthEmployees(group[1]) | limitTo : 10">
-                    <img src="{{getEmployeeImagePath(employee[0])}}" title="Employee photo" alt="Employee photo"
+                    <img src="{{getEmployeeImagePath(employee.photoPath)}}" title="{{employee.name}}" alt="{{employee.name}}"
                          width="50" height="50">
                   </div>
                 </div>
