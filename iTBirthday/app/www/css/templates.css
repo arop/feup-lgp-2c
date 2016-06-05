@@ -107,6 +107,11 @@
   background-size: 10px !important;
 }
 
+#default_messages_div #banners img {
+  width: auto;
+  max-height: 300px;
+}
+
 #default_messages_div #templates_save_changes a {
   float: right;
   padding: 5px 20px 5px 10px;

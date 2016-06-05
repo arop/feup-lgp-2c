@@ -16,7 +16,27 @@
 }
 
 #dashboard #month_employees .slider-slide .month-group {
+  padding-left: 20px;
+  padding-right: 20px;
   width: 100%;
+}
+
+#dashboard #month_employees .slider-slide .month-group a#btn-previous {
+  position: absolute;
+  left: 0;
+  background: transparent url("../img/icons/left_arrow.png") no-repeat center center !important;
+  background-size: 12px !important;
+  width: 20px;
+  height: 100%;
+}
+
+#dashboard #month_employees .slider-slide .month-group a#btn-next {
+  position: absolute;
+  right: 0;
+  background: transparent url("../img/icons/right_arrow.png") no-repeat center center !important;
+  background-size: 12px !important;
+  width: 20px;
+  height: 100%;
 }
 
 #dashboard #month_employees .slider-slide .month-group .col:first-child {
@@ -54,7 +74,8 @@
 
 #dashboard #month_employees .slider-slide .month-group .month-employee {
   box-sizing: border-box;
-  width: 25%;
+  padding: 5px;
+  width: 20%;
   height: 60px;
   float: left;
   text-align: center;
@@ -62,8 +83,8 @@
 
 #dashboard #month_employees .slider-slide .month-group .month-employee img {
   border-radius: 50%;
-  width: 60px;
-  height: 60px;
+  width: 50px;
+  height: 50px;
   max-width: 100%;
   max-height: 100%;
 }

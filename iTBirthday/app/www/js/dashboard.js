@@ -122,11 +122,11 @@ angular.module('itBirthday.statistics', ['chart.js'])
       }
     };
 
-    $scope.chooseNextMonthGroup = function() {
+    $scope.nextMonthGroup = function() {
       $ionicSlideBoxDelegate.next();
     };
 
-    $scope.choosePreviousMonthGroup = function() {
+    $scope.previousMonthGroup = function() {
       $ionicSlideBoxDelegate.previous();
     };
   });
