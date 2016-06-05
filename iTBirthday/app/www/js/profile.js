@@ -74,8 +74,10 @@ angular.module('itBirthday.profile', ['ngFileUpload'])
     $scope.showConfirmRemove = function () {
       var confirmPopup = $ionicPopup.confirm({
         title: 'Remover perfil',
+        cssClass: 'profile-confirm-popup',
         template: 'Tem a certeza que quer remover este perfil? (Esta ação é irreversível)',
         cancelText: 'Cancelar',
+        cancelType: 'button-dark',
         okText: 'Sim',
         okType: 'button-assertive'
       });
@@ -107,8 +109,10 @@ angular.module('itBirthday.profile', ['ngFileUpload'])
     $scope.showPopupExitDate = function () {
       var confirmPopup = $ionicPopup.confirm({
         title: 'Adicionar data de saída',
+        cssClass: 'profile-confirm-popup',
         template: 'Tem a certeza que quer adicionar uma data de saída? (Esta ação é irreversível)',
         cancelText: 'Cancelar',
+        cancelType: 'button-dark',
         okText: 'Sim',
         okType: 'button-assertive'
       });

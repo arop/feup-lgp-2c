@@ -530,3 +530,25 @@
   background-size: 20px !important;
 }
 
+/* POPUP */
+.popup-container.profile-confirm-popup .popup {
+  background-color: #f1f1f2;
+}
+
+.popup-container.profile-confirm-popup .popup button {
+  color: #434343;
+  background-color: transparent !important;
+
+  -webkit-transition: all .2s;
+  -moz-transition: all .2s;
+  -o-transition: all .2s;
+  transition: all .2s;
+}
+
+.popup-container.profile-confirm-popup .popup button.button-dark:hover {
+  background-color: #eda04b !important;
+}
+
+.popup-container.profile-confirm-popup .popup button.button-assertive:hover {
+  background-color: #DB4B23 !important;
+}
