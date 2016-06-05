@@ -1,4 +1,6 @@
 var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+var monthsExtended = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho",
+  "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
 
 angular.module('itBirthday.statistics', ['chart.js'])
   .config(['ChartJsProvider', function (ChartJsProvider) {
@@ -11,7 +13,8 @@ angular.module('itBirthday.statistics', ['chart.js'])
     });
   }])
 
-  .controller('StatisticsCtrl', function ($scope, $http, ionicLoadingService) {
+  .controller('StatisticsCtrl', function ($scope, $http, ionicLoadingService, $ionicSlideBoxDelegate) {
+    $scope.serverUrl = serverUrl;
     $scope.data = {
       MFData: [0, 0],
       MFRatio: {},
@@ -25,15 +28,29 @@ angular.module('itBirthday.statistics', ['chart.js'])
       AgeGroups: [[0, 0, 0, 0, 0]],
       AverageTime: 0,
       BirthsByMonthRatio: [],
-      BirthsByMonthTotal: []
+      BirthsByMonthTotal: [],
+      Employees: [],
+      MonthGroups: []
     };
+    $scope.currentMonthIndex = 0;
+    $scope.currentMonths = [months[$scope.currentMonthIndex], months[$scope.currentMonthIndex + 1]];
 
     $scope.getStatistics = function () {
       ionicLoadingService.showLoading();
-      //
+
+      $scope.currentMonthIndex = Math.min(new Date().getMonth(), 10);
+
+      $scope.data.MonthGroups = [];
+      for (var i = 0; i < months.length; i += 2) {
+        $scope.data.MonthGroups.push([months[i], months[i + 1]]);
+      }
+
       $http.get(serverUrl + '/statistics').then(
         function (success) {
           var data = success.data;
+
+          $scope.data.Employees = data.Employees;
+          $ionicSlideBoxDelegate.update();
 
           $scope.data.AverageTime = data.AverageTime;
           $scope.data.MFData = [data.MFTotal.Female, data.MFTotal.Male];
@@ -59,27 +76,57 @@ angular.module('itBirthday.statistics', ['chart.js'])
 
     function normalizeBirthsByMonthRatios() {
 
-      var size = ($.map($scope.data.BirthsByMonthTotal, function(elem) { return elem; })).length;
+      var size = ($.map($scope.data.BirthsByMonthTotal, function (elem) {
+        return elem;
+      })).length;
 
       var max = -1.0;
       var i = 0;
-      for(i = 0; i < size; i++) {
+      for (i = 0; i < size; i++) {
         var val = $scope.data.BirthsByMonthTotal[months[i]];
-        if(val >= max) {
+        if (val >= max) {
           max = val;
         }
       }
 
       $scope.data.BirthsByMonthRatio = [];
 
-      for(i = 0; i < size; i++) {
+      for (i = 0; i < size; i++) {
         var month = months[i];
         $scope.data.BirthsByMonthRatio[month] = (($scope.data.BirthsByMonthTotal[month] / max) * 100) + "%";
       }
-
     }
 
-    angular.element(document).ready(function () {
-      $scope.getStatistics();
-    });
+    $scope.getExtendedMonthName = function(month) {
+      for(var i = 0; i < months.length; i++) {
+        if(month == months[i]) {
+          return monthsExtended[i];
+        }
+      }
+
+      return "";
+    };
+
+    $scope.filterMonthEmployees = function (month) {
+      return function (item) {
+        var itemMonth = months[new Date(item[1]).getMonth()];
+        return (month == itemMonth);
+      };
+    };
+
+    $scope.getEmployeeImagePath = function (imgPath) {
+      if (imgPath == undefined) {
+        return serverUrl + "/images/employees/default.png";
+      } else {
+        return serverUrl + "/images/employees/" + imgPath;
+      }
+    };
+
+    $scope.chooseNextMonthGroup = function() {
+      $ionicSlideBoxDelegate.next();
+    };
+
+    $scope.choosePreviousMonthGroup = function() {
+      $ionicSlideBoxDelegate.previous();
+    };
   });

@@ -7,6 +7,67 @@
   max-width: 70%;
 }
 
+#dashboard #month_employees .slider-pager {
+  display: none;
+}
+
+#dashboard #month_employees .slider-slide {
+  width: 100%;
+}
+
+#dashboard #month_employees .slider-slide .month-group {
+  width: 100%;
+}
+
+#dashboard #month_employees .slider-slide .month-group .col:first-child {
+  padding-right: 0;
+}
+
+#dashboard #month_employees .slider-slide .month-group .col:last-child {
+  padding-left: 0;
+}
+
+#dashboard #month_employees .slider-slide .month-group .month-employees-container {
+  height: 120px;
+  overflow: auto;
+}
+
+#dashboard #month_employees .slider-slide .month-group .month-name {
+  height: 30px;
+}
+
+#dashboard #month_employees .slider-slide .month-group .month-name > span {
+  font-size: 20px;
+}
+
+#dashboard #month_employees .slider-slide .month-group .month-left .month-name {
+  padding-right: 4px;
+  border-top: 3px solid #ECA04B;
+  text-align: right;
+}
+
+#dashboard #month_employees .slider-slide .month-group .month-right .month-name {
+  padding-left: 4px;
+  border-top: 3px solid #2F4D7C;
+  text-align: left;
+}
+
+#dashboard #month_employees .slider-slide .month-group .month-employee {
+  box-sizing: border-box;
+  width: 25%;
+  height: 60px;
+  float: left;
+  text-align: center;
+}
+
+#dashboard #month_employees .slider-slide .month-group .month-employee img {
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  max-width: 100%;
+  max-height: 100%;
+}
+
 #dashboard .col.col-offset-15 {
   margin-left: 15%;
 }
