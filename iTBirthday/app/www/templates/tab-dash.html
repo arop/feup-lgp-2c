@@ -8,21 +8,23 @@
             <div class="row responsive-sm responsive-md month-group" style="width: 100%;">
               <a id="btn-previous" ng-click="previousMonthGroup()"></a>
               <a id="btn-next" ng-click="nextMonthGroup()"></a>
-              <div class="col col-50 month-left" id="{{group[0]}}" ng-click="onMonthClicked($index)">
+              <div class="col col-50 month-left" id="{{group[0]}}" ng-click="onMonthClicked($index, 0)">
                 <div class="month-employees-container">
                   <div class="month-employee"
                        ng-repeat="employee in data.Employees | filter:filterMonthEmployees(group[0]) | limitTo : 10">
-                    <img src="{{getEmployeeImagePath(employee.photoPath)}}" title="{{employee.name}}" alt="{{employee.name}}"
+                    <img src="{{getEmployeeImagePath(employee.photoPath)}}" title="{{employee.name}}"
+                         alt="{{employee.name}}"
                          width="50" height="50">
                   </div>
                 </div>
                 <div class="month-name"><span>{{getExtendedMonthName(group[0])}}</span></div>
               </div>
-              <div class="col col-50 month-right" id="{{group[1]}}" ng-click="onMonthClicked($index)">
+              <div class="col col-50 month-right" id="{{group[1]}}" ng-click="onMonthClicked($index, 1)">
                 <div class="month-employees-container">
                   <div class="month-employee"
                        ng-repeat="employee in data.Employees | filter:filterMonthEmployees(group[1]) | limitTo : 10">
-                    <img src="{{getEmployeeImagePath(employee.photoPath)}}" title="{{employee.name}}" alt="{{employee.name}}"
+                    <img src="{{getEmployeeImagePath(employee.photoPath)}}" title="{{employee.name}}"
+                         alt="{{employee.name}}"
                          width="50" height="50">
                   </div>
                 </div>
@@ -198,5 +200,30 @@
         <div class="title">Tempo médio de permanência na empresa: <b>{{data.AverageTime}}</b> dias</div>
       </div>
     </div>
+
+    <script id="month_window.html" type="text/ng-template">
+      <ion-modal-view id="dashboard_modal">
+        <ion-header-bar>
+          <h1 class="title">Aniversários em <b>{{currentMonth}}</b></h1>
+        </ion-header-bar>
+        <ion-content padding="true" overflow-scroll="true">
+          <div class="row responsive-sm responsive-md">
+            <div class="col col-25" ng-repeat="emp in currentMonthBirthdays">
+              <div class="container">
+                <div class="emp-img">
+                  <img src="{{getEmployeeImagePath(emp.photoPath)}}" title="{{emp.name}} photo" alt="{{emp.name}}"
+                       width="100" height="100">
+                </div>
+                <div class="emp-name">{{emp.name}}</div>
+                <div class="emp-birth-date">{{getCleanDate(emp.birthDate)}}</div>
+              </div>
+            </div>
+          </div>
+        </ion-content>
+        <ion-footer-bar>
+          <a class="emp-btn-close" ng-click="modal.hide()">Fechar</a>
+        </ion-footer-bar>
+      </ion-modal-view>
+    </script>
   </ion-content>
 </ion-view>

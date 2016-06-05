@@ -137,6 +137,7 @@ angular.module('itBirthday.profile', ['ngFileUpload'])
     $scope.showAlertProfile = function () {
       var alertPopup = $ionicPopup.alert({
         title: "Perfil não editado!",
+        cssClass: "profile-alert-popup",
         template: 'Tem os seguintes erros no formulário de edição:' + wrongFields
       });
     };
@@ -271,6 +272,7 @@ angular.module('itBirthday.profile', ['ngFileUpload'])
       $scope.showAlertProfile = function () {
         var alertPopup = $ionicPopup.alert({
           title: 'Perfil não criado!',
+          cssClass: 'profile-alert-popup',
           template: 'Tem os seguintes erros no formulário de criação:' + wrongFields
         });
       };

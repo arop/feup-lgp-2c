@@ -21,6 +21,19 @@
   width: 100%;
 }
 
+#dashboard #month_employees .slider-slide .month-group .col {
+  cursor: pointer;
+
+  -webkit-transition: background-color .5s;
+  -moz-transition: background-color .5s;
+  -o-transition: background-color .5s;
+  transition: background-color .5s;
+}
+
+#dashboard #month_employees .slider-slide .month-group .col:hover {
+  background-color: #f1f1f2;
+}
+
 #dashboard #month_employees .slider-slide .month-group a#btn-previous {
   position: absolute;
   left: 0;
@@ -102,7 +115,7 @@
   margin: auto;
 }
 
-@media screen and (max-width: 767px){
+@media screen and (max-width: 767px) {
   #dashboard .col.col-70 {
     -webkit-box-flex: 1;
     -webkit-flex: 1;
@@ -168,7 +181,10 @@
 
 #dashboard #births_dy_month .dashboard-progress-bar-container > .dashboard-progress-bar {
   width: 0;
-	background-color: #eda04b !important;
+  background-color: #eda04b !important;
+  margin-top: 6px;
+  margin-bottom: 4px;
+  height: 12px;
 
   -webkit-transition: all .5s;
   -moz-transition: all .5s;
@@ -184,4 +200,81 @@
   #dashboard .separator.show-when-small {
     display: block;
   }
+}
+
+#dashboard_modal {
+  background-color: #f1f1f2 !important;
+}
+
+#dashboard_modal ion-header-bar {
+  background-color: #f1f1f2 !important;
+}
+
+#dashboard_modal ion-footer-bar {
+  border-top: 1px solid #dddddd;
+  background-color: #f1f1f2 !important;
+}
+
+#dashboard_modal .row {
+  -webkit-flex-wrap: wrap;
+  flex-wrap: wrap;
+  background-color: #f1f1f2 !important;
+}
+
+#dashboard_modal .row .col > .container {
+  height: 100%;
+  background-color: #ffffff;
+  padding: 5px;
+  border-bottom: solid rgba(237, 160, 75, 1) !important;
+}
+
+#dashboard_modal .emp-img {
+  display: block;
+  width: 100%;
+  text-align: center;
+}
+
+#dashboard_modal .emp-img > img {
+  width: 100px;
+  height: 100px;
+  max-width: 100%;
+  max-height: 100%;
+}
+
+#dashboard_modal .emp-name {
+  display: block;
+  width: 100%;
+  text-align: center;
+}
+
+#dashboard_modal .emp-birth-date {
+  display: block;
+  width: 100%;
+  text-align: center;
+}
+
+#dashboard_modal .bar.bar-footer {
+  padding: 0;
+}
+
+#dashboard_modal .emp-btn-close {
+  display: block;
+  padding: 5px;
+  width: 100%;
+  line-height: 2em;
+  font-size: 18px;
+  text-align: center;
+
+  -webkit-transition: background-color .2s;
+  -moz-transition: background-color .2s;
+  -o-transition: background-color .2s;
+  transition: background-color .2s;
+}
+
+#dashboard_modal .emp-btn-close:hover {
+  background-color: #eda04b !important;
+}
+
+.modal-backdrop-bg {
+  background-color: #f1f1f2;
 }

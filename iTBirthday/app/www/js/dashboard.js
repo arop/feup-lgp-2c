@@ -13,7 +13,7 @@ angular.module('itBirthday.statistics', ['chart.js'])
     });
   }])
 
-  .controller('StatisticsCtrl', function ($scope, $http, ionicLoadingService, $ionicSlideBoxDelegate) {
+  .controller('StatisticsCtrl', function ($scope, $http, ionicLoadingService, $ionicSlideBoxDelegate, $ionicModal) {
     $scope.serverUrl = serverUrl;
     $scope.data = {
       MFData: [0, 0],
@@ -32,6 +32,14 @@ angular.module('itBirthday.statistics', ['chart.js'])
       Employees: [],
       MonthGroups: []
     };
+    $scope.currentMonth = undefined;
+    $scope.currentMonthBirthdays = [];
+
+    $ionicModal.fromTemplateUrl('month_window.html', {
+      scope: $scope
+    }).then(function(modal) {
+      $scope.modal = modal;
+    });
 
     $scope.getStatistics = function () {
       ionicLoadingService.showLoading();
@@ -118,8 +126,29 @@ angular.module('itBirthday.statistics', ['chart.js'])
       }
     };
 
-    $scope.onMonthClicked = function(index) {
+    $scope.getCleanDate = function(fullDate) {
+      var date = new Date(fullDate).toLocaleDateString();
+      console.log(date);
+      return date;
+    };
 
+    $scope.onMonthClicked = function(monthIndex, offset) {
+      var month = (monthIndex * 2) + offset;
+
+      if($scope.modal.isShown()) {
+        $scope.modal.hide();
+      } else {
+        $scope.currentMonth = monthsExtended[month];
+        $scope.currentMonthBirthdays = [];
+        for(var i = 0; i < $scope.data.Employees.length; i++) {
+          var emp = $scope.data.Employees[i];
+          var empMonth = new Date(emp.birthDate).getMonth();
+          if(empMonth == month) {
+            $scope.currentMonthBirthdays.push(emp);
+          }
+        }
+        $scope.modal.show();
+      }
     };
 
     $scope.nextMonthGroup = function() {
