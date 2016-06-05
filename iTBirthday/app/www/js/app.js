@@ -25,27 +25,25 @@ angular.module('itBirthday', ['ionic', 'ngFileUpload', 'ngPageTitle',
       }
     });
 
+    $ionicPlatform.ready(function () {
+      if (window.cordova && window.cordova.plugins.Keyboard) {
+        // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
+        // for form inputs)
+        cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
+
+        // Don't remove this line unless you know what you are doing. It stops the viewport
+        // from snapping when text inputs are focused. Ionic handles this internally for
+        // a much nicer keyboard experience.
+        cordova.plugins.Keyboard.disableScroll(true);
+      }
+      if (window.StatusBar) {
+        StatusBar.styleDefault();
+      }
+    });
+  })
 
 
-      $ionicPlatform.ready(function () {
-        if (window.cordova && window.cordova.plugins.Keyboard) {
-          // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
-          // for form inputs)
-          cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
-
-          // Don't remove this line unless you know what you are doing. It stops the viewport
-          // from snapping when text inputs are focused. Ionic handles this internally for
-          // a much nicer keyboard experience.
-          cordova.plugins.Keyboard.disableScroll(true);
-        }
-        if (window.StatusBar) {
-          StatusBar.styleDefault();
-        }
-      });
-    })
-
-
-      .config(function ($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
+  .config(function ($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
 
     $ionicConfigProvider.tabs.position('top'); //bottom - comment to put default
 
@@ -180,11 +178,10 @@ angular.module('itBirthday', ['ionic', 'ngFileUpload', 'ngPageTitle',
     $urlRouterProvider.otherwise('/login');
   })
 
-
   .service('ionicLoadingService', function ($ionicLoading) {
     var ionicLoadingService = this;
     ionicLoadingService.showLoading = function() {
-      var customTemplate = '<ion-spinner class="spinner-energized"></ion-spinner>';
+      var customTemplate = '<ion-spinner icon="dots"></ion-spinner>';
       $ionicLoading.show({
         template: customTemplate,
         hideOnStateChange: true,
@@ -195,6 +192,7 @@ angular.module('itBirthday', ['ionic', 'ngFileUpload', 'ngPageTitle',
       $ionicLoading.hide();
     };
   })
+
   .factory('Auth', function($http, $q){
     return {
       getAuth: function(){
@@ -203,17 +201,16 @@ angular.module('itBirthday', ['ionic', 'ngFileUpload', 'ngPageTitle',
 
         if (cookie != null) {
           var cookie2 = cookie.replace('\"', '');
-        return $http.get(serverUrl + '/Session/' + cookie2, function(data){
+          return $http.get(serverUrl + '/Session/' + cookie2, function(data){
             defer.resolve(data);
             return data;
-        }).error(function(error){
+          }).error(function(error){
             defer.reject(error);
-        });
+          });
 
         }else{
           defer.reject();
         }
-
 
         return defer.promise;
       }
