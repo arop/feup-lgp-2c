@@ -1,6 +1,6 @@
 @font-face {
     font-family: ApexNewLight;
-    src: url(apex_new_light.otf);
+    src: url("../fonts/apex_new_light.otf");
 }
 
 *{

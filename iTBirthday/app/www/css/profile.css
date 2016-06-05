@@ -160,10 +160,11 @@
 }
 
 #search-profile.has-header {
-  top: 55px;
+  top: 44px;
 }
 
 #search-profile .title {
+  font-size: 20px;
   margin-bottom: 4px;
 }
 

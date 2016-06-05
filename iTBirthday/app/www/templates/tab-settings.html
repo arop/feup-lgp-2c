@@ -5,7 +5,8 @@
         <div class="col col-50 col-offset-25" id="email_template">
           <label class="title">Template Email</label>
           <label class="item item-input item-stacked-label">
-            <!--<span class="item-label">Mensagem</span>-->
+            <span class="item-label">Mensagem</span>
+            <div class="separator"></div>
             <textarea id="emailMsg" rows="6" class="app-color" placeholder="Template Email"
                       ng-model="defaultMsg.email"></textarea>
           </label>
@@ -39,6 +40,7 @@
           <label class="title">Template SMS</label>
           <label class="item item-input item-stacked-label app-color">
             <span class="item-label">Mensagem (máx. 160 caracteres)</span>
+            <div class="separator"></div>
             <textarea id="smsMsg" rows="6" maxlength="160" class="app-color" placeholder="Template SMS"
                       ng-model="defaultMsg.sms"></textarea>
           </label>
@@ -51,6 +53,7 @@
           <label class="title">Template Facebook</label>
           <label class="item item-input item-stacked-label app-color ">
             <span class="item-label">Mensagem (máx. 240 caracteres)</span>
+            <div class="separator"></div>
             <textarea id="fbMsg" rows="6" maxlength="240" class="app-color" placeholder="Template Facebook"
                       ng-model="defaultMsg.fb"></textarea>
           </label>
