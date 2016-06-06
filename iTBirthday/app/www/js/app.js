@@ -1,7 +1,7 @@
 // Ionic Starter App
 
-var serverUrl = "https://897e01a9.ngrok.io";
-//var serverUrl = "http://localhost:8080";
+//var serverUrl = "https://897e01a9.ngrok.io";
+var serverUrl = "http://localhost:8080";
 //var defaultPath = '/app/www/';
 var defaultPath = '';
 
@@ -10,13 +10,14 @@ var defaultPath = '';
 // the 2nd parameter is an array of 'requires'
 
 angular.module('itBirthday', ['ionic', 'ngFileUpload', 'ngPageTitle',
-  'itBirthday.login', 'itBirthday.profile', 'itBirthday.statistics', 'itBirthday.settings', 'itBirthday.facebook'])
+  'itBirthday.login', 'itBirthday.profile', 'itBirthday.statistics',
+  'itBirthday.settings', 'itBirthday.facebook', 'itBirthday.outlook'])
 
   .run(function ($ionicPlatform, $rootScope, Auth, $state) {
     $rootScope.defaultPath = defaultPath;
 
     $rootScope.$on('$stateChangeStart', function (event, toState, toParams) {
-      if ( toState.url != '/login') {
+      if (toState.url != '/login') {
         var auth = Auth.getAuth();
         auth.then(function (data) {
         }, function (error) {
@@ -171,6 +172,19 @@ angular.module('itBirthday', ['ionic', 'ngFileUpload', 'ngPageTitle',
         data: {
           pageTitle: 'Facebook'
         }
+      })
+
+      .state('tabs.outlook', {
+        url: '/outlook',
+        views: {
+          'tab-outlook': {
+            templateUrl: defaultPath + 'templates/outlook.html',
+            controller: 'OutlookCtrl'
+          }
+        },
+        data: {
+          pageTitle: 'Outlook'
+        }
       });
 
     // if none of the above states are matched, use this as the fallback
@@ -180,7 +194,7 @@ angular.module('itBirthday', ['ionic', 'ngFileUpload', 'ngPageTitle',
 
   .service('ionicLoadingService', function ($ionicLoading) {
     var ionicLoadingService = this;
-    ionicLoadingService.showLoading = function() {
+    ionicLoadingService.showLoading = function () {
       var customTemplate = '<ion-spinner icon="dots"></ion-spinner>';
       $ionicLoading.show({
         template: customTemplate,
@@ -188,27 +202,27 @@ angular.module('itBirthday', ['ionic', 'ngFileUpload', 'ngPageTitle',
         animation: 'fade-in'
       });
     };
-    ionicLoadingService.hideLoading = function(){
+    ionicLoadingService.hideLoading = function () {
       $ionicLoading.hide();
     };
   })
 
-  .factory('Auth', function($http, $q){
+  .factory('Auth', function ($http, $q) {
     return {
-      getAuth: function(){
+      getAuth: function () {
         var defer = $q.defer();
         var cookie = localStorage.getItem('session');
 
         if (cookie != null) {
           var cookie2 = cookie.replace('\"', '');
-          return $http.get(serverUrl + '/Session/' + cookie2, function(data){
+          return $http.get(serverUrl + '/Session/' + cookie2, function (data) {
             defer.resolve(data);
             return data;
-          }).error(function(error){
+          }).error(function (error) {
             defer.reject(error);
           });
 
-        }else{
+        } else {
           defer.reject();
         }
 
