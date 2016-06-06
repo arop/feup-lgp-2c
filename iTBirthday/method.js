@@ -29,9 +29,9 @@ module.exports = function (express, app, mongoose, path, nodemailer, CronJob, fs
         }
     });
 
-    //var serverUri = "https://897e01a9.ngrok.io";
-    var serverUri = "http://localhost:8100";
-    var redirectUri = "http://localhost:8080/authorize";
+    var serverUri = "http://localhot:8100";
+    var redirectUri = "https://897e01a9.ngrok.io/authorize";
+    //var redirectUri = "http://localhost:8080/authorize";
 
     var scopes = ["openid",
         "https://outlook.office.com/calendars.readwrite",
