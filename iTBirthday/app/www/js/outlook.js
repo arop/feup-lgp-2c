@@ -1,5 +1,5 @@
 angular.module('itBirthday.outlook', [])
-  .controller('OutlookCtrl', function ($scope, $http, ionicLoadingService) {
+  .controller('OutlookCtrl', function ($scope, $http, ionicLoadingService, $ionicPopup) {
     $scope.outlookLink = {};
     $scope.email = undefined;
     $scope.expirationDate = undefined;
@@ -12,7 +12,7 @@ angular.module('itBirthday.outlook', [])
           $scope.outlookLink = success.data;
           $scope.getOutlookInfo();
         }, function (err) {
-          console.log(err);
+          // error
         });
     };
 
@@ -22,12 +22,9 @@ angular.module('itBirthday.outlook', [])
           var data = success.data;
           $scope.expirationDate = new Date(data["expirationDate"]);
           $scope.email = data["email"];
-          console.log("Email: " + $scope.email);
-          console.log("Expiration Date: " + $scope.expirationDate);
           $scope.updateAuthentication();
           ionicLoadingService.hideLoading();
         }, function (err) {
-          console.log(err);
           $scope.updateAuthentication();
           ionicLoadingService.hideLoading();
         });
@@ -36,9 +33,17 @@ angular.module('itBirthday.outlook', [])
     $scope.updateOutlookCalendar = function () {
       $http.get(serverUrl + '/update_calendar').then(
         function (success) {
-          console.log("success");
+          var alertPopup = $ionicPopup.alert({
+            title: 'Calendário',
+            cssClass: 'outlook-alert-popup-success',
+            template: 'O seu calendário foi atualizado com sucesso.'
+          });
         }, function (err) {
-          console.log(err);
+          var alertPopup = $ionicPopup.alert({
+            title: 'Calendário',
+            cssClass: 'outlook-alert-popup-error',
+            template: 'Houve um erro na atualização do seu calendário!'
+          });
         });
     };
 

@@ -40,3 +40,36 @@
 #outlook .row .col {
   margin-bottom: 0;
 }
+
+.outlook-alert-popup-success .popup,
+.outlook-alert-popup-error .popup {
+  background-color: #f1f1f2 !important;
+}
+
+.outlook-alert-popup-success.popup-container .popup-head {
+  border-bottom: 2px solid #2C4E7D !important;
+}
+
+.outlook-alert-popup-success.popup-container .popup-head .popup-title {
+  color: #2C4E7D !important;
+}
+
+.outlook-alert-popup-error.popup-container .popup-head {
+  border-bottom: 2px solid #DB4B23 !important;
+}
+
+.outlook-alert-popup-error.popup-container .popup-head .popup-title {
+  color: #DB4B23 !important;
+}
+
+.popup-container .popup-head .popup-title {
+  font-weight: 900;
+}
+
+.popup-container .popup-buttons .button {
+  background-color: #eda04b !important;
+}
+
+.popup-container .popup-buttons .button.activated {
+  background-color: #e8871a !important;
+}
