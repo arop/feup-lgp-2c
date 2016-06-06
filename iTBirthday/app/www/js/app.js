@@ -1,6 +1,6 @@
 // Ionic Starter App
 
-var serverUrl = "https://825e77a6.ngrok.io";
+var serverUrl = "https://1b817994.ngrok.io";
 //var serverUrl = "http://localhost:8080";
 //var defaultPath = '/app/www/';
 var defaultPath = '';

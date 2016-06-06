@@ -30,7 +30,7 @@ module.exports = function (express, app, mongoose, path, nodemailer, CronJob, fs
     });
 
     var serverUri = "http://localhost:8100";
-    var redirectUri = "https://825e77a6.ngrok.io/authorize";
+    var redirectUri = "https://1b817994.ngrok.io/authorize";
     //var redirectUri = "http://localhost:8080/authorize";
 
     var scopes = ["openid",
