@@ -3,6 +3,7 @@ angular.module('itBirthday.outlook', [])
     $scope.outlookLink = {};
     $scope.email = undefined;
     $scope.expirationDate = undefined;
+    $scope.isAuthenticated = false;
 
     $scope.getOutlookLink = function () {
       ionicLoadingService.showLoading();
@@ -19,18 +20,20 @@ angular.module('itBirthday.outlook', [])
       $http.get(serverUrl + '/outlook_get_info').then(
         function (success) {
           var data = success.data;
-          $scope.expirationDate = new Date(data["expirationDate"]).toLocaleString();
+          $scope.expirationDate = new Date(data["expirationDate"]);
           $scope.email = data["email"];
-          console.log(success);
-          console.log($scope.expirationDate);
+          console.log("Email: " + $scope.email);
+          console.log("Expiration Date: " + $scope.expirationDate);
+          $scope.updateAuthentication();
           ionicLoadingService.hideLoading();
         }, function (err) {
           console.log(err);
+          $scope.updateAuthentication();
           ionicLoadingService.hideLoading();
         });
     };
 
-    $scope.updateOutlookCalendar = function() {
+    $scope.updateOutlookCalendar = function () {
       $http.get(serverUrl + '/update_calendar').then(
         function (success) {
           console.log("success");
@@ -39,19 +42,16 @@ angular.module('itBirthday.outlook', [])
         });
     };
 
-    $scope.isAuthenticated = function() {
-      if($scope.email == undefined) {
-        return false;
+    $scope.updateAuthentication = function () {
+      if ($scope.email == undefined) {
+        $scope.isAuthenticated = false;
       }
 
-      if($scope.expirationDate == undefined) {
-        return false;
+      if ($scope.expirationDate == undefined) {
+        $scope.isAuthenticated = false;
       }
 
-      if($scope.expirationDate <= new Date()) {
-        return false;
-      }
-
-      return true;
+      var date = new Date();
+      $scope.isAuthenticated = ($scope.expirationDate.getTime() > date.getTime());
     }
   });

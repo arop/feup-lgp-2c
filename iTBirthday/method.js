@@ -68,7 +68,8 @@ module.exports = function (express, app, mongoose, path, nodemailer, CronJob, fs
         sendPersonalizedSMS: {type: Boolean, required: false, default: false},
         facebookPost: {type: Boolean, required: true, default: false},
         photoPath: {type: String, required: false, trim: true, default: 'default.png'},
-        gender: {type: String, enum: employeeGender, required: true, trim: true}
+        gender: {type: String, enum: employeeGender, required: true, trim: true},
+        outlookYear: {type: Number, required: false}
     });
 
     EmployeeSchema.virtual('age').get(function () {
@@ -1103,16 +1104,22 @@ module.exports = function (express, app, mongoose, path, nodemailer, CronJob, fs
             if (err) {
                 console.log('[MONGOOSE]: ' + err);
             } else {
-                var query = Employee.find({}, 'name birthDate exitDate');
+                var query = Employee.find({}, 'name birthDate exitDate outlookYear');
                 query.exec(function (err, result) {
                     if (!err) {
                         if (result.length > 0) {
                             console.log('[MONGOOSE] Found all employees');
                             for (var i = 0; i < result.length; i++) {
                                 var person = result[i];
-                                if (!person.exitDate || person.exitDate == undefined) {
-                                    createEvent(person, tokenResult[0]);
-                                }
+
+                                if (person.exitDate && person.exitDate != undefined)
+                                    continue;
+
+                                var year = (new Date()).getFullYear();
+                                if (person.outlookYear == year)
+                                    continue;
+
+                                createEvent(person, tokenResult[0]);
                             }
                         } else {
                             console.log('[MONGOOSE] No employees to find');
@@ -1127,15 +1134,50 @@ module.exports = function (express, app, mongoose, path, nodemailer, CronJob, fs
         });
     });
 
-    function createEvent(person, tokenInfo) {
-        var token = tokenInfo.token;
-        console.log(tokenInfo.token);
-        var email = 'lgptest@xiiiorg.onmicrosoft.com';
-        console.log('Creatint event');
+    function createEvent(person, outlookInfo) {
+
+        var year = (new Date()).getFullYear();
+        var query = Employee.find({'_id': person._id});
+        Employee.update(query,
+            {
+                outlookYear: year
+            },
+            function (err, result) {
+                if (err) {
+                    console.log('[MONGOOSE] Error: ' + err);
+                    return false;
+                } else {
+                    console.log("Update Employee Outlook Year: Success --> " + person.name);
+                    //console.log(result);
+                }
+            });
+
+        console.log("--- CREATE EVENT ---");
+        console.log(person.name);
+
+        var token = outlookInfo.token;
+        var email = outlookInfo.email;
+
+        // console.log(outlookInfo.token);
+        // console.log(outlookInfo.email);
+        // console.log('Creating event');
+
+        var date = new Date();
+        var birthdayBegin = person.birthDate;
+        birthdayBegin.setFullYear(date.getFullYear());
+        var birthdayBeginString = birthdayBegin.toISOString().split('.')[0];
+
+        var birthdayEnd = new Date(birthdayBegin);
+        birthdayEnd.setUTCHours(birthdayBegin.getUTCHours() + 23);
+        var birthdayEndString = birthdayEnd.toISOString().split('.')[0];
+
+        // console.log(birthdayBeginString);
+        // console.log(birthdayEndString);
+
         if (token) {
             outlook.base.setApiEndpoint('https://outlook.office.com/api/v2.0');
             outlook.base.setAnchorMailbox(email);
-            outlook.base.setPreferredTimeZone('Eastern Standard Time');
+            //outlook.base.setPreferredTimeZone('Eastern Standard Time');
 
             var newEvent = {
                 "Subject": "Aniversário de " + person.name,
@@ -1144,18 +1186,18 @@ module.exports = function (express, app, mongoose, path, nodemailer, CronJob, fs
                     "Content": "Aniversário de " + person.name
                 },
                 "Start": {
-                    "DateTime": "2016-05-27T00:00:00",
-                    "TimeZone": "Eastern Standard Time"
+                    "DateTime": birthdayBeginString,
+                    "TimeZone": "GMT Standard Time"
                 },
                 "End": {
-                    "DateTime": "2016-05-27T00:00:00",
-                    "TimeZone": "Eastern Standard Time"
+                    "DateTime": birthdayEndString,
+                    "TimeZone": "GMT Standard Time"
                 },
                 "Attendees": []
             };
 
             var userInfo = {
-                email: 'lgptest@xiiiorg.onmicrosoft.com'
+                email: email
             };
 
             outlook.calendar.createEvent({token: token, event: newEvent, user: userInfo},
@@ -1300,4 +1342,19 @@ module.exports = function (express, app, mongoose, path, nodemailer, CronJob, fs
 
     // var outlookTemplate = new Outlook({'token': '231321', 'email': 'a@gmail.com', 'expirationDate': new Date()});
     // outlookTemplate.save(function(err){if(err) console.log(err);});
+    
+    // var query = Employee.find({});
+    // Employee.update(query,
+    //     {
+    //         outlookYear: null
+    //     },
+    //     {
+    //         multi: true
+    //     }, function (err, result) {
+    //         if (err) {
+    //             console.log('[MONGOOSE] Error: ' + err);
+    //         } else {
+    //             console.log(result);
+    //         }
+    //     });
 };

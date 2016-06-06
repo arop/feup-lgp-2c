@@ -7,13 +7,13 @@
       </div>
     </div>
 
-    <div class="row responsive-sm responsive-md" ng-if="isAuthenticated()">
+    <div class="row responsive-sm responsive-md" ng-show="isAuthenticated">
       <div class="col col-50 col-offset-25">
         <a class="icon-refresh" ng-click="updateOutlookCalendar()">Atualizar Calendário</a>
       </div>
     </div>
 
-    <div class="row responsive-sm responsive-md" ng-if="!isAuthenticated()">
+    <div class="row responsive-sm responsive-md" ng-show="!isAuthenticated">
       <div class="col col-50 col-offset-25">
         <div class="card">
           <div class="item item-text-wrap title">A aplicação não está autenticada!</div>
@@ -25,14 +25,14 @@
       </div>
     </div>
 
-    <div class="row responsive-sm responsive-md" ng-if="isAuthenticated()">
+    <div class="row responsive-sm responsive-md" ng-show="isAuthenticated">
       <div class="col col-50 col-offset-25">
         <div class="card">
           <div class="item item-text-wrap title">A aplicação está autenticada.</div>
           <div class="separator"></div>
           <div class="item item-text-wrap">
             <p>Email: <b>{{email}}</b></p>
-            <p>Validade do Token: <b>{{expirationDate}}</b></p>
+            <p>Validade do Token: <b>{{expirationDate.toLocaleString()}}</b></p>
           </div>
         </div>
       </div>
