@@ -30,6 +30,11 @@ navigation history that also transitions its views in and out.
     <ion-nav-view name="tab-facebook"></ion-nav-view>
   </ion-tab>
 
+  <!-- Outlook Tab -->
+  <ion-tab title="Outlook" class="tab-icon-logout" icon-off="ion-gear" icon-on="ion-gear" ui-sref="tabs.outlook">
+    <ion-nav-view name="tab-outlook"></ion-nav-view>
+  </ion-tab>
+
   <!-- Logout Tab -->
   <ion-tab title="Logout" class="tab-icon-logout" icon-off="ion-power" icon-on="ion-power" ng-controller="LoginCtrl" ng-click="logout()">
   </ion-tab>

@@ -29,6 +29,8 @@ module.exports = function (express, app, mongoose, path, nodemailer, CronJob, fs
         }
     });
 
+    //var serverUri = "https://897e01a9.ngrok.io";
+    var serverUri = "http://localhost:8100";
     var redirectUri = "http://localhost:8080/authorize";
 
     var scopes = ["openid",
@@ -90,8 +92,8 @@ module.exports = function (express, app, mongoose, path, nodemailer, CronJob, fs
     });
 
     var BannerSchema = new mongoose.Schema({
-        path : {type: String, required: true, trim:true},
-        active : {type: Boolean, required: true}
+        path: {type: String, required: true, trim: true},
+        active: {type: Boolean, required: true}
     });
 
     var SMSTemplateSchema = new mongoose.Schema({
@@ -114,7 +116,13 @@ module.exports = function (express, app, mongoose, path, nodemailer, CronJob, fs
 
     var OutlookSchema = new mongoose.Schema({
         token: {type: String, required: false, trim: true},
-        expirationDate: {type: Date, required: false}
+        expirationDate: {type: Date, required: false},
+        email: {
+            type: String, required: false,
+            match: [/^[a-zA-Z0-9_.-]*@[a-zA-Z0-9_.-]*.[a-zA-Z0-9_.-]*/],
+            trim: true,
+            unique: true
+        }
     });
 
     //Create the Models
@@ -234,7 +242,7 @@ module.exports = function (express, app, mongoose, path, nodemailer, CronJob, fs
         req.pipe(req.busboy);
         req.busboy.on('file', function (fieldname, file, filename) {
             console.log("Uploading: " + filename);
-            var ran =  (new Date()).getMilliseconds();
+            var ran = (new Date()).getMilliseconds();
             //Path where image will be uploaded
             var ext = filename.substr(filename.indexOf('.'), filename.length);
             var photo = {photoPath: req.params.id + ran + ext};
@@ -469,7 +477,7 @@ module.exports = function (express, app, mongoose, path, nodemailer, CronJob, fs
 
         var defaultEmailTemplate = emailTemplates[0].text;
         var defaultSMSTemplate = smsTemplates[0].text;
-        var bannerPath = __dirname + '/images/banners/'+ emailBanner[0].path;
+        var bannerPath = __dirname + '/images/banners/' + emailBanner[0].path;
 
         for (var i = 0; i < employees.length; i++) {
             var person = employees[i];
@@ -485,8 +493,8 @@ module.exports = function (express, app, mongoose, path, nodemailer, CronJob, fs
                 subject: "Feliz Aniversário da iTGrow",
                 text: "Feliz Aniversário da iTGrow",
                 html: '<p>' + EmailTemplateToSend + '</p>' +
-                         '<p><img src="cid:image1"/></p>',
-                attachments:[
+                '<p><img src="cid:image1"/></p>',
+                attachments: [
                     {filePath: bannerPath, cid: "image1"}
                 ],
             };
@@ -496,7 +504,7 @@ module.exports = function (express, app, mongoose, path, nodemailer, CronJob, fs
                     if (error) {
                         return console.log(error);
                     }
-                console.log('Message sent: ' + info.response);
+                    console.log('Message sent: ' + info.response);
                 });
                 //console.log("Sending mail to " + person.name + " | " + person.email + " : " + EmailTemplateToSend);
             }
@@ -707,9 +715,9 @@ module.exports = function (express, app, mongoose, path, nodemailer, CronJob, fs
     /******************** BANNER  *********************************/
 
     //get active banner
-    app.get('/banner_template', function(req, res){
+    app.get('/banner_template', function (req, res) {
         var query = Banner.find({active: true});
-        query.exec(function(err, result){
+        query.exec(function (err, result) {
             if (err) {
                 console.log('[MONGOOSE] Error ' + err);
             } else {
@@ -720,9 +728,9 @@ module.exports = function (express, app, mongoose, path, nodemailer, CronJob, fs
     });
 
     //gets all banners
-    app.get('/all_banners', function(req,res){
-        var query = Banner.find({}).sort({active : -1});
-        query.exec(function(err, result){
+    app.get('/all_banners', function (req, res) {
+        var query = Banner.find({}).sort({active: -1});
+        query.exec(function (err, result) {
             if (err) {
                 console.log('[MONGOOSE] Error ' + err);
             } else {
@@ -732,16 +740,16 @@ module.exports = function (express, app, mongoose, path, nodemailer, CronJob, fs
         });
     });
 
-    app.post('/update_banner', function(req,res){
+    app.post('/update_banner', function (req, res) {
         //
-        Banner.findOneAndUpdate({active: true}, {active: false}, function(err, emp){
+        Banner.findOneAndUpdate({active: true}, {active: false}, function (err, emp) {
         });
         //
-        Banner.findOneAndUpdate({_id : req.body.id},  {active: true}, function(err, emp){
+        Banner.findOneAndUpdate({_id: req.body.id}, {active: true}, function (err, emp) {
         });
     });
 
-    app.post('/post_banner_template', function(req, res){
+    app.post('/post_banner_template', function (req, res) {
         var temp_banner = new Banner({
             active: false,
             path: "null"
@@ -793,7 +801,7 @@ module.exports = function (express, app, mongoose, path, nodemailer, CronJob, fs
     /******************** EMAIL TEMPLATE *************************/
     //gets the current active template
     app.get('/email_template', function (req, res) {
-        var query = EmailTemplate.find({active : true});
+        var query = EmailTemplate.find({active: true});
         query.exec(function (err, result) {
             if (err) {
                 console.log('[MONGOOSE] Error ' + err);
@@ -835,7 +843,7 @@ module.exports = function (express, app, mongoose, path, nodemailer, CronJob, fs
         });
 
         //deactivates the older template
-        EmailTemplate.findOneAndUpdate({active:true},{active:false});
+        EmailTemplate.findOneAndUpdate({active: true}, {active: false});
 
         temp_email.save(function (err, emp) {
             if (err) {
@@ -925,7 +933,7 @@ module.exports = function (express, app, mongoose, path, nodemailer, CronJob, fs
         var text = "";
         text = text.concat(template, "\n\n");
 
-        for(var i = 0; i < employees.length; i++) {
+        for (var i = 0; i < employees.length; i++) {
             var employee = employees[i];
             date.setMonth(employee.birthDate.getMonth());
             date.setDate(employee.birthDate.getDate());
@@ -938,27 +946,26 @@ module.exports = function (express, app, mongoose, path, nodemailer, CronJob, fs
     /**
      * @return {string}
      */
-    function ConvertIndexToWeekDay(day)
-    {
-        if(day == 0) {
+    function ConvertIndexToWeekDay(day) {
+        if (day == 0) {
             return "domingo ";
         }
-        if(day == 1) {
+        if (day == 1) {
             return "segunda-feira ";
         }
-        if(day == 2) {
+        if (day == 2) {
             return "terça-feira ";
         }
-        if(day == 3) {
+        if (day == 3) {
             return "quarta-feira ";
         }
-        if(day == 4) {
+        if (day == 4) {
             return "quinta-feira ";
         }
-        if(day == 5) {
+        if (day == 5) {
             return "sexta-feira ";
         }
-        if(day == 6) {
+        if (day == 6) {
             return "sábado ";
         }
 
@@ -1036,24 +1043,24 @@ module.exports = function (express, app, mongoose, path, nodemailer, CronJob, fs
             });
     }
 
-    app.get('/get_facebook_login_status', function(req, res) {
+    app.get('/get_facebook_login_status', function (req, res) {
         var query = Facebook.find({}, 'token');
-        query.exec(function(err, result) {
+        query.exec(function (err, result) {
             if (err) {
                 console.log('[MONGOOSE] Error: ' + err);
                 res.status(500).json(err);
             } else {
                 FB.setAccessToken(result[0].token);
-                FB.api('/me?fields=id,name,email', function(response) {
+                FB.api('/me?fields=id,name,email', function (response) {
                     res.status(200).json(response);
                 });
             }
         });
     });
 
-    app.get('/get_facebook_expiration_date', function(req, res) {
+    app.get('/get_facebook_expiration_date', function (req, res) {
         var query = Facebook.find({}, 'expirationDate');
-        query.exec(function(err, result) {
+        query.exec(function (err, result) {
             if (err) {
                 console.log('[MONGOOSE] Error: ' + err);
                 res.status(500).json(err);
@@ -1096,14 +1103,16 @@ module.exports = function (express, app, mongoose, path, nodemailer, CronJob, fs
             if (err) {
                 console.log('[MONGOOSE]: ' + err);
             } else {
-                var query = Employee.find({}, 'name birthDate');
+                var query = Employee.find({}, 'name birthDate exitDate');
                 query.exec(function (err, result) {
                     if (!err) {
                         if (result.length > 0) {
                             console.log('[MONGOOSE] Found all employees');
                             for (var i = 0; i < result.length; i++) {
                                 var person = result[i];
-                                createEvent(person, tokenResult[0]);
+                                if (!person.exitDate || person.exitDate == undefined) {
+                                    createEvent(person, tokenResult[0]);
+                                }
                             }
                         } else {
                             console.log('[MONGOOSE] No employees to find');
@@ -1117,64 +1126,6 @@ module.exports = function (express, app, mongoose, path, nodemailer, CronJob, fs
             }
         });
     });
-
-    function setOutlookToken(token) {
-        var query = Outlook.find({});
-        Outlook.update(query, {token: token}, function (err, result) {
-            if (err) {
-                console.log('[MONGOOSE] Error: ' + err);
-                return false;
-            } else {
-                return true;
-            }
-        });
-    }
-
-    app.get('/authUrl', function (req, res) {
-        var returnVal = oauth2.authCode.authorizeURL({
-            redirect_uri: redirectUri,
-            scope: scopes.join(" ")
-        });
-        console.log("Generated auth url: " + returnVal);
-        res.status(200).json(returnVal);
-    });
-
-    var url = require('url');
-    app.get('/authorize', function (req, res) {
-        console.log("Request handler 'authorize' was called.");
-        var url_parts = url.parse(req.url, true);
-        var code = url_parts.query.code;
-        console.log("Code: " + code);
-        getTokenFromCode(code, tokenReceived, res);
-    });
-
-    function getTokenFromCode(auth_code, callback, response) {
-        var token;
-        oauth2.authCode.getToken({
-            code: auth_code,
-            redirect_uri: redirectUri,
-            scope: scopes.join(" ")
-        }, function (error, result) {
-            if (error) {
-                console.log("Access token error: ", error.message);
-                callback(response, error, null);
-            }
-            else {
-                token = oauth2.accessToken.create(result);
-                console.log("Token created: ", token.token);
-                callback(response, null, token);
-            }
-        });
-    }
-
-    function tokenReceived(res, error, token) {
-        if (error) {
-            console.log("Access token error: ", error.message);
-        }
-        else {
-            setOutlookToken(token.token.access_token);
-        }
-    }
 
     function createEvent(person, tokenInfo) {
         var token = tokenInfo.token;
@@ -1219,6 +1170,97 @@ module.exports = function (express, app, mongoose, path, nodemailer, CronJob, fs
         }
     }
 
+    app.get('/authUrl', function (req, res) {
+        var returnVal = oauth2.authCode.authorizeURL({
+            redirect_uri: redirectUri,
+            scope: scopes.join(" ")
+        });
+        console.log("Generated auth url: " + returnVal);
+        res.status(200).json(returnVal);
+    });
+
+    var url = require('url');
+    app.get('/authorize', function (req, res) {
+        console.log("Request handler 'authorize' was called.");
+        var url_parts = url.parse(req.url, true);
+        var code = url_parts.query.code;
+        console.log("Code: " + code);
+        getTokenFromCode(code, tokenReceived, res);
+    });
+
+    app.get('/outlook_get_info', function (req, res) {
+        var query = Outlook.find({});
+        query.exec(function (err, result) {
+            if (err) {
+                console.log('[MONGOOSE] Error: ' + err);
+                res.status(500).json(err);
+            } else {
+                res.status(200).json(result[0]);
+            }
+        });
+    });
+
+    function getTokenFromCode(auth_code, callback, response) {
+        var tokenObj;
+        oauth2.authCode.getToken({
+            code: auth_code,
+            redirect_uri: redirectUri,
+            scope: scopes.join(" ")
+        }, function (error, result) {
+            if (error) {
+                console.log("Access token error: ", error.message);
+                callback(response, error, null);
+            }
+            else {
+                tokenObj = oauth2.accessToken.create(result);
+                console.log("Token created: ", tokenObj.token);
+                callback(response, null, tokenObj);
+            }
+        });
+    }
+
+    function tokenReceived(res, error, tokenObj) {
+        console.log("---- TOKEN OBJ -----");
+        console.log(tokenObj.token["access_token"]);
+        console.log(tokenObj.token["expires_at"]);
+        if (error) {
+            console.log("Access token error: ", error.message);
+        }
+        else {
+            var email = getEmailFromIdToken(tokenObj.token["id_token"]);
+            console.log("Email: " + email);
+            var query = Outlook.find({});
+            Outlook.update(query, {
+                token: tokenObj.token["access_token"],
+                expirationDate: tokenObj.token["expires_at"],
+                email: email
+            }, function (err, result) {
+                if (err) {
+                    console.log('[MONGOOSE] Error: ' + err);
+                    return false;
+                } else {
+                    res.redirect(serverUri + '#/tabs/outlook');
+                    return true;
+                }
+            });
+        }
+    }
+
+    function getEmailFromIdToken(id_token) {
+        // JWT is in three parts, separated by a '.'
+        var token_parts = id_token.split('.');
+
+        // Token content is in the second part, in urlsafe base64
+        var encoded_token = new Buffer(token_parts[1].replace("-", "_").replace("+", "/"), 'base64');
+
+        var decoded_token = encoded_token.toString();
+
+        var jwt = JSON.parse(decoded_token);
+
+        // Email is in the preferred_username field
+        return jwt.preferred_username;
+    }
+
     /****************** UTILS ************************/
 
     var _MS_PER_DAY = 1000 * 60 * 60 * 24;
@@ -1248,11 +1290,14 @@ module.exports = function (express, app, mongoose, path, nodemailer, CronJob, fs
      facebookstuff.save(function(err){if(err) console.log(err);});*/
 
     /*var templateMail = new EmailTemplate({'text':'Uma coisa qualquer','path':'itgrow-logo.png','active':true});
-    templateMail.save(function(err){if(err) console.log(err);});*/
+     templateMail.save(function(err){if(err) console.log(err);});*/
 
     /*var templateSMS = new SMSTemplate({'text':'Uma coisa qualquer','active':true});
-    templateSMS.save(function(err){if(err) console.log(err);});*/
+     templateSMS.save(function(err){if(err) console.log(err);});*/
 
     /*var templateFacebook = new FacebookTemplate({'text':'Uma coisa qualquer','active':true});
-    templateFacebook.save(function(err){if(err) console.log(err);});*/
+     templateFacebook.save(function(err){if(err) console.log(err);});*/
+
+    // var outlookTemplate = new Outlook({'token': '231321', 'email': 'a@gmail.com', 'expirationDate': new Date()});
+    // outlookTemplate.save(function(err){if(err) console.log(err);});
 };
