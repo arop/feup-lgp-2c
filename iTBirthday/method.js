@@ -29,7 +29,7 @@ module.exports = function (express, app, mongoose, path, nodemailer, CronJob, fs
         }
     });
 
-    var serverUri = "http://localhot:8100";
+    var serverUri = "http://localhost:8100";
     var redirectUri = "https://897e01a9.ngrok.io/authorize";
     //var redirectUri = "http://localhost:8080/authorize";
 
@@ -1217,16 +1217,16 @@ module.exports = function (express, app, mongoose, path, nodemailer, CronJob, fs
             redirect_uri: redirectUri,
             scope: scopes.join(" ")
         });
-        console.log("Generated auth url: " + returnVal);
+        //console.log("Generated auth url: " + returnVal);
         res.status(200).json(returnVal);
     });
 
     var url = require('url');
     app.get('/authorize', function (req, res) {
-        console.log("Request handler 'authorize' was called.");
+        //console.log("Request handler 'authorize' was called.");
         var url_parts = url.parse(req.url, true);
         var code = url_parts.query.code;
-        console.log("Code: " + code);
+        //console.log("Code: " + code);
         getTokenFromCode(code, tokenReceived, res);
     });
 
@@ -1255,22 +1255,22 @@ module.exports = function (express, app, mongoose, path, nodemailer, CronJob, fs
             }
             else {
                 tokenObj = oauth2.accessToken.create(result);
-                console.log("Token created: ", tokenObj.token);
+                //console.log("Token created: ", tokenObj.token);
                 callback(response, null, tokenObj);
             }
         });
     }
 
     function tokenReceived(res, error, tokenObj) {
-        console.log("---- TOKEN OBJ -----");
-        console.log(tokenObj.token["access_token"]);
-        console.log(tokenObj.token["expires_at"]);
+        // console.log("---- TOKEN OBJ -----");
+        // console.log(tokenObj.token["access_token"]);
+        // console.log(tokenObj.token["expires_at"]);
         if (error) {
             console.log("Access token error: ", error.message);
         }
         else {
             var email = getEmailFromIdToken(tokenObj.token["id_token"]);
-            console.log("Email: " + email);
+            //console.log("Email: " + email);
             var query = Outlook.find({});
             Outlook.update(query, {
                 token: tokenObj.token["access_token"],
