@@ -35,7 +35,7 @@
           <ion-item class="item-avatar col-50" ng-repeat="p in profiles | filter: filterResults"
                     ui-sref="tabs.profile.show({id: p._id})">
             <div class="item-content">
-              <img ng-src="{{p.imageURL}}" err-src="{{defaultImageURL}}" title="Avatar" alt="Avatar Image"
+              <img ng-src="{{p.imageURL}}" err-src="{{defaultImageURL}}" title="Avatar" alt=""
                    width="46" height="46">
               <h2>{{p.name}}</h2>
               <p>{{p.email}}</p>

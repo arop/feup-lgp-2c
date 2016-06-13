@@ -88,11 +88,26 @@ angular.module('itBirthday.profile', ['ngFileUpload'])
             email: $scope.profile.email
           }).success(function (data, status) {
             if (status == 200) {
-              window.alert("Perfil não existe");
+              var errorPopup = $ionicPopup.alert({
+                title: "Perfil não encontrado!",
+                cssClass: "profile-alert-popup",
+                template: 'Tentou eliminar um perfil que não existe.'
+              });
+
+              errorPopup.then(function() {
+                $state.go('tabs.dash');
+              });
             } else if (status == 202) {
-              window.alert("Perfil removido com sucesso");
+              var successPopup = $ionicPopup.alert({
+                title: "Perfil eliminado!",
+                cssClass: "profile-alert-popup",
+                template: 'Perfil eliminado com sucesso.'
+              });
+
+              successPopup.then(function() {
+                $state.go('tabs.dash');
+              });
             }
-            $state.go('tabs.dash');
             return true;
           }).error(function (err) {
             console.log('Error while deleting new user: ' + err);
@@ -172,13 +187,13 @@ angular.module('itBirthday.profile', ['ngFileUpload'])
           $scope.profile.daysInCompany = Math.floor(Math.abs(exitDate - entryDate) / (1000 * 3600 * 24));
 
           var ageInExit = new Date(exitDate - birthDate);
-          $scope.profile.birthdaysInCompany = Math.abs(ageInExit.getUTCFullYear() - 1970) - Math.abs(ageInEntry.getUTCFullYear() - 1970);
+          $scope.profile.birthdaysInCompany = Math.max(0, Math.abs(ageInExit.getUTCFullYear() - 1970) - Math.abs(ageInEntry.getUTCFullYear() - 1970));
 
           $scope.hasExited = true;
 
         } else {
           $scope.profile.daysInCompany = Math.floor(Math.abs(dateNow - entryDate) / (1000 * 3600 * 24));
-          $scope.profile.birthdaysInCompany = $scope.profile.age - Math.abs(ageInEntry.getUTCFullYear() - 1970);
+          $scope.profile.birthdaysInCompany = Math.max(0, $scope.profile.age - Math.abs(ageInEntry.getUTCFullYear() - 1970));
         }
 
         ionicLoadingService.hideLoading();
@@ -260,8 +275,12 @@ angular.module('itBirthday.profile', ['ngFileUpload'])
       $scope.getEmployee = function () {
         $scope.isView = false;
         $scope.isNewProfile = true;
-        $scope.profile.birthDate = new Date().toISOString().slice(0, 10);
-        $scope.profile.entryDate = new Date().toISOString().slice(0, 10);
+        // $scope.profile.birthDate = new Date().toISOString().slice(0, 10);
+        // $scope.profile.entryDate = new Date().toISOString().slice(0, 10);
+      };
+
+      $scope.getNow = function() {
+        return new Date().toISOString().slice(0, 10);
       };
 
       //listen for the file selected event
