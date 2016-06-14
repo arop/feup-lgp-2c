@@ -163,8 +163,8 @@ angular.module('itBirthday.profile', ['ngFileUpload'])
       $scope.isView = true;
       $scope.notCreating = true;
       $http.get(serverUrl + '/employee_profile/' + $stateParams.id).success(function (response) {
-        //console.log(response);
         $scope.profile = response;
+        var photoPath = $scope.profile.photoPath;
 
         var birthDate = new Date(String($scope.profile.birthDate));
         var entryDate = new Date(String($scope.profile.entryDate));
@@ -177,7 +177,7 @@ angular.module('itBirthday.profile', ['ngFileUpload'])
         $scope.profile.entryDate = entryDate.toISOString().slice(0, 10);
         $scope.profile.age = Math.abs(ageDate.getUTCFullYear() - 1970);
 
-        $scope.imageURL = serverUrl + "/images/employees/" + $scope.profile.photoPath;
+        $scope.imageURL = (serverUrl + "/images/employees/" + photoPath);
 
         if ($scope.profile.exitDate != undefined) {
           var exitDate = new Date(String($scope.profile.exitDate));
@@ -235,14 +235,24 @@ angular.module('itBirthday.profile', ['ngFileUpload'])
             }
           }).then(function (data, status, headers, config) {
             // file is uploaded successfully
-            console.log("Image upload successful.");
+            ionicLoadingService.hideLoading();
+
+            $state.transitionTo($state.current, $stateParams, {
+              reload: true,
+              inherit: false,
+              notify: true
+            });
           }, function (err) {
-            console.error("Image upload: Error: " + err);
+            ionicLoadingService.hideLoading();
+
+            $state.transitionTo($state.current, $stateParams, {
+              reload: true,
+              inherit: false,
+              notify: true
+            });
+
           });
         }
-        ionicLoadingService.hideLoading();
-
-        $state.go($state.current, {}, {reload: true});
       });
     };
 
