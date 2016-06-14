@@ -40,6 +40,14 @@
   background-image: url("../img/menu icons/logout_filled.svg");
 }
 
+.tab-nav.tabs a.tab-icon-outlook.tab-item i.icon {
+  background-image: url("../img/menu icons/outlook.svg");
+}
+
+.tab-nav.tabs a.tab-icon-outlook.tab-item.tab-item-active i.icon {
+  background-image: url("../img/menu icons/outlook_filled.svg");
+}
+
 .tab-nav.tabs a.tab-icon-templates.tab-item i.icon {
   background-image: url("../img/menu icons/templates.svg");
 }
