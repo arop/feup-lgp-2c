@@ -1,17 +1,30 @@
 // Ionic Starter App
 
-var serverUrl = "https://edf72357.ngrok.io";
+var serverUrl = "https://1b817994.ngrok.io";
+//var serverUrl = "http://localhost:8080";
 //var defaultPath = '/app/www/';
 var defaultPath = '';
 
 // angular.module is a global place for creating, registering and retrieving Angular modules
 // 'itBirthday' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
-angular.module('itBirthday', ['ionic', 'ngFileUpload', 'ngPageTitle',
-  'itBirthday.login', 'itBirthday.profile', 'itBirthday.statistics', 'itBirthday.settings'])
 
-  .run(function ($ionicPlatform, $rootScope) {
+angular.module('itBirthday', ['ionic', 'ngFileUpload', 'ngPageTitle',
+  'itBirthday.login', 'itBirthday.profile', 'itBirthday.statistics',
+  'itBirthday.settings', 'itBirthday.facebook', 'itBirthday.outlook'])
+
+  .run(function ($ionicPlatform, $rootScope, Auth, $state) {
     $rootScope.defaultPath = defaultPath;
+
+    $rootScope.$on('$stateChangeStart', function (event, toState, toParams) {
+      if (toState.url != '/login') {
+        var auth = Auth.getAuth();
+        auth.then(function (data) {
+        }, function (error) {
+          $state.go('login');
+        });
+      }
+    });
 
     $ionicPlatform.ready(function () {
       if (window.cordova && window.cordova.plugins.Keyboard) {
@@ -29,6 +42,7 @@ angular.module('itBirthday', ['ionic', 'ngFileUpload', 'ngPageTitle',
       }
     });
   })
+
 
   .config(function ($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
 
@@ -79,18 +93,6 @@ angular.module('itBirthday', ['ionic', 'ngFileUpload', 'ngPageTitle',
           'tab-profile': {
             templateUrl: defaultPath + 'templates/tab-profile.html'
           }
-        }
-      })
-
-      .state('tabs.profile.main', {
-        url: '/main',
-        views: {
-          'inside-profile-tab@tabs.profile': {
-            templateUrl: defaultPath + 'templates/default-profile.html'
-          }
-        },
-        data: {
-          pageTitle: 'Perfis'
         }
       })
 
@@ -150,12 +152,12 @@ angular.module('itBirthday', ['ionic', 'ngFileUpload', 'ngPageTitle',
         url: '/settings',
         views: {
           'tab-settings': {
-            templateUrl: defaultPath + 'templates/tab-settings.html',
+            templateUrl: defaultPath + 'templates/tab-templates.html',
             controller: 'MsgTemplatesCtrl'
           }
         },
         data: {
-          pageTitle: 'Opções'
+          pageTitle: 'Templates'
         }
       })
 
@@ -168,12 +170,64 @@ angular.module('itBirthday', ['ionic', 'ngFileUpload', 'ngPageTitle',
           }
         },
         data: {
-          pageTitle: 'Facebook Info'
+          pageTitle: 'Facebook'
+        }
+      })
+
+      .state('tabs.outlook', {
+        url: '/outlook',
+        views: {
+          'tab-outlook': {
+            templateUrl: defaultPath + 'templates/outlook.html',
+            controller: 'OutlookCtrl'
+          }
+        },
+        data: {
+          pageTitle: 'Outlook'
         }
       });
 
     // if none of the above states are matched, use this as the fallback
 
     $urlRouterProvider.otherwise('/login');
+  })
+
+  .service('ionicLoadingService', function ($ionicLoading) {
+    var ionicLoadingService = this;
+    ionicLoadingService.showLoading = function () {
+      var customTemplate = '<ion-spinner icon="dots"></ion-spinner>';
+      $ionicLoading.show({
+        template: customTemplate,
+        hideOnStateChange: true,
+        animation: 'fade-in'
+      });
+    };
+    ionicLoadingService.hideLoading = function () {
+      $ionicLoading.hide();
+    };
+  })
+
+  .factory('Auth', function ($http, $q) {
+    return {
+      getAuth: function () {
+        var defer = $q.defer();
+        var cookie = localStorage.getItem('session');
+
+        if (cookie != null) {
+          var cookie2 = cookie.replace('\"', '');
+          return $http.get(serverUrl + '/Session/' + cookie2, function (data) {
+            defer.resolve(data);
+            return data;
+          }).error(function (error) {
+            defer.reject(error);
+          });
+
+        } else {
+          defer.reject();
+        }
+
+        return defer.promise;
+      }
+    }
   });
 

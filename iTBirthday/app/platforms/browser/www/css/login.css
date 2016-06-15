@@ -1,11 +1,39 @@
-@media (orientation:landscape) and (min-width: 767px) {
-  #login-logo {
-    margin-top: 5%;
-  }
-}
-
-#login-logo img {
+#login_page #login-logo img {
+  margin-top: 40px;
   width: 100%;
   height: auto;
-  padding: 5%;
+  padding: 5px;
+}
+
+#login_page #errorMessage {
+  padding: 5px;
+}
+
+#login_page label,
+#login-page input {
+  border: none;
+}
+
+#login_page #login_btn {
+  margin-top: 5px;
+}
+
+#login_page #login_btn a {
+  display: block;
+  text-align: right;
+  padding: 12px;
+  margin: auto;
+  font-size: 20px;
+  border: solid 1px transparent !important;
+  background: transparent url("../img/svg icons/right_arrow_orange.svg") no-repeat right center;
+  background-size: 30px !important;
+
+  -webkit-transition: background, border .2s;
+  -moz-transition: background, border .2s;
+  -o-transition: background, border .2s;
+  transition: background, border .2s;
+}
+
+#login_page #login_btn a > span {
+  padding-right: 16px;
 }
