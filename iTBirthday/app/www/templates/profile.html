@@ -89,16 +89,14 @@
                 class="item item-input item-stacked-label date {{(isView || hasExited) ? 'not-editable' : 'editable'}}">
                 <span class="input-label">Data de nascimento</span>
                 <input id="birthDate" class="input-date icon-calendar" datepicker type="text" placeholder="yyyy-mm-dd"
-                       maxlength="10" onkeydown="return false" ng-readonly="true" ng-model="profile.birthDate"
-                       ng-init="profile.birthDate = getNow()"/>
+                       maxlength="10" onkeydown="return false" ng-readonly="true" ng-model="profile.birthDate"/>
               </label>
               <!-- DATA DE ADMISSAO -->
               <label
                 class="item item-input item-stacked-label date {{(isView || hasExited) ? 'not-editable' : 'editable'}}">
                 <span class="input-label">Data de admissão</span>
                 <input id="entryDate" class="input-date icon-calendar" datepicker type="text" placeholder="yyyy-mm-dd"
-                       maxlength="10" onkeydown="return false" ng-readonly="true" ng-model="profile.entryDate"
-                       ng-init="profile.entryDate = getNow()"/>
+                       maxlength="10" onkeydown="return false" ng-readonly="true" ng-model="profile.entryDate"/>
               </label>
               <!-- DATA DE SAIDA -->
               <label class="item item-input item-stacked-label date exit-date not-editable" ng-if="hasExited">

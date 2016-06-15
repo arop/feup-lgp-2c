@@ -110,12 +110,10 @@ angular.module('itBirthday.profile', ['ngFileUpload'])
             }
             return true;
           }).error(function (err) {
-            console.log('Error while deleting new user: ' + err);
-            console.log($scope.profile.email);
             return false;
           });
         } else {
-          //console.log('You are not sure');
+          return false;
         }
       });
     };
@@ -226,7 +224,7 @@ angular.module('itBirthday.profile', ['ngFileUpload'])
         facebookPost: $scope.profile.facebookPost,
         gender: $scope.profile.gender,
         exitDate: date
-      }).success(function () {
+      }).then(function () {
         if ($scope.profile.photo != undefined && $scope.changedPhoto == true) {
           Upload.upload({
             url: serverUrl + '/save_image_employee/' + $stateParams.id,
@@ -236,25 +234,18 @@ angular.module('itBirthday.profile', ['ngFileUpload'])
           }).then(function (data, status, headers, config) {
             // file is uploaded successfully
             ionicLoadingService.hideLoading();
-
-            $state.transitionTo($state.current, $stateParams, {
-              reload: true,
-              inherit: false,
-              notify: true
-            });
+            $state.transitionTo($state.current, $stateParams, {reload: true, inherit: false, notify: true});
           }, function (err) {
             ionicLoadingService.hideLoading();
-
-            $state.transitionTo($state.current, $stateParams, {
-              reload: true,
-              inherit: false,
-              notify: true
-            });
-
+            $state.transitionTo($state.current, $stateParams, {reload: true, inherit: false, notify: true});
           });
         } else {
           ionicLoadingService.hideLoading();
+          $state.transitionTo($state.current, $stateParams, {reload: true, inherit: false, notify: true});
         }
+      }, function(err) {
+        ionicLoadingService.hideLoading();
+        $state.transitionTo($state.current, $stateParams, {reload: true, inherit: false, notify: true});
       });
     };
 
@@ -265,7 +256,6 @@ angular.module('itBirthday.profile', ['ngFileUpload'])
       wrongFields = "";
       if (!VerifyProfileData(profileData)) {
         $scope.showAlertProfile();
-        console.error("Profile data is wrong. Returning...");
         return false;
       }
 
@@ -314,9 +304,7 @@ angular.module('itBirthday.profile', ['ngFileUpload'])
         $("textarea").css("border", "none");
         wrongFields = "";
         if (!VerifyProfileData(profileData)) {
-          console.log(wrongFields);
           $scope.showAlertProfile();
-          console.error("Profile data is wrong. Returning...");
           return false;
         }
 
@@ -353,7 +341,6 @@ angular.module('itBirthday.profile', ['ngFileUpload'])
           return true;
         }).error(function (err) {
           ionicLoadingService.hideLoading();
-          console.log('Error while creating new user: ' + err);
           return false;
         });
       }
@@ -461,20 +448,17 @@ var VerifyProfileData = function (profileData) {
     allOk = false;
   } else if (profileData.sendMail == true) {
     if (profileData.sendPersonalizedMail == undefined) {
-      console.error('Send personalized mail is not defined.');
       allOk = false;
     } else if (profileData.sendPersonalizedMail == true) {
       if (profileData.mailText == undefined) {
         wrongFields += "<br>- Mensagem de Email personalizada;";
         $("textarea#emailCustom").css("border", "1px solid #FF9A9A");
-        console.error('Send personalized mail is set to true, but the text is not.');
         allOk = false;
       } else {
         var mailTextTrimmed = profileData.mailText.trim();
         if (mailTextTrimmed.length == 0) {
           wrongFields += "<br>- Mensagem de Email personalizada;";
           $("textarea#emailCustom").css("border", "1px solid #FF9A9A");
-          console.error('Personalized Email text is empty. Discarding...');
           allOk = false;
         } else {
           profileData.mailText = mailTextTrimmed;
@@ -494,20 +478,17 @@ var VerifyProfileData = function (profileData) {
     allOk = false;
   } else if (profileData.sendSMS == true) {
     if (profileData.sendPersonalizedSMS == undefined) {
-      console.error('Send personalized SMS is not defined.');
       allOk = false;
     } else if (profileData.sendPersonalizedSMS == true) {
       if (profileData.smsText == undefined) {
         wrongFields += "<br>- SMS personalizada;";
         $("textarea#smsCustom").css("border", "1px solid #FF9A9A");
-        console.error('Send personalized SMS is set to true, but the text is not.');
         allOk = false;
       } else {
         var smsTextTrimmed = profileData.smsText.trim();
         if (smsTextTrimmed.length == 0) {
           wrongFields += "<br>- SMS personalizada;";
           $("textarea#smsCustom").css("border", "1px solid #FF9A9A");
-          console.error('Personalized SMS text is empty. Discarding...');
           allOk = false;
         } else {
           profileData.smsText = smsTextTrimmed;
