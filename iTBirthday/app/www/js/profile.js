@@ -252,6 +252,8 @@ angular.module('itBirthday.profile', ['ngFileUpload'])
             });
 
           });
+        } else {
+          ionicLoadingService.hideLoading();
         }
       });
     };

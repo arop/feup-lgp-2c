@@ -217,7 +217,7 @@ module.exports = function (express, app, mongoose, path, nodemailer, CronJob, fs
         emp_temp.save(function (err, emp) {
             if (err) {
                 console.error(err);
-                res.status(500).json('[MONGOOSE] Error inserting new Employee');
+                res.status(500).json('[MONGOOSE] Error inserting new Employee: ' + err);
             }
             else {
                 console.log("Employee inserted correctly");
