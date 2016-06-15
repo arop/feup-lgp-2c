@@ -1,54 +1,20 @@
 <ion-view>
-  <ion-content padding="true" overflow-scroll="true" id="fb_content">
-    <div id="fb-root"></div>
+  <ion-content>
+    <div id = "fb-root"></div>
 
-    <div class="row responsive-sm responsive-md" ng-if="loggedIn && !updating">
-      <div class="col col-50 col-offset-25">
-        <a class="icon-refresh" ng-click="loginFacebook()">Atualizar</a>
-      </div>
-    </div>
+    <fb:login-button class="fb-login-button button button-block" scope="public_profile,email,publish_actions" onlogin="checkLoginState();"
+                     show-faces="true" max-rows="1" size="large"></fb:login-button>
 
-    <div class="row responsive-sm responsive-md" ng-if="!loggedIn && !updating">
-      <div class="col col-50 col-offset-25">
-        <a class="icon-facebook" ng-click="loginFacebook()">Log in</a>
-      </div>
-    </div>
+    <button class="button button-block" id="create-fb-data" ng-click="updateFacebookData()">
+      CREATE FACEBOOK DATA
+    </button>
 
-    <div class="row responsive-sm responsive-md" ng-if="!loggedIn && !updating">
-      <div class="col-50 col-offset-25">
-        <div class="card">
-          <div class="item item-text-wrap title">A aplicação <b>não</b> está autenticada!</div>
-          <div class="separator"></div>
-          <div class="item item-text-wrap">
-            <p>Para autenticar, clique no botão <b>Log in</b>.</p>
-          </div>
-        </div>
-      </div>
-    </div>
+    <button class="button button-block" id="login-status" ng-click="checkLoginState()">
+      CHECK LOGIN STATUS
+    </button>
 
-    <div class="row responsive-sm responsive-md" ng-if="loggedIn && !updating">
-      <div class="col col-50 col-offset-25">
-        <div class="card">
-          <div class="item item-text-wrap title">A aplicação está autenticada.</div>
-          <div class="separator"></div>
-          <div class="item item-text-wrap">
-            <p>Utilizador: <b>{{fbName}}</b></p>
-            <p>Email: <b>{{fbMail}}</b></p>
-            <p>Validade do Token: <b>{{expirationDate}}</b></p>
-          </div>
-          <div class="separator"></div>
-          <div class="item item-text-wrap">
-            <p>É possível fazer a renovação do token clicando no botão <b>Atualizar</b>, mas é necessário que este
-              pedido seja efetuado pelo menos um dia após o último pedido, caso contrário não haverá renovação.</p>
-          </div>
-          <div class="separator"></div>
-          <div class="item item-text-wrap">
-            <p>Para se autenticar com outro utilizador:</p>
-            <p>1. <b>Termine Sessão</b> na sua conta do Facebook;</p>
-            <p>2. Clique no botão de <b>Log in</b> (ou <b>Atualizar</b>) nesta página e siga o procedimento normal.</p>
-          </div>
-        </div>
-      </div>
-    </div>
+    <button class="button button-block" id="post-button" ng-click="post()">
+      POST
+    </button>
   </ion-content>
 </ion-view>

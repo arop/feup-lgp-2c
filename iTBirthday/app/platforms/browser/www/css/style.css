@@ -1,70 +1,7 @@
-@font-face {
-    font-family: ApexNewLight;
-    src: url("../fonts/apex_new_light.otf");
-}
-
-*{
-  font-family: ApexNewLight, Arial, serif !important;
-}
-
-a {
-  text-decoration: none !important;
-  color: inherit !important;
-  cursor: pointer;
-}
-
 .app-color {
-	background: #f1f1f2 !important;
+	background: #FFD17B !important;
 }
 
 .tabs-background-app-color > .tabs {
-  background-color: white !important;
-}
-
-.has-tabs-top {
-  top: 75px;
-}
-
-.bar-header.has-tabs-top {
-  top: 0;
-}
-
-.tabs-top > .tabs {
-  top: 20px;
-  height: 54px;
-}
-
-.tabs-top.tabs-striped .tab-item {
-  margin-top: 0;
-  border-width: 0 0 2px 0 !important;
-  font-size: 12px;
-}
-
-@media screen and (max-width: 500px) {
-  .tabs-top.tabs-striped .tab-item span {
-    display: none;
-  }
-}
-
-.loading-container .loading {
-  background-color: transparent !important;
-}
-
-.loading-container .loading svg g {
-  stroke: #eda04b;
-  stroke-width: 6;
-}
-
-.backdrop {
-  background-color: white;
-}
-
-.backdrop.active {
-  opacity: 0.5;
-}
-
-.spinner svg {
-  fill: #ECA04B;
-  width: 100px;
-  height: 100px;
+  background-color: #FFD17B !important;
 }
