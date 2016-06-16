@@ -277,12 +277,6 @@ angular.module('itBirthday.profile', ['ngFileUpload'])
       $scope.getEmployee = function () {
         $scope.isView = false;
         $scope.isNewProfile = true;
-        // $scope.profile.birthDate = new Date().toISOString().slice(0, 10);
-        // $scope.profile.entryDate = new Date().toISOString().slice(0, 10);
-      };
-
-      $scope.getNow = function() {
-        return new Date().toISOString().slice(0, 10);
       };
 
       //listen for the file selected event
