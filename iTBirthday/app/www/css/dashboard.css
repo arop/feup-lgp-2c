@@ -52,14 +52,6 @@
   height: 100%;
 }
 
-#dashboard #month_employees .slider-slide .month-group .col:first-child {
-  padding-right: 0;
-}
-
-#dashboard #month_employees .slider-slide .month-group .col:last-child {
-  padding-left: 0;
-}
-
 #dashboard #month_employees .slider-slide .month-group .month-employees-container {
   height: 120px;
   overflow: auto;
@@ -142,16 +134,16 @@
   padding: 10px;
 }
 
-#ratio_and_years.row .row {
+#dashboard #ratio_and_years.row .row {
   padding-left: 0;
   padding-right: 0;
 }
 
-#ratio_and_years.row .row > .col-33 {
+#dashboard #ratio_and_years.row .row > .col-33 {
   padding-left: 0;
 }
 
-#ratio_and_years.row .row > .col-66 {
+#dashboard #ratio_and_years.row .row > .col-66 {
   padding-right: 0;
 }
 

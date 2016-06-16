@@ -1,6 +1,5 @@
 /* MAIN PAGE */
-
-#profile-buttons a {
+#profile_div #profile-buttons a {
   display: block;
   text-align: center;
   text-decoration: none;
@@ -10,17 +9,17 @@
   margin: auto;
 }
 
-#profile-buttons a:hover {
+#profile_div #profile-buttons a:hover {
   background-color: white;
 }
 
-#profile-buttons a > img {
+#profile_div #profile-buttons a > img {
   width: 100%;
   height: auto;
   padding: 0 5%;
 }
 
-#profile-buttons a > p {
+#profile_div #profile-buttons a > p {
   color: #333333;
   display: block;
   width: 100%;
@@ -29,26 +28,17 @@
   font-size: 20px;
 }
 
-.row.go-back-btn {
+#profile_div .row.go-back-btn {
   padding-bottom: 0;
   padding-top: 0;
 }
 
-.row.go-back-btn > a {
+#profile_div .row.go-back-btn > a {
   float: right;
   padding: 5px 20px 5px 10px;
   margin: auto 5px auto auto;
   background: transparent url("../img/svg icons/right_arrow_orange.svg") no-repeat right center !important;
   background-size: 20px !important;
-}
-
-.separator {
-  box-sizing: border-box;
-  min-width: 100%;
-  width: 100%;
-  height: auto;
-  border: 1px solid #dddddd;
-  margin: 5px auto 5px auto;
 }
 
 /*********************
@@ -135,7 +125,7 @@
   box-shadow: none;
 }
 
-#search-label {
+#search-profile-filter #search-label {
   outline: none;
   border: none;
   margin: 0;
@@ -143,43 +133,46 @@
   padding-left: 4px;
 }
 
-#search-label input:-ms-input-placeholder {
+#search-profile-filter #search-label input:-ms-input-placeholder {
   color: #333333;
 }
 
-#search-label input::-webkit-input-placeholder {
+#search-profile-filter #search-label input::-webkit-input-placeholder {
   color: #333333;
 }
 
-#search-label input::-moz-placeholder {
+#search-profile-filter #search-label input::-moz-placeholder {
   color: #333333;
 }
 
-#search-label input:-moz-placeholder {
+#search-profile-filter #search-label input:-moz-placeholder {
   color: #333333;
 }
 
-#search-profile.has-header {
+#search-profile-filter #search-profile.has-header {
   top: 44px;
 }
 
-#search-profile .title {
+#search-profile-filter #search-profile .title {
   font-size: 20px;
   margin-bottom: 4px;
 }
 
 @media screen and (max-width: 567px) {
-  #search-profile .row .col-50 {
+  #search-profile-filter #search-profile .row .col-50 {
     margin-bottom: 5px;
   }
 }
 
 @media screen and (max-width: 767px) {
-  #search-profile.has-header {
+  #search-profile-filter #search-profile.has-header {
     top: 95px;
   }
 }
 
+/******************
+   Search Results
+*******************/
 #search-profile-results {
   display: block;
   height: auto;
@@ -239,24 +232,22 @@
 }
 
 /*************************************************************************
-**************************************************************************
-     New Profile
+     Profile Page
 *************************************************************************/
-
-#profile_row .col-50 {
+#profile_div #profile_row .col-50 {
   padding: 5px;
 }
 
-#profile-div .list label.item {
+#profile_div .list label.item {
   border: none;
   padding: 1px 2px 1px 2px;
 }
 
-#profile-div .list label.item > span {
+#profile_div .list label.item > span {
   padding: 2px 0;
 }
 
-#profile-div .list label.item.item-input textarea {
+#profile_div .list label.item.item-input textarea {
   min-width: 100%;
   max-width: 100%;
   min-height: 8em;
@@ -265,7 +256,7 @@
   padding: 4px;
 }
 
-#profile-div .list label.item.item-input input {
+#profile_div .list label.item.item-input input {
   padding: 1px 3px 1px 3px;
   height: 2em;
   -webkit-border-radius: 0;
@@ -274,35 +265,35 @@
   background-color: #f0f0f0 !important;
 }
 
-#profile-div .list label.item.item-input.not-editable {
+#profile_div .list label.item.item-input.not-editable {
   pointer-events: none;
 }
 
-#profile-div .list label.item.item-input.not-editable textarea {
+#profile_div .list label.item.item-input.not-editable textarea {
   cursor: default;
 }
 
-#profile-div .list label.item.item-input.not-editable input.icon-pencil {
+#profile_div .list label.item.item-input.not-editable input.icon-pencil {
   background: none;
 }
 
-#profile-div .list label.item.item-input.editable {
+#profile_div .list label.item.item-input.editable {
   pointer-events: all;
 }
 
-#profile-div .list label.item.item-input.editable input.icon-pencil {
+#profile_div .list label.item.item-input.editable input.icon-pencil {
   background: url("../img/icons/pencil.png") no-repeat right #eda04b;
   -webkit-background-size: 20px;
   background-size: 20px;
 }
 
-#profile-div .list label.item.item-input.editable input.icon-calendar {
+#profile_div .list label.item.item-input.editable input.icon-calendar {
   background: url("../img/icons/calendar.png") no-repeat right #eda04b;
   -webkit-background-size: 20px;
   background-size: 20px;
 }
 
-#profile-div .list label.item label.item-select {
+#profile_div .list label.item label.item-select {
   display: block;
   position: relative;
   width: auto;
@@ -313,11 +304,11 @@
   text-align: center;
 }
 
-#profile-div .list label.item label.item-select::after {
+#profile_div .list label.item label.item-select::after {
   display: none;
 }
 
-#profile-div .list label.item label.item-select select {
+#profile_div .list label.item label.item-select select {
   display: block;
   position: inherit;
   width: 100%;
@@ -333,45 +324,45 @@
   background-color: #f0f0f0 !important;
 }
 
-#profile-div .list label.item.not-editable label.item-select select {
+#profile_div .list label.item.not-editable label.item-select select {
   background: none;
 }
 
-#profile-div .list label.item.item-input.date {
+#profile_div .list label.item.item-input.date {
   cursor: pointer;
 }
 
-#profile-div .list label.item.item-input.date.exit-date input {
+#profile_div .list label.item.item-input.date.exit-date input {
   color: #c00000 !important;
   font-weight: 600;
 }
 
-#profile-div .list label.item.item-input.date input {
+#profile_div .list label.item.item-input.date input {
   cursor: pointer;
 }
 
-#profile-div .list label.item.item-input input::-webkit-input-placeholder {
+#profile_div .list label.item.item-input input::-webkit-input-placeholder {
   color: #808080;
 }
 
-#profile-div .list label.item.item-input input:-moz-placeholder {
+#profile_div .list label.item.item-input input:-moz-placeholder {
   color: #808080;
 }
 
-#profile-div .list label.item.item-input input::-moz-placeholder {
+#profile_div .list label.item.item-input input::-moz-placeholder {
   color: #808080;
 }
 
-#profile-div .list label.item.item-input input:-ms-input-placeholder {
+#profile_div .list label.item.item-input input:-ms-input-placeholder {
   color: #808080;
 }
 
-#profile-div .list label.item-checkbox {
+#profile_div .list label.item-checkbox {
   border: none;
   padding: 4px 30px 4px 2px;
 }
 
-#profile-div .list label.item-checkbox > .checkbox {
+#profile_div .list label.item-checkbox > .checkbox {
   top: 0;
   right: 2px;
   left: auto;
@@ -379,14 +370,14 @@
   margin-top: 0;
 }
 
-#profile-div .list label.item-checkbox > .checkbox .checkbox-icon {
+#profile_div .list label.item-checkbox > .checkbox .checkbox-icon {
   right: 0;
   width: 22px;
   height: 22px;
   cursor: pointer;
 }
 
-#profile-div .list label.item-checkbox > .checkbox .checkbox-icon::before {
+#profile_div .list label.item-checkbox > .checkbox .checkbox-icon::before {
   -webkit-border-radius: 0;
   -moz-border-radius: 0;
   border-radius: 0;
@@ -394,26 +385,20 @@
   background-color: #f0f0f0;
 }
 
-#profile-div .list label.item-checkbox > .checkbox .checkbox-icon::after {
+#profile_div .list label.item-checkbox > .checkbox .checkbox-icon::after {
   width: 12px;
   border-bottom-width: 2px;
   border-left-width: 2px;
   border-color: #2C4E7D;
 }
 
-#profile-div .list label.item-checkbox > .checkbox input:checked + .checkbox-icon::after {
+#profile_div .list label.item-checkbox > .checkbox input:checked + .checkbox-icon::after {
   border-bottom-width: 2px;
   border-left-width: 2px;
   border-color: #2C4E7D;
 }
 
-@media screen and (max-width: 767px) {
-  .hide-when-small {
-    display: none;
-  }
-}
-
-#profile-div .input-date {
+#profile_div .input-date {
   -webkit-touch-callout: none;
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -421,34 +406,34 @@
   user-select: none;
 }
 
-#profile-div .input-date::-moz-selection {
+#profile_div .input-date::-moz-selection {
   background: transparent;
 }
 
-#profile-div .input-date::selection {
+#profile_div .input-date::selection {
   background: transparent;
 }
 
-#profile-div .toggle input:checked + .track {
+#profile_div .toggle input:checked + .track {
   border-color: #f0f0f0;
   background-color: #f0f0f0;
 }
 
-#profile-div .list {
+#profile_div .list {
   margin-bottom: 0;
 }
 
-#profile-div .list > .item.item-image {
+#profile_div .list > .item.item-image {
   padding-top: 28px;
   height: 200px;
 }
 
-#profile-div .list > .item.item-image > span {
+#profile_div .list > .item.item-image > span {
   text-align: left;
   display: block;
 }
 
-#profile-div .list > .item.item-image > img {
+#profile_div .list > .item.item-image > img {
   display: block;
   margin: auto;
   border: none;
@@ -458,12 +443,12 @@
   width: auto;
 }
 
-#profile-div .list > .item.item-file {
+#profile_div .list > .item.item-file {
   padding-top: 0;
   margin-top: 0;
 }
 
-#profile-div .list > .item.item-file input[type="file"] {
+#profile_div .list > .item.item-file input[type="file"] {
   cursor: pointer;
   width: 100%;
   text-align: center;
@@ -472,11 +457,11 @@
   background-color: transparent !important;
 }
 
-#profile-div #profile-buttons-row {
+#profile_div #profile-buttons-row {
   padding: 10px 10px 20px 10px;
 }
 
-#profile-div #profile-buttons-row > a {
+#profile_div #profile-buttons-row > a {
   float: right;
   padding: 5px 20px 5px 10px;
   margin: auto 5px auto auto;
@@ -497,53 +482,50 @@
   margin: auto;
 }
 
-.profile-alert-popup .popup {
-  background-color: #f1f1f2 !important;
-}
-
-.popup-container .popup-head .popup-title {
-  font-weight: 900;
-}
-
-.popup-container .popup-buttons .button {
-  background-color: #eda04b !important;
-}
-
-.popup-container .popup-buttons .button.activated {
-  background-color: #e8871a !important;
-}
-
-#profile-div #profile-buttons-row > #edit-profile-btn {
+#profile_div #profile-buttons-row > #edit-profile-btn {
   background: transparent url("../img/svg icons/pencil_blue.svg") no-repeat right center !important;
   background-size: 20px !important;
 }
 
-#profile-div #profile-buttons-row > #create-profile-btn {
+#profile_div #profile-buttons-row > #create-profile-btn {
   background: transparent url("../img/svg icons/confirm_blue.svg") no-repeat right center !important;
   background-size: 20px !important;
 }
 
-#profile-div #profile-buttons-row > #save-profile-changes-btn {
+#profile_div #profile-buttons-row > #save-profile-changes-btn {
   background: transparent url("../img/svg icons/confirm_blue.svg") no-repeat right center !important;
   background-size: 20px !important;
 }
 
-#profile-div #add-exit-date-btn > a {
+#profile_div #add-exit-date-btn > a {
   background: transparent url("../img/svg icons/down_arrow_blue.svg") no-repeat left center !important;
   background-size: 20px !important;
 }
 
-#profile-div #remove-profile-btn > a {
+#profile_div #remove-profile-btn > a {
   background: transparent url("../img/svg icons/trash_bin.svg") no-repeat left center !important;
   background-size: 20px !important;
 }
 
-/* POPUP */
-.popup-container.profile-confirm-popup .popup {
-  background-color: #f1f1f2;
+/******************************
+          Popup
+******************************/
+.profile-alert-popup.popup-container .popup button:hover,
+.profile-confirm-popup.popup-container .popup button.button-dark:hover {
+  background-color: #eda04b !important;
 }
 
-.popup-container.profile-confirm-popup .popup button {
+.profile-confirm-popup.popup-container .popup button.button-assertive:hover {
+  background-color: #DB4B23 !important;
+}
+
+.profile-alert-popup.popup-container .popup,
+.profile-confirm-popup.popup-container .popup {
+  background-color: #f1f1f2 !important;
+}
+
+.profile-confirm-popup.popup-container .popup button,
+.profile-alert-popup.popup-container .popup button {
   color: #434343;
   background-color: transparent !important;
 
@@ -553,10 +535,12 @@
   transition: all .2s;
 }
 
-.popup-container.profile-confirm-popup .popup button.button-dark:hover {
-  background-color: #eda04b !important;
+.profile-alert-popup.popup-container .popup-head .popup-title,
+.profile-confirm-popup.popup-container .popup-head .popup-title {
+  font-weight: 900;
 }
 
-.popup-container.profile-confirm-popup .popup button.button-assertive:hover {
-  background-color: #DB4B23 !important;
+.profile-alert-popup.popup-container .popup-buttons .button.activated,
+.profile-confirm-popup.popup-container .popup-buttons .button.activated {
+  background-color: #e8871a !important;
 }

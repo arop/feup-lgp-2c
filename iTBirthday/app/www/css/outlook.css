@@ -62,14 +62,17 @@
   color: #DB4B23 !important;
 }
 
-.popup-container .popup-head .popup-title {
+.outlook-alert-popup-success.popup-container .popup-head .popup-title,
+.outlook-alert-popup-error.popup-container .popup-head .popup-title {
   font-weight: 900;
 }
 
-.popup-container .popup-buttons .button {
+.outlook-alert-popup-success.popup-container .popup-buttons .button,
+.outlook-alert-popup-error.popup-container .popup-buttons .button {
   background-color: #eda04b !important;
 }
 
-.popup-container .popup-buttons .button.activated {
+.outlook-alert-popup-success.popup-container .popup-buttons .button.activated,
+.outlook-alert-popup-error.popup-container .popup-buttons .button.activated {
   background-color: #e8871a !important;
 }

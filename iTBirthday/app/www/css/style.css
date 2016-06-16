@@ -69,6 +69,15 @@ a {
   height: 100px;
 }
 
+.separator {
+  box-sizing: border-box;
+  min-width: 100%;
+  width: 100%;
+  height: auto;
+  border: 1px solid #dddddd;
+  margin: 5px auto 5px auto;
+}
+
 /*********************
      Date Picker
 *********************/
