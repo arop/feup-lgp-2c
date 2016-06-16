@@ -348,7 +348,6 @@ module.exports = function (express, app, mongoose, path, nodemailer, CronJob, fs
     app.get('/employee_profile/:id', function (req, res) {
         var query = Employee.findOne({'_id': req.params.id});
         query.exec(function (err, result) {
-            //TODO
             if (!err) {
                 if (result) {
                     console.log('[MONGOOSE] Found employee');
@@ -373,8 +372,8 @@ module.exports = function (express, app, mongoose, path, nodemailer, CronJob, fs
      | +------------ Minute            (range: 0-59)
      +-------------- Seconds           (range: 0-59)
      /********************CRON ***********************/
-
-    new CronJob('00 * * * * *', function () {
+    /* Stands for every day, every month, every year, at 00:01:00 */
+    new CronJob('00 1 00 * * *', function () {
         var month = new Date().getMonth();
         var day = new Date().getDate();
         var year = new Date().getFullYear();
@@ -440,38 +439,36 @@ module.exports = function (express, app, mongoose, path, nodemailer, CronJob, fs
             ]);
         }
 
-        // query.exec(function (err, employees) {
-        //     if (!err) {
-        //         var query = EmailTemplate.find({active:true});
-        //         query.exec(function(err, emailTemplates){
-        //             if(err){
-        //                 console.log(err);
-        //                 return;
-        //             } else {
-        //                 var query = SMSTemplate.find({active:true});
-        //                 query.exec(function(err, smsTemplates){
-        //                     if(err){
-        //                         console.log(err);
-        //                         return;
-        //                     } else {
-        //                         var query = Banner.find({active:true});
-        //                         query.exec(function(err, emailBanner){
-        //                             if(err){
-        //                                 console.log(err);
-        //                                 return;
-        //                             } else {
-        //                                 sendEmailAndSMS(employees, emailTemplates, smsTemplates, emailBanner);
-        //                             }
-        //                         });
-        //                     }
-        //                 });
-        //             }
-        //         });
-        //     } else {
-        //         console.log(err);
-        //         return;
-        //     }
-        // });
+        query.exec(function (err, employees) {
+            if (!err) {
+                var query = EmailTemplate.find({active: true});
+                query.exec(function (err, emailTemplates) {
+                    if (err) {
+                        console.log(err);
+                    }
+                    else {
+                        var query = SMSTemplate.find({active: true});
+                        query.exec(function (err, smsTemplates) {
+                            if (err) {
+                                console.log(err);
+                            }
+                            else {
+                                var query = Banner.find({active: true});
+                                query.exec(function (err, emailBanner) {
+                                    if (err) {
+                                        console.log(err);
+                                    } else {
+                                        sendEmailAndSMS(employees, emailTemplates, smsTemplates, emailBanner);
+                                    }
+                                });
+                            }
+                        });
+                    }
+                });
+            } else {
+                console.log(err);
+            }
+        });
     }, null, true, 'Europe/London');
 
     function sendEmailAndSMS(employees, emailTemplates, smsTemplates, emailBanner) {
@@ -497,7 +494,7 @@ module.exports = function (express, app, mongoose, path, nodemailer, CronJob, fs
                 '<p><img src="cid:image1"/></p>',
                 attachments: [
                     {filePath: bannerPath, cid: "image1"}
-                ],
+                ]
             };
 
             if (person.sendMail) {
@@ -507,11 +504,10 @@ module.exports = function (express, app, mongoose, path, nodemailer, CronJob, fs
                     }
                     console.log('Message sent: ' + info.response);
                 });
-                //console.log("Sending mail to " + person.name + " | " + person.email + " : " + EmailTemplateToSend);
             }
+
             if (person.sendSMS) {
-                // SendSMSService(SMSTemplateToSend, "+351" + person.phoneNumber);
-                // console.log("Sending sms to " + person.name + " | " + person.phoneNumber + " : " + SMSTemplateToSend);
+                SendSMSService(SMSTemplateToSend, "+351" + person.phoneNumber);
             }
         }
     }
@@ -608,9 +604,6 @@ module.exports = function (express, app, mongoose, path, nodemailer, CronJob, fs
                     birthDate: employee.birthDate,
                     name: employee.name
                 };
-                // person["photoPath"] = employee.photoPath;
-                // person["birthDate"] = employee.birthDate;
-                // person["name"] = employee.name;
 
                 people[people.length] = person;
 
@@ -631,8 +624,8 @@ module.exports = function (express, app, mongoose, path, nodemailer, CronJob, fs
         MFratio[0] = ((MFtotal[0] / activeEmployees) * 100).toFixed(1) + "%";
         MFratio[1] = ((MFtotal[1] / activeEmployees) * 100).toFixed(1) + "%";
 
-        for (var i = 0; i < birthByMonthTotal.length; i++) {
-            birthByMonthRatio[i] = ((birthByMonthTotal[i] / activeEmployees) * 100).toFixed(1) + "%";
+        for (var j = 0; j < birthByMonthTotal.length; j++) {
+            birthByMonthRatio[j] = ((birthByMonthTotal[j] / activeEmployees) * 100).toFixed(1) + "%";
         }
 
         statistics[0] = MFratio;
@@ -870,62 +863,63 @@ module.exports = function (express, app, mongoose, path, nodemailer, CronJob, fs
      | +------------ Minute            (range: 0-59)
      +-------------- Seconds           (range: 0-59)
      /********************CRON ***********************/
+    /* stands for first day of every month, every year, at 00:01:00 */
     new CronJob('00 1 00 1 * *', function () {
         var month = new Date().getMonth();
         var day = new Date().getDate();
         var year = new Date().getFullYear();
 
-        // if(day == 30) {
-        //     var query = Employee.find({});
-        //     query.exec(function (err, result) {
-        //         if (err) {
-        //             console.log('[MONGOOSE] Error: ' + err);
-        //         } else {
-        //             var activeEmployees = [];
-        //
-        //             for(var i = 0; i < result.length; i++) {
-        //                 var employee = result[i];
-        //
-        //                 if(!employee.exitDate || employee.exitDate == null) {
-        //                     var employeeDay = employee.birthDate.getDate();
-        //                     var employeeMonth = employee.birthDate.getMonth();
-        //                     if(employeeMonth == month) {
-        //                         activeEmployees.push(employee);
-        //                     }
-        //                 }
-        //             }
-        //
-        //             activeEmployees.sort(function(a, b){
-        //                 return (a.birthDate.getDate() - b.birthDate.getDate());
-        //             });
-        //
-        //             var query = FacebookTemplate.find({'active':true});
-        //             query.exec(function (err, result) {
-        //                 if (err) {
-        //                     console.log('[MONGOOSE] Error ' + err);
-        //                 } else {
-        //                     var body = getFacebookBodyMessage(result[0].text, activeEmployees);
-        //
-        //                     var query = Facebook.find({}, 'token');
-        //                     query.exec(function(err, result) {
-        //                         if (err) {
-        //                             console.log('[MONGOOSE] Error: ' + err);
-        //                         } else {
-        //                             FB.setAccessToken(result[0].token);
-        //                             FB.api('/me/feed', 'post', { message: body }, function (res) {
-        //                                 if (!res || res.error) {
-        //                                     console.log(!res ? 'error occurred' : res.error);
-        //                                 } else {
-        //                                     console.log("Successful post on facebook");
-        //                                 }
-        //                             });
-        //                         }
-        //                     });
-        //                 }
-        //             });
-        //         }
-        //     });
-        // }
+        if (day == 30) {
+            var query = Employee.find({});
+            query.exec(function (err, result) {
+                if (err) {
+                    console.log('[MONGOOSE] Error: ' + err);
+                } else {
+                    var activeEmployees = [];
+
+                    for (var i = 0; i < result.length; i++) {
+                        var employee = result[i];
+
+                        if (!employee.exitDate || employee.exitDate == null) {
+                            var employeeDay = employee.birthDate.getDate();
+                            var employeeMonth = employee.birthDate.getMonth();
+                            if (employeeMonth == month) {
+                                activeEmployees.push(employee);
+                            }
+                        }
+                    }
+
+                    activeEmployees.sort(function (a, b) {
+                        return (a.birthDate.getDate() - b.birthDate.getDate());
+                    });
+
+                    var query = FacebookTemplate.find({'active': true});
+                    query.exec(function (err, result) {
+                        if (err) {
+                            console.log('[MONGOOSE] Error ' + err);
+                        } else {
+                            var body = getFacebookBodyMessage(result[0].text, activeEmployees);
+
+                            var query = Facebook.find({}, 'token');
+                            query.exec(function (err, result) {
+                                if (err) {
+                                    console.log('[MONGOOSE] Error: ' + err);
+                                } else {
+                                    FB.setAccessToken(result[0].token);
+                                    FB.api('/me/feed', 'post', {message: body}, function (res) {
+                                        if (!res || res.error) {
+                                            console.log(!res ? 'error occurred' : res.error);
+                                        } else {
+                                            console.log("Successful post on facebook");
+                                        }
+                                    });
+                                }
+                            });
+                        }
+                    });
+                }
+            });
+        }
 
     }, null, true, 'Europe/London');
 
@@ -1148,19 +1142,11 @@ module.exports = function (express, app, mongoose, path, nodemailer, CronJob, fs
                     return false;
                 } else {
                     console.log("Update Employee Outlook Year: Success --> " + person.name);
-                    //console.log(result);
                 }
             });
 
-        console.log("--- CREATE EVENT ---");
-        console.log(person.name);
-
         var token = outlookInfo.token;
         var email = outlookInfo.email;
-
-        // console.log(outlookInfo.token);
-        // console.log(outlookInfo.email);
-        // console.log('Creating event');
 
         var date = new Date();
         var birthdayBegin = person.birthDate;
@@ -1171,13 +1157,9 @@ module.exports = function (express, app, mongoose, path, nodemailer, CronJob, fs
         birthdayEnd.setUTCHours(birthdayBegin.getUTCHours() + 23);
         var birthdayEndString = birthdayEnd.toISOString().split('.')[0];
 
-        // console.log(birthdayBeginString);
-        // console.log(birthdayEndString);
-
         if (token) {
             outlook.base.setApiEndpoint('https://outlook.office.com/api/v2.0');
             outlook.base.setAnchorMailbox(email);
-            //outlook.base.setPreferredTimeZone('Eastern Standard Time');
 
             var newEvent = {
                 "Subject": "Aniversário de " + person.name,
@@ -1255,16 +1237,12 @@ module.exports = function (express, app, mongoose, path, nodemailer, CronJob, fs
             }
             else {
                 tokenObj = oauth2.accessToken.create(result);
-                //console.log("Token created: ", tokenObj.token);
                 callback(response, null, tokenObj);
             }
         });
     }
 
     function tokenReceived(res, error, tokenObj) {
-        // console.log("---- TOKEN OBJ -----");
-        // console.log(tokenObj.token["access_token"]);
-        // console.log(tokenObj.token["expires_at"]);
         if (error) {
             console.log("Access token error: ", error.message);
         }
@@ -1342,7 +1320,7 @@ module.exports = function (express, app, mongoose, path, nodemailer, CronJob, fs
 
     // var outlookTemplate = new Outlook({'token': '231321', 'email': 'a@gmail.com', 'expirationDate': new Date()});
     // outlookTemplate.save(function(err){if(err) console.log(err);});
-    
+
     // var query = Employee.find({});
     // Employee.update(query,
     //     {
