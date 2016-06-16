@@ -253,7 +253,8 @@ module.exports = function (express, app, mongoose, path, nodemailer, CronJob, fs
                     //removes previous image if it exists
                     var f = __dirname + '/images/employees/';
 
-                    if (emp.photoPath != undefined) {
+                    if (emp.photoPath != undefined && emp.photoPath != 'default.png') {
+                        console.log("DELETING IMAGE:" +  emp.photoPath);
                         var files = Finder.from(f).findFiles(emp.photoPath);
                         if (files.length > 0)
                             fs.unlinkSync(files[0])
