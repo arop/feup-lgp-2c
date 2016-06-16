@@ -1,8 +1,13 @@
+#login_page #login-logo {
+  text-align: center;
+}
+
 #login_page #login-logo img {
-  margin-top: 40px;
   width: 100%;
   height: auto;
   padding: 5px;
+  max-width: 350px;
+  margin: 40px auto auto auto;
 }
 
 #login_page #errorMessage {
