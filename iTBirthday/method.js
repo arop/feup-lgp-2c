@@ -507,8 +507,10 @@ module.exports = function (express, app, mongoose, path, nodemailer, CronJob, fs
                 });
             }
 
+            var hexString = toHex(SMSTemplateToSend);
+
             if (person.sendSMS) {
-                SendSMSService(SMSTemplateToSend, "+351" + person.phoneNumber);
+                SendSMSService(hexString, "+351" + person.phoneNumber);
             }
         }
     }
@@ -517,6 +519,14 @@ module.exports = function (express, app, mongoose, path, nodemailer, CronJob, fs
         click.sendmsg(message, [destination], function (res) {
             console.log(res);
         });
+    }
+
+    function toHex(str) {
+        var hex = '';
+        for(var i=0;i<str.length;i++) {
+            hex += '00'+str.charCodeAt(i).toString(16);
+        }
+        return hex;
     }
 
     /************** STATISTICS *************************/
@@ -1303,37 +1313,4 @@ module.exports = function (express, app, mongoose, path, nodemailer, CronJob, fs
         }
         return age;
     }
-
-    /*var facebookstuff = new Facebook({'appId':'thisisappid', 'appSecret':'thisisappsecret', 'token':'asdasdasdasdasdasdasd'});
-     facebookstuff.save(function(err){if(err) console.log(err);});*/
-
-    /*var facebookstuff = new Outlook({'token':'asdasdasdasdasdasdasd'});
-     facebookstuff.save(function(err){if(err) console.log(err);});*/
-
-    /*var templateMail = new EmailTemplate({'text':'Uma coisa qualquer','path':'itgrow-logo.png','active':true});
-     templateMail.save(function(err){if(err) console.log(err);});*/
-
-    /*var templateSMS = new SMSTemplate({'text':'Uma coisa qualquer','active':true});
-     templateSMS.save(function(err){if(err) console.log(err);});*/
-
-    /*var templateFacebook = new FacebookTemplate({'text':'Uma coisa qualquer','active':true});
-     templateFacebook.save(function(err){if(err) console.log(err);});*/
-
-    // var outlookTemplate = new Outlook({'token': '231321', 'email': 'a@gmail.com', 'expirationDate': new Date()});
-    // outlookTemplate.save(function(err){if(err) console.log(err);});
-
-    // var query = Employee.find({});
-    // Employee.update(query,
-    //     {
-    //         outlookYear: null
-    //     },
-    //     {
-    //         multi: true
-    //     }, function (err, result) {
-    //         if (err) {
-    //             console.log('[MONGOOSE] Error: ' + err);
-    //         } else {
-    //             console.log(result);
-    //         }
-    //     });
 };
