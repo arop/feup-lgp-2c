@@ -12,7 +12,7 @@
                 <div class="month-employees-container">
                   <div class="month-employee"
                        ng-repeat="employee in data.Employees | filter:filterMonthEmployees(group[0]) | limitTo : 10">
-                    <img src="{{getEmployeeImagePath(employee.photoPath)}}" title="{{employee.name}}"
+                    <img ng-src="{{getEmployeeImagePath(employee.photoPath)}}" title="{{employee.name}}"
                          alt="{{employee.name}}"
                          width="50" height="50">
                   </div>
@@ -23,7 +23,7 @@
                 <div class="month-employees-container">
                   <div class="month-employee"
                        ng-repeat="employee in data.Employees | filter:filterMonthEmployees(group[1]) | limitTo : 10">
-                    <img src="{{getEmployeeImagePath(employee.photoPath)}}" title="{{employee.name}}"
+                    <img ng-src="{{getEmployeeImagePath(employee.photoPath)}}" title="{{employee.name}}"
                          alt="{{employee.name}}"
                          width="50" height="50">
                   </div>
@@ -211,7 +211,7 @@
             <div class="col col-25" ng-repeat="emp in currentMonthBirthdays">
               <div class="container">
                 <div class="emp-img">
-                  <img src="{{getEmployeeImagePath(emp.photoPath)}}" title="{{emp.name}} photo" alt="{{emp.name}}"
+                  <img ng-src="{{getEmployeeImagePath(emp.photoPath)}}" title="{{emp.name}} photo" alt="{{emp.name}}"
                        width="100" height="100">
                 </div>
                 <div class="emp-name">{{emp.name}}</div>
