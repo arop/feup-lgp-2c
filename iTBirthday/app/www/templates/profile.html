@@ -119,8 +119,8 @@
                 <label
                   class="item item-input item-stacked-label {{(isView || hasExited) ? 'not-editable' : 'editable'}}"
                   ng-show="profile.sendMail && profile.sendPersonalizedMail">
-                  <textarea id="emailCustom" rows="4" placeholder="Email personalizado" ng-model="profile.mailText"
-                            maxlength="500" ng-readonly="isView || hasExited"
+                  <textarea id="emailCustom" rows="4" placeholder="Email personalizado (máx. 500 caracteres)"
+                            ng-model="profile.mailText" maxlength="500" ng-readonly="isView || hasExited"
                             ng-disabled="isView || hasExited"></textarea>
                 </label>
                 <!-- SMS -->
@@ -137,7 +137,8 @@
                 <label
                   class="item item-input item-stacked-label {{(isView || hasExited) ? 'not-editable' : 'editable'}}"
                   ng-show="profile.sendSMS && profile.sendPersonalizedSMS">
-                  <textarea id="smsCustom" placeholder="SMS personalizado" ng-model="profile.smsText"
+                  <textarea id="smsCustom" placeholder="SMS personalizado (máx. 70 caracteres)"
+                            ng-model="profile.smsText" maxlength="70"
                             ng-readonly="isView || hasExited" ng-disabled="isView"></textarea>
                 </label>
                 <div class="separator"></div>
