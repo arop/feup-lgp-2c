@@ -581,6 +581,7 @@ a {
   height: 100px;
   max-width: 100%;
   max-height: 100%;
+  border-radius: 50%;
 }
 
 #dashboard_modal .emp-name {
@@ -1295,6 +1296,40 @@ a {
   background: transparent url("../img/icons/confirm.png") no-repeat right center !important;
   background-size: 16px !important;
 }
+
+/******************************
+          Popup
+******************************/
+.template-alert-popup.popup-container .popup button:hover {
+  background-color: #eda04b !important;
+}
+
+.template-alert-popup.popup-container .popup button.button-assertive:hover {
+  background-color: #DB4B23 !important;
+}
+
+.template-alert-popup.popup-container .popup  {
+  background-color: #f1f1f2 !important;
+}
+
+.template-alert-popup.popup-container .popup button  {
+  color: #434343;
+  background-color: transparent !important;
+
+  -webkit-transition: all .2s;
+  -moz-transition: all .2s;
+  -o-transition: all .2s;
+  transition: all .2s;
+}
+
+.template-alert-popup.popup-container .popup-head .popup-title {
+  font-weight: 900;
+}
+
+.template-alert-popup.popup-container .popup-buttons .button.activated  {
+  background-color: #e8871a !important;
+}
+
 
 /********************************************************
                         Facebook
