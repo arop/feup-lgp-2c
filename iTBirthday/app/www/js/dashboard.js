@@ -54,6 +54,9 @@ angular.module('itBirthday.statistics', ['chart.js'])
           var data = success.data;
 
           $scope.data.Employees = data.Employees;
+
+          var monthBox = new Date().getMonth() >> 1;
+          $ionicSlideBoxDelegate.slide(monthBox);
           $ionicSlideBoxDelegate.update();
 
           $scope.data.AverageTime = data.AverageTime;
