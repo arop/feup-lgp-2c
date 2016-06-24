@@ -10,8 +10,8 @@
   margin: 40px auto auto auto;
 }
 
-#login_page #errorMessage {
-  padding: 5px;
+#login_page label {
+  padding-right: 16px;
 }
 
 #login_page label,
@@ -41,4 +41,37 @@
 
 #login_page #login_btn a > span {
   padding-right: 16px;
+}
+
+/******************************
+          Popup
+******************************/
+.login-alert-popup.popup-container .popup button:hover {
+  background-color: #eda04b !important;
+}
+
+.login-alert-popup.popup-container .popup button.button-assertive:hover {
+  background-color: #DB4B23 !important;
+}
+
+.login-alert-popup.popup-container .popup  {
+  background-color: #f1f1f2 !important;
+}
+
+.login-alert-popup.popup-container .popup button  {
+  color: #434343;
+  background-color: transparent !important;
+
+  -webkit-transition: all .2s;
+  -moz-transition: all .2s;
+  -o-transition: all .2s;
+  transition: all .2s;
+}
+
+.login-alert-popup.popup-container .popup-head .popup-title {
+  font-weight: 900;
+}
+
+.login-alert-popup.popup-container .popup-buttons .button.activated  {
+  background-color: #e8871a !important;
 }

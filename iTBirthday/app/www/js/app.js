@@ -20,7 +20,9 @@ angular.module('itBirthday', ['ionic', 'ngFileUpload', 'ngPageTitle',
       if (toState.url != '/login') {
         var auth = Auth.getAuth();
         auth.then(function (data) {
+          // Success
         }, function (error) {
+          console.log("auth error!");
           $state.go('login');
         });
       }

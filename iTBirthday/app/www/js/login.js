@@ -1,10 +1,16 @@
 angular.module('itBirthday.login', [])
 
-  .controller('LoginCtrl', function ($scope, $state, $http, ionicLoadingService) {
-
+  .controller('LoginCtrl', function ($scope, $state, $http, ionicLoadingService, $ionicPopup) {
     $scope.user = {};
-
     $scope.errorMessage = '';
+
+    $scope.resetInputFields = function() {
+      var inputs = $('input').each(function(key, data) {
+        var $data = $(data);
+        $data.css('border','none');
+        $data.val('');
+      });
+    };
 
     //log out
     $scope.logout = function () {
@@ -12,36 +18,47 @@ angular.module('itBirthday.login', [])
       $state.go('login');
     };
 
+    $scope.showWrongDataPopup = function() {
+      $('input').css('border','1px solid #FF9A9A');
+      $ionicPopup.alert({
+        title: 'Erro no Login',
+        cssClass: "login-alert-popup",
+        template: 'Os dados inseridos estão incorretos. ' +
+        'Por favor insira o nome de utilizador e a palavra-passe de administrador.'
+      });
+    };
+
     $scope.login = function () {
-
       var user = $scope.user;
+      ionicLoadingService.showLoading();
 
-      $scope.errorMessage = '';
-      //console.log("LOGIN user: " + user.username + " - PW: " + user.password);
-      if (user.username == undefined || user.password == undefined) {
-        $scope.errorMessage = 'Erro nos valores inseridos.';
+      if(user.username == undefined || user.username == '') {
+        ionicLoadingService.hideLoading();
+        $scope.showWrongDataPopup();
+        return false;
+      } else if(user.password == undefined || user.password == '') {
+        ionicLoadingService.hideLoading();
+        $scope.showWrongDataPopup();
         return false;
       } else {
-        ionicLoadingService.showLoading();
-
         $http.post(serverUrl + '/check_login', {
           username: user.username,
           password: CryptoJS.SHA256(user.password).toString()
         }).success(function (data) {
-          console.log('[APP] Login Successful');
+          ionicLoadingService.hideLoading();
+          user.password = undefined;
 
-          //saves cookie in localstorage
-          if ("session" in localStorage) localStorage.removeItem("session");
+          if ("session" in localStorage) {
+            localStorage.removeItem("session");
+          }
+
           localStorage.setItem("session", JSON.stringify(data));
 
-          ionicLoadingService.hideLoading();
           $state.go('tabs.dash');
-          user.password = '';
-        }).error(function (data) {
-          $scope.errorMessage = 'Erro nos valores inseridos.';
-          user.password = '';
-          console.log('ERROR: ' + data);
+        }).error(function (err) {
+          user.password = undefined;
           ionicLoadingService.hideLoading();
+          $scope.showWrongDataPopup();
           return false;
         });
       }
