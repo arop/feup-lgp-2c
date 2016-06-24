@@ -59,10 +59,14 @@
           </label>
         </div>
       </div>
-      <div class="row responsive-sm responsive-md" id="templates_save_changes">
+      <div class="row responsive-sm responsive-md" id="template_buttons">
         <div class="col col-50 col-offset-25">
-          <a id="save-profile-changes-btn" ng-click="saveChanges()" ng-hide="isView || isNewProfile">
-            Guardar alterações</a>
+          <div class="block">
+            <a id="revert_templates_btn" ng-click="getDefaultMsg()">Reverter para dados no servidor</a>
+          </div>
+          <div class="block">
+            <a id="save_templates_changes_btn" ng-click="saveChanges()"> Guardar alterações</a>
+          </div>
         </div>
       </div>
     </div>

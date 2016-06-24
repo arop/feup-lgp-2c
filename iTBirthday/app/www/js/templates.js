@@ -1,8 +1,10 @@
 angular.module('itBirthday.settings', ['ngFileUpload'])
 
-  .controller('MsgTemplatesCtrl', function ($scope, $http, Upload, $ionicPopup, $ionicSlideBoxDelegate, ionicLoadingService) {
+  .controller('MsgTemplatesCtrl', function ($scope, $state, $stateParams, $http, Upload, $ionicPopup, $ionicSlideBoxDelegate, ionicLoadingService) {
     $scope.index = 0;
-
+    $scope.defaultMsg = {};
+    $scope.responseCount = 0;
+    $scope.errCount = 0;
     $scope.wrongFields = "";
     $scope.index_default_banner = 0;
 
@@ -14,6 +16,7 @@ angular.module('itBirthday.settings', ['ngFileUpload'])
       $ionicSlideBoxDelegate.next();
       $scope.index = $ionicSlideBoxDelegate.currentIndex();
     };
+
     $scope.previous = function () {
       $ionicSlideBoxDelegate.previous();
       $scope.index = $ionicSlideBoxDelegate.currentIndex();
@@ -39,8 +42,6 @@ angular.module('itBirthday.settings', ['ngFileUpload'])
       });
     };
 
-    $scope.defaultMsg = {};
-
     //listen for the file selected event
     $("input[type=file]").on("change", function () {
       $scope.banner = this.files[0];
@@ -53,6 +54,8 @@ angular.module('itBirthday.settings', ['ngFileUpload'])
       $scope.defaultMsg.sms = "";
       $scope.defaultMsg.fb = "";
       $scope.banners = [];
+
+      resetCounters();
 
       $scope.defaultMsgEmail_exists = false;
       var successCount = 0;
@@ -103,34 +106,35 @@ angular.module('itBirthday.settings', ['ngFileUpload'])
     $scope.saveChanges = function () {
       ionicLoadingService.showLoading();
 
-      $scope.wrongFields = '';
-      $("textarea").css("border", "none");
+      resetCounters();
 
       var emailTemplate = $scope.defaultMsg.email.trim();
       var smsTemplate = $scope.defaultMsg.sms.trim();
       var fbTemplate = $scope.defaultMsg.fb.trim();
-      var errCount = 0;
 
       // Update default banner
       if ($scope.banners.size > 0) {
         $http.get(serverUrl + '/all_banners').then(function (response) {
+            incrementSaveChangesResponses();
 
-          var bannerIndex = 0;
-          angular.forEach(response, function (value, key) {
-            if (bannerIndex === $scope.index_default_banner) {
-              $http.post(serverUrl + '/update_banner', {
-                id: value._id
-              }).then(function () {
-                //console.log("Updated Banner template");
-              }, function (err) {
-                // Server error
-              });
-            }
-            bannerIndex++;
-          }, $scope.banners);
-        }, function (err) {
-          // Server error
-        });
+            var bannerIndex = 0;
+            angular.forEach(response, function (value, key) {
+              if (bannerIndex === $scope.index_default_banner) {
+                $http.post(serverUrl + '/update_banner', {
+                  id: value._id
+                }).then(function () {
+                  // Success: updated default template
+                }, function (err) {
+                  // Server error
+                });
+              }
+              bannerIndex++;
+            }, $scope.banners);
+          }, function (err) {
+            incrementSaveChangesResponses();
+          });
+      } else {
+        incrementSaveChangesResponses();
       }
 
       // Update email template
@@ -139,22 +143,20 @@ angular.module('itBirthday.settings', ['ngFileUpload'])
           $http.post(serverUrl + '/post_email_template', {
             text: emailTemplate
           }).then(function (success) {
-            // Success
+            incrementSaveChangesResponses();
           }, function (err) {
-            // Server error
+            incrementSaveChangesResponses();
           });
         } else
           $http.post(serverUrl + '/update_email_template', {
             text: emailTemplate
           }).then(function (success) {
-            // Success
+            incrementSaveChangesResponses();
           }, function (err) {
-            // Server error
+            incrementSaveChangesResponses();
           });
       } else {
-        errCount++;
-        $scope.wrongFields += "<br>- Email template: campo vazio;";
-        $("textarea#emailMsg").css("border", "1px solid #FF9A9A");
+        incrementSaveChangesErrCount('Email template: campo vazio;', $("textarea#emailMsg"));
       }
 
       // Add new banner
@@ -165,10 +167,12 @@ angular.module('itBirthday.settings', ['ngFileUpload'])
           progress: function (e) {
           }
         }).then(function (data, status, headers, config) {
-          // File is uploaded successfully
+          incrementSaveChangesResponses();
         }, function (err) {
-          // Server error
+          incrementSaveChangesResponses();
         });
+      } else {
+        incrementSaveChangesResponses();
       }
 
       // Update SMS template
@@ -176,37 +180,52 @@ angular.module('itBirthday.settings', ['ngFileUpload'])
         $http.post(serverUrl + '/update_sms_template', {
           text: smsTemplate
         }).then(function (success) {
-          // Success
-        }, function(err) {
-          // Server error
+          incrementSaveChangesResponses();
+        }, function (err) {
+          incrementSaveChangesResponses();
         });
       } else {
-        errCount++;
-        $scope.wrongFields += "<br>- SMS template: campo vazio;";
-        $("textarea#smsMsg").css("border", "1px solid #FF9A9A");
+        incrementSaveChangesErrCount('SMS template: campo vazio', $("textarea#smsMsg"));
       }
 
+      // Update Facebook template
       if (fbTemplate != undefined && fbTemplate != '') {
         $http.post(serverUrl + '/update_facebook_template', {
           text: fbTemplate
         }).then(function () {
-          // Success
-        }, function(err) {
-          // Server error
+          incrementSaveChangesResponses();
+        }, function (err) {
+          incrementSaveChangesResponses();
         });
       } else {
-        errCount++;
-        $scope.wrongFields += "<br>- Facebook template: campo vazio;";
-        $("textarea#fbMsg").css("border", "1px solid #FF9A9A");
+        incrementSaveChangesErrCount('Facebook template: campo vazio', $("textarea#fbMsg"));
       }
+    };
 
-      ionicLoadingService.hideLoading();
+    var resetCounters = function () {
+      $scope.responseCount = 0;
+      $scope.errCount = 0;
+      $scope.wrongFields = '';
+      $("textarea").css("border", "none");
+    };
 
-      if(errCount > 0) {
-        $scope.showAlertProfile();
+    var incrementSaveChangesResponses = function () {
+      $scope.responseCount++;
+
+      if ($scope.responseCount >= 5) {
+        ionicLoadingService.hideLoading();
+        $state.transitionTo($state.current, $stateParams, {reload: true, inherit: false, notify: true});
+
+        if ($scope.errCount > 0) {
+          $scope.showAlertProfile();
+        }
       }
-      else {
-        $scope.showConfirmPopup();
-      }
-    }
+    };
+
+    var incrementSaveChangesErrCount = function (message, $element) {
+      $scope.errCount++;
+      $scope.wrongFields += ('<br>- ' + message);
+      $element.css("border", "1px solid #FF9A9A");
+      incrementSaveChangesResponses();
+    };
   });

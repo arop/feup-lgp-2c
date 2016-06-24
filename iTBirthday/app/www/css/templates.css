@@ -112,12 +112,22 @@
   max-height: 300px;
 }
 
-#default_messages_div #templates_save_changes a {
+#default_messages_div #template_buttons a {
   float: right;
+}
+
+#default_messages_div #template_buttons a#save_templates_changes_btn {
   padding: 5px 20px 5px 10px;
   margin: auto 5px auto auto;
   background: transparent url("../img/icons/confirm.png") no-repeat right center !important;
   background-size: 16px !important;
+}
+
+#default_messages_div #template_buttons a#revert_templates_btn {
+  padding: 5px 23px 5px 10px;
+  margin: auto 2px auto auto;
+  background: transparent url("../img/icons/reload.png") no-repeat right center !important;
+  background-size: 21px !important;
 }
 
 /******************************
