@@ -611,6 +611,7 @@ module.exports = function (express, app, mongoose, path, nodemailer, CronJob, fs
                 activeEmployees++;
 
                 var person = {
+                    id: employee._id,
                     photoPath: employee.photoPath,
                     birthDate: employee.birthDate,
                     name: employee.name
