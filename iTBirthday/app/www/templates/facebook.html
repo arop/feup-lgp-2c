@@ -2,13 +2,13 @@
   <ion-content padding="true" overflow-scroll="true" id="fb_content">
     <div id="fb-root"></div>
 
-    <div class="row responsive-sm responsive-md" ng-if="loggedIn && !updating">
+    <div class="row responsive-sm responsive-md fb-buttons" ng-if="loggedIn && !updating">
       <div class="col col-50 col-offset-25">
         <a class="icon-refresh" ng-click="loginFacebook()">Atualizar</a>
       </div>
     </div>
 
-    <div class="row responsive-sm responsive-md" ng-if="!loggedIn && !updating">
+    <div class="row responsive-sm responsive-md fb-buttons" ng-if="!loggedIn && !updating">
       <div class="col col-50 col-offset-25">
         <a class="icon-facebook" ng-click="loginFacebook()">Log in</a>
       </div>
@@ -43,9 +43,13 @@
           </div>
           <div class="separator"></div>
           <div class="item item-text-wrap">
-            <p>Para se autenticar com outro utilizador:</p>
-            <p>1. Faça login na conta que deseja associar aos posts;</p>
-            <p>2. Clique no botão de <b>Log in</b> (ou <b>Atualizar</b>) nesta página e siga o procedimento normal.</p>
+            <p>Para se autenticar com um novo utilizador:</p>
+            <p>1. No site do <span id="fb_link"><a href="https://www.facebook.com" target="_blank">Facebook</a></span>,
+              fazer login com as
+              credenciais da conta com a qual pretende que os posts de aniversário sejam feitos;</p>
+            <p>2. Nesta app, na tab atual, clique no botão de <b>Log in</b> (ou <b>Atualizar</b>) e siga o procedimento
+              de login normal. (<b>Nota</b>: a janela de login poderá ou não aparecer, mas as informações nesta página
+              serão atualizadas em conformidade).</p>
           </div>
         </div>
       </div>

@@ -1377,12 +1377,16 @@ a {
 /********************************************************
                         Facebook
 ********************************************************/
-#fb_content a {
+#fb_content .fb-buttons a {
   float: right;
   padding: 5px 15px 5px 10px;
   margin: auto 5px auto auto;
   background: transparent url("../img/icons/right_arrow.png") no-repeat right center !important;
   background-size: 10px !important;
+}
+
+#fb_content #fb_link a {
+  color: #0c60ee !important;
 }
 
 #fb_content .icon-refresh {
