@@ -111,19 +111,6 @@ angular.module('itBirthday', ['ionic', 'ngFileUpload', 'ngPageTitle',
         }
       })
 
-      .state('tabs.profile.update', {
-        url: '/update',
-        views: {
-          'inside-profile-tab@tabs.profile': {
-            templateUrl: defaultPath + 'templates/profile.html',
-            controller: 'UpdateUserCtrl'
-          }
-        },
-        data: {
-          pageTitle: 'Atualizar Perfil'
-        }
-      })
-
       .state('tabs.profile.show', {
         url: '/show/:id',
         views: {

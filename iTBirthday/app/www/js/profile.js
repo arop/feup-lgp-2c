@@ -54,7 +54,7 @@ angular.module('itBirthday.profile', ['ngFileUpload'])
 
   }])
 
-  .controller('UpdateUserCtrl', function ($scope, $http, $state, $stateParams, $filter, $ionicPopup, Upload, ionicLoadingService) {
+  .controller('UpdateUserCtrl', function ($scope, $http, $state, $stateParams, $ionicPopup, Upload, ionicLoadingService) {
     $scope.profile = {};
     $scope.isView = null;
     $scope.notCreating = null;

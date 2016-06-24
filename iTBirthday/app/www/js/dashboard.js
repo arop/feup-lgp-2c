@@ -13,7 +13,8 @@ angular.module('itBirthday.statistics', ['chart.js'])
     });
   }])
 
-  .controller('StatisticsCtrl', function ($scope, $http, ionicLoadingService, $ionicSlideBoxDelegate, $ionicModal) {
+  .controller('StatisticsCtrl', function ($scope, $http, $state, $stateParams, ionicLoadingService, 
+    $ionicSlideBoxDelegate, $ionicModal) {
     $scope.serverUrl = serverUrl;
     $scope.data = {
       MFData: [0, 0],
@@ -81,6 +82,14 @@ angular.module('itBirthday.statistics', ['chart.js'])
         });
     };
 
+    $scope.goToProfile = function (emp_id) {
+      $scope.modal.hide().then(function() {
+        $state.go('tabs.profile.new').then(function() {
+          $state.go('tabs.profile.show', {id: emp_id});
+        });
+      });
+    }
+
     function normalizeBirthsByMonthRatios() {
 
       var size = ($.map($scope.data.BirthsByMonthTotal, function (elem) {
@@ -131,7 +140,6 @@ angular.module('itBirthday.statistics', ['chart.js'])
 
     $scope.getCleanDate = function(fullDate) {
       var date = new Date(fullDate).toLocaleDateString();
-      console.log(date);
       return date;
     };
 

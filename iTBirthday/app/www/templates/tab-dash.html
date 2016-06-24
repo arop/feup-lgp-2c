@@ -201,6 +201,7 @@
       </div>
     </div>
 
+
     <script id="month_window.html" type="text/ng-template">
       <ion-modal-view id="dashboard_modal">
         <ion-header-bar>
@@ -208,7 +209,7 @@
         </ion-header-bar>
         <ion-content padding="true" overflow-scroll="true">
           <div class="row responsive-sm responsive-md">
-            <div class="col col-25" ng-repeat="emp in currentMonthBirthdays">
+            <div class="col col-25" ng-repeat="emp in currentMonthBirthdays" ng-click="goToProfile(emp.id)">
               <div class="container">
                 <div class="emp-img">
                   <img ng-src="{{getEmployeeImagePath(emp.photoPath)}}" title="{{emp.name}} photo" alt="{{emp.name}}"
